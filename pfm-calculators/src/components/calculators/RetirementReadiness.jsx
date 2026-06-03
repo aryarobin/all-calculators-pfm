@@ -1,234 +1,197 @@
 import { useState, useMemo } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, RadialBarChart, RadialBar, PieChart, Pie, Legend } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import SliderInput from '../shared/SliderInput';
-import { calcInflation, calcSIP, calcSIPFromCorpus, calcFD, calcPPF, calcNPS, calcLumpsum, formatINR } from '../../utils/financialCalc';
+import { useCalcState } from '../../hooks/useCalcState';
+import { calcInflation, calcSIP, calcSIPFromCorpus, formatINR } from '../../utils/financialCalc';
 
-const ASSET_RATES = {
-  savings: { label: '🏦 Savings Account', defaultRate: 3.5, color: '#94a3b8' },
-  fd: { label: '🏦 FD / RD', defaultRate: 7, color: '#3b82f6' },
-  ppf_epf: { label: '🛡️ PPF / EPF', defaultRate: 8.1, color: '#10b981' },
-  mf: { label: '📈 Mutual Funds', defaultRate: 12, color: '#f97316' },
-  stocks: { label: '📊 Stocks', defaultRate: 15, color: '#7c3aed' },
-  gold: { label: '🪙 Gold', defaultRate: 8, color: '#f59e0b' },
-  realestate: { label: '🏠 Real Estate', defaultRate: 9, color: '#06b6d4' },
-};
+const ASSETS = [
+  { key: 'savings',   label: 'Savings Account', rate: 3.5,  color: '#94a3b8' },
+  { key: 'fd',        label: 'FD / RD',          rate: 7,    color: '#3b82f6' },
+  { key: 'ppf_epf',   label: 'PPF / EPF',        rate: 8.1,  color: '#10b981' },
+  { key: 'mf',        label: 'Mutual Funds',     rate: 12,   color: '#f97316' },
+  { key: 'stocks',    label: 'Stocks / Equity',  rate: 15,   color: '#7c3aed' },
+  { key: 'gold',      label: 'Gold',             rate: 8,    color: '#f59e0b' },
+  { key: 'realestate',label: 'Real Estate',      rate: 9,    color: '#06b6d4' },
+];
 
-const defaultNetWorth = { savings: 500000, fd: 6000000, ppf_epf: 5000000, mf: 3600000, stocks: 2000000, gold: 7000000, realestate: 0 };
-const defaultMonthly = { savings: 0, fd: 30000, ppf_epf: 20000, mf: 100000, stocks: 50000, gold: 0, realestate: 0 };
+const DEFAULT_NW  = { savings: 500000, fd: 6000000, ppf_epf: 5000000, mf: 3600000, stocks: 2000000, gold: 7000000, realestate: 0 };
+const DEFAULT_MO  = { savings: 0, fd: 30000, ppf_epf: 20000, mf: 100000, stocks: 50000, gold: 0, realestate: 0 };
 
-export default function RetirementReadiness() {
-  const [currentAge, setCurrentAge] = useState(44);
-  const [retirementAge, setRetirementAge] = useState(65);
-  const [lifeExpectancy, setLifeExpectancy] = useState(75);
-  const [targetCorpus, setTargetCorpus] = useState(10000000);
-  const [inflation, setInflation] = useState(5);
-  const [postReturnRate, setPostReturnRate] = useState(8);
+export default function RetirementReadiness({ onNavigate }) {
+  const [s, set] = useCalcState('readiness', {
+    currentAge: 44, retirementAge: 65, targetCorpus: 10000000, inflation: 5,
+    nw: DEFAULT_NW, mo: DEFAULT_MO,
+  });
 
-  const [netWorth, setNetWorth] = useState(defaultNetWorth);
-  const [monthly, setMonthly] = useState(defaultMonthly);
+  const yearsToRetire = Math.max(1, s.retirementAge - s.currentAge);
+  const inflatedCorpus = useMemo(() => calcInflation(s.targetCorpus, s.inflation, yearsToRetire), [s.targetCorpus, s.inflation, yearsToRetire]);
 
-  const yearsToRetire = retirementAge - currentAge;
-  const inflatedCorpus = useMemo(() => calcInflation(targetCorpus, inflation, yearsToRetire), [targetCorpus, inflation, yearsToRetire]);
+  const projections = useMemo(() => ASSETS.map(a => {
+    const nwVal  = s.nw[a.key]  || 0;
+    const moVal  = s.mo[a.key]  || 0;
+    const nwProj = nwVal * Math.pow(1 + a.rate / 100, yearsToRetire);
+    const moProj = moVal ? calcSIP(moVal, a.rate, yearsToRetire).corpus : 0;
+    return { ...a, nwVal, moVal, nwProj, moProj, total: nwProj + moProj };
+  }).filter(a => a.nwVal > 0 || a.moVal > 0), [s.nw, s.mo, yearsToRetire]);
 
-  // Project each asset
-  const assetProjections = useMemo(() => {
-    return Object.entries(ASSET_RATES).map(([key, info]) => {
-      const existingProjected = (netWorth[key] || 0) * Math.pow(1 + info.defaultRate / 100, yearsToRetire);
-      const monthlyProjected = monthly[key] ? calcSIP(monthly[key], info.defaultRate, yearsToRetire).corpus : 0;
-      return {
-        key, ...info,
-        existingNW: netWorth[key] || 0,
-        existingProjected,
-        monthlyContrib: monthly[key] || 0,
-        monthlyProjected,
-        total: existingProjected + monthlyProjected,
-      };
-    }).filter(a => a.existingNW > 0 || a.monthlyContrib > 0);
-  }, [netWorth, monthly, yearsToRetire]);
+  const totalProjected = projections.reduce((sum, a) => sum + a.total, 0);
+  const shortfall  = Math.max(0, inflatedCorpus - totalProjected);
+  const surplus    = Math.max(0, totalProjected - inflatedCorpus);
+  const score      = Math.min(100, Math.round((totalProjected / inflatedCorpus) * 100));
+  const addSIP     = shortfall > 0 ? calcSIPFromCorpus(shortfall, 12, yearsToRetire) : 0;
 
-  const totalProjected = useMemo(() => assetProjections.reduce((s, a) => s + a.total, 0), [assetProjections]);
-  const shortfall = Math.max(0, inflatedCorpus - totalProjected);
-  const surplus = Math.max(0, totalProjected - inflatedCorpus);
+  const scoreColor = score >= 90 ? '#10b981' : score >= 70 ? '#f59e0b' : score >= 50 ? '#f97316' : '#ef4444';
+  const scoreLabel = score >= 90 ? 'Excellent' : score >= 70 ? 'Good' : score >= 50 ? 'Fair' : 'Needs Work';
 
-  const readinessScore = useMemo(() => Math.min(100, Math.round((totalProjected / inflatedCorpus) * 100)), [totalProjected, inflatedCorpus]);
+  const updateNW = (key, val) => set(prev => ({ ...prev, nw: { ...prev.nw, [key]: val } }));
+  const updateMO = (key, val) => set(prev => ({ ...prev, mo: { ...prev.mo, [key]: val } }));
 
-  const additionalSIP = useMemo(() => shortfall > 0 ? calcSIPFromCorpus(shortfall, 12, yearsToRetire) : 0, [shortfall, yearsToRetire]);
-
-  const scoreColor = readinessScore >= 90 ? '#10b981' : readinessScore >= 70 ? '#f59e0b' : readinessScore >= 50 ? '#f97316' : '#ef4444';
-  const scoreLabel = readinessScore >= 90 ? 'Excellent 🎉' : readinessScore >= 70 ? 'Good 👍' : readinessScore >= 50 ? 'Fair ⚠️' : 'Needs Attention 🚨';
-
-  const updateNW = (key, val) => setNetWorth(prev => ({ ...prev, [key]: val }));
-  const updateMonthly = (key, val) => setMonthly(prev => ({ ...prev, [key]: val }));
-
-  const radialData = [{ name: 'Score', value: readinessScore, fill: scoreColor }];
+  const circumference = 2 * Math.PI * 44;
+  const dashOffset    = circumference * (1 - score / 100);
 
   return (
-    <div className="max-w-5xl mx-auto">
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-slate-800">Retirement Readiness Dashboard</h2>
-        <p className="text-slate-500 mt-1">Multi-asset retirement projection with readiness score — like that WhatsApp bot, but way more powerful!</p>
-      </div>
+    <div className="space-y-4 max-w-3xl mx-auto">
 
-      {/* Readiness Score */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="card md:col-span-1 flex flex-col items-center justify-center">
-          <p className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-2">Readiness Score</p>
-          <div className="relative w-32 h-32">
-            <svg viewBox="0 0 120 120" className="w-full h-full -rotate-90">
-              <circle cx="60" cy="60" r="50" fill="none" stroke="#f1f5f9" strokeWidth="12" />
-              <circle cx="60" cy="60" r="50" fill="none" stroke={scoreColor} strokeWidth="12"
-                strokeDasharray={`${(readinessScore / 100) * 314} 314`} strokeLinecap="round" />
-            </svg>
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <p className="text-3xl font-black" style={{ color: scoreColor }}>{readinessScore}</p>
-              <p className="text-xs text-slate-400">/ 100</p>
-            </div>
-          </div>
-          <p className="text-sm font-bold mt-2" style={{ color: scoreColor }}>{scoreLabel}</p>
-        </div>
-
-        <div className="card md:col-span-2">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-xs font-bold text-slate-400 uppercase">Target (Inflation Adj.)</p>
-              <p className="text-xl font-black text-slate-800 mt-1">{formatINR(inflatedCorpus)}</p>
-              <p className="text-xs text-slate-400">from {formatINR(targetCorpus)} today</p>
-            </div>
-            <div>
-              <p className="text-xs font-bold text-slate-400 uppercase">Total Projected</p>
-              <p className="text-xl font-black text-slate-800 mt-1">{formatINR(totalProjected)}</p>
-              <p className="text-xs text-slate-400">from all assets</p>
-            </div>
-            {shortfall > 0 ? (
-              <div className="col-span-2 p-3 bg-red-50 rounded-xl border border-red-100">
-                <p className="text-xs font-bold text-red-500">Shortfall: {formatINR(shortfall)}</p>
-                <p className="text-sm font-black text-red-700">Additional SIP needed: {formatINR(additionalSIP)}/mo at 12%</p>
-              </div>
-            ) : (
-              <div className="col-span-2 p-3 bg-emerald-50 rounded-xl border border-emerald-100">
-                <p className="text-xs font-bold text-emerald-500">Surplus: {formatINR(surplus)}</p>
-                <p className="text-sm font-black text-emerald-700">You're on track — great wealth building!</p>
-              </div>
-            )}
+      {/* Score + headline */}
+      <div className="bg-white rounded-2xl border border-slate-200 p-5 flex flex-col sm:flex-row gap-5 items-center">
+        {/* Ring */}
+        <div className="relative w-28 h-28 flex-shrink-0">
+          <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
+            <circle cx="50" cy="50" r="44" fill="none" stroke="#f1f5f9" strokeWidth="10" />
+            <circle cx="50" cy="50" r="44" fill="none" stroke={scoreColor} strokeWidth="10"
+              strokeDasharray={`${circumference}`} strokeDashoffset={dashOffset}
+              strokeLinecap="round" style={{ transition: 'stroke-dashoffset 0.6s ease' }} />
+          </svg>
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className="text-3xl font-black tabular-nums" style={{ color: scoreColor }}>{score}</span>
+            <span className="text-[11px] text-slate-400 font-semibold">/ 100</span>
           </div>
         </div>
-      </div>
 
-      {/* Basic Inputs */}
-      <div className="card mb-6">
-        <p className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">📊 Retirement Parameters</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6">
-          <SliderInput label="Current Age" value={currentAge} min={25} max={60} onChange={setCurrentAge} unit=" yrs" />
-          <SliderInput label="Retirement Age" value={Math.max(currentAge + 1, retirementAge)} min={currentAge + 1} max={75} onChange={setRetirementAge} unit=" yrs" />
-          <SliderInput label="Life Expectancy" value={lifeExpectancy} min={retirementAge + 1} max={100} onChange={setLifeExpectancy} unit=" yrs" />
-          <SliderInput label="Target Corpus (Today)" value={targetCorpus} min={1000000} max={500000000} step={1000000} onChange={setTargetCorpus} prefix="₹" hint="In today's money — we'll inflate it" />
-          <SliderInput label="Inflation" value={inflation} min={3} max={10} step={0.5} onChange={setInflation} unit="%" />
+        <div className="flex-1 text-center sm:text-left">
+          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Retirement Readiness Score</p>
+          <p className="text-2xl font-bold" style={{ color: scoreColor }}>{scoreLabel}</p>
+          <div className="flex flex-wrap gap-x-6 gap-y-1 mt-3 justify-center sm:justify-start">
+            <div>
+              <p className="text-xs text-slate-400">Target (inflated)</p>
+              <p className="text-base font-bold text-slate-700 tabular-nums">{formatINR(inflatedCorpus)}</p>
+            </div>
+            <div>
+              <p className="text-xs text-slate-400">Projected total</p>
+              <p className="text-base font-bold text-slate-700 tabular-nums">{formatINR(totalProjected)}</p>
+            </div>
+          </div>
+          {shortfall > 0 ? (
+            <div className="mt-3 px-3 py-2 bg-red-50 border border-red-100 rounded-xl text-sm text-red-700 font-medium">
+              Shortfall <strong>{formatINR(shortfall)}</strong> — additional SIP needed: <strong>{formatINR(addSIP)}/mo</strong>
+            </div>
+          ) : (
+            <div className="mt-3 px-3 py-2 bg-emerald-50 border border-emerald-100 rounded-xl text-sm text-emerald-700 font-medium">
+              Surplus <strong>{formatINR(surplus)}</strong> — you are on track!
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Asset inputs */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        {/* Current Net Worth */}
-        <div className="card">
-          <p className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">💼 Current Net Worth by Asset</p>
-          {Object.entries(ASSET_RATES).map(([key, info]) => (
-            <div key={key} className="mb-4">
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-sm font-semibold text-slate-600">{info.label}</span>
-                <span className="text-xs text-slate-400">{info.defaultRate}% p.a.</span>
+      {/* Parameters */}
+      <div className="bg-white rounded-2xl border border-slate-200 px-5 py-5">
+        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Parameters</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8">
+          <SliderInput label="Current Age" value={s.currentAge} min={25} max={60} onChange={v => set({ currentAge: v })} unit=" yr" />
+          <SliderInput label="Retirement Age" value={Math.max(s.currentAge + 1, s.retirementAge)} min={s.currentAge + 1} max={75} onChange={v => set({ retirementAge: v })} unit=" yr" />
+          <SliderInput label="Target Corpus (Today's Value)" value={s.targetCorpus} min={1000000} max={1000000000} step={1000000} onChange={v => set({ targetCorpus: v })} prefix="₹" hint="We'll adjust for inflation" />
+          <SliderInput label="Inflation" value={s.inflation} min={3} max={10} step={0.5} onChange={v => set({ inflation: v })} unit="%" />
+        </div>
+      </div>
+
+      {/* Asset sliders — two cards side by side on ≥ md */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-white rounded-2xl border border-slate-200 px-5 py-5">
+          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Current Net Worth by Asset</p>
+          {ASSETS.map(a => (
+            <div key={a.key} className="mb-5">
+              <div className="flex justify-between items-center mb-1.5">
+                <span className="text-sm font-semibold text-slate-700">{a.label}</span>
+                <span className="text-sm font-bold tabular-nums" style={{ color: a.color }}>{formatINR(s.nw[a.key] || 0)}</span>
               </div>
-              <input type="range" min={0} max={50000000} step={100000} value={netWorth[key] || 0} onChange={e => updateNW(key, +e.target.value)}
+              <input type="range" min={0} max={100000000} step={100000}
+                value={Math.min(s.nw[a.key] || 0, 100000000)}
+                onChange={e => updateNW(a.key, +e.target.value)}
                 className="w-full"
-                style={{ background: `linear-gradient(to right, ${info.color} 0%, ${info.color} ${Math.min(100, (netWorth[key] || 0) / 500000)}%, #e2e8f0 ${Math.min(100, (netWorth[key] || 0) / 500000)}%, #e2e8f0 100%)` }} />
-              <div className="flex justify-between text-xs mt-0.5">
-                <span className="text-slate-400">₹0</span>
-                <span className="font-bold" style={{ color: info.color }}>{formatINR(netWorth[key] || 0)}</span>
-                <span className="text-slate-400">₹5Cr</span>
+                style={{ background: `linear-gradient(to right,${a.color} 0%,${a.color} ${Math.min(100, (s.nw[a.key] || 0) / 1000000)}%,#e2e8f0 ${Math.min(100, (s.nw[a.key] || 0) / 1000000)}%,#e2e8f0 100%)` }}
+              />
+              <div className="flex justify-between text-[11px] text-slate-400 mt-1">
+                <span>₹0</span><span>₹10 Cr</span>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Monthly Investments */}
-        <div className="card">
-          <p className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">📅 Monthly Investments by Asset</p>
-          {Object.entries(ASSET_RATES).map(([key, info]) => (
-            <div key={key} className="mb-4">
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-sm font-semibold text-slate-600">{info.label}</span>
-                <span className="text-xs font-bold" style={{ color: info.color }}>{formatINR(monthly[key] || 0)}/mo</span>
+        <div className="bg-white rounded-2xl border border-slate-200 px-5 py-5">
+          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Monthly Investment by Asset</p>
+          {ASSETS.map(a => (
+            <div key={a.key} className="mb-5">
+              <div className="flex justify-between items-center mb-1.5">
+                <span className="text-sm font-semibold text-slate-700">{a.label}</span>
+                <span className="text-sm font-bold tabular-nums" style={{ color: a.color }}>{formatINR(s.mo[a.key] || 0)}/mo</span>
               </div>
-              <input type="range" min={0} max={200000} step={5000} value={monthly[key] || 0} onChange={e => updateMonthly(key, +e.target.value)}
+              <input type="range" min={0} max={500000} step={5000}
+                value={Math.min(s.mo[a.key] || 0, 500000)}
+                onChange={e => updateMO(a.key, +e.target.value)}
                 className="w-full"
-                style={{ background: `linear-gradient(to right, ${info.color} 0%, ${info.color} ${Math.min(100, (monthly[key] || 0) / 2000)}%, #e2e8f0 ${Math.min(100, (monthly[key] || 0) / 2000)}%, #e2e8f0 100%)` }} />
+                style={{ background: `linear-gradient(to right,${a.color} 0%,${a.color} ${Math.min(100, (s.mo[a.key] || 0) / 5000)}%,#e2e8f0 ${Math.min(100, (s.mo[a.key] || 0) / 5000)}%,#e2e8f0 100%)` }}
+              />
+              <div className="flex justify-between text-[11px] text-slate-400 mt-1">
+                <span>₹0</span><span>₹5 L/mo</span>
+              </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Asset projection breakdown */}
-      <div className="card mb-6">
-        <h3 className="font-bold text-slate-700 mb-4">Projected Corpus by Asset Class</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-slate-100">
-                <th className="text-left py-2 text-slate-400">Asset</th>
-                <th className="text-right py-2 text-slate-400">Today</th>
-                <th className="text-right py-2 text-slate-400">NW → {retirementAge}</th>
-                <th className="text-right py-2 text-slate-400">Monthly SIP</th>
-                <th className="text-right py-2 text-slate-400">SIP → {retirementAge}</th>
-                <th className="text-right py-2 text-orange-500 font-bold">Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              {assetProjections.map(a => (
-                <tr key={a.key} className="border-b border-slate-50 hover:bg-slate-50">
-                  <td className="py-2">
-                    <span className="flex items-center gap-2">
-                      <span className="w-3 h-3 rounded-full inline-block" style={{ background: a.color }}></span>
-                      <span className="font-semibold text-slate-700">{a.label}</span>
-                    </span>
-                  </td>
-                  <td className="py-2 text-right text-slate-500">{formatINR(a.existingNW)}</td>
-                  <td className="py-2 text-right font-semibold text-emerald-600">{formatINR(a.existingProjected)}</td>
-                  <td className="py-2 text-right text-slate-500">{a.monthlyContrib > 0 ? `${formatINR(a.monthlyContrib)}/mo` : '-'}</td>
-                  <td className="py-2 text-right font-semibold text-blue-600">{a.monthlyContrib > 0 ? formatINR(a.monthlyProjected) : '-'}</td>
-                  <td className="py-2 text-right font-black text-orange-600">{formatINR(a.total)}</td>
-                </tr>
-              ))}
-              <tr className="border-t-2 border-slate-200 bg-orange-50">
-                <td className="py-2 font-black text-slate-800">TOTAL</td>
-                <td className="py-2 text-right font-bold">{formatINR(Object.values(netWorth).reduce((s, v) => s + v, 0))}</td>
-                <td colSpan={3}></td>
-                <td className="py-2 text-right font-black text-orange-700 text-base">{formatINR(totalProjected)}</td>
-              </tr>
-            </tbody>
-          </table>
+      {/* Asset summary cards — replaces broken table on mobile */}
+      <div className="bg-white rounded-2xl border border-slate-200 p-5">
+        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Projected Corpus by Asset</p>
+        <div className="space-y-2">
+          {projections.map(a => (
+            <div key={a.key} className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-slate-50">
+              <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: a.color }} />
+              <span className="text-sm font-semibold text-slate-700 flex-1 min-w-0 truncate">{a.label}</span>
+              <div className="text-right flex-shrink-0">
+                <p className="text-sm font-bold text-slate-900 tabular-nums">{formatINR(a.total, true)}</p>
+                <p className="text-[11px] text-slate-400">
+                  {formatINR(a.nwVal, true)} today
+                  {a.moVal > 0 && ` + ${formatINR(a.moVal, true)}/mo`}
+                </p>
+              </div>
+            </div>
+          ))}
+          {/* Total row */}
+          <div className="flex items-center gap-3 px-3 py-3 rounded-xl bg-orange-50 border border-orange-100">
+            <div className="w-3 h-3 rounded-full bg-orange-500 flex-shrink-0" />
+            <span className="text-sm font-bold text-slate-800 flex-1">Total Projected</span>
+            <span className="text-base font-black text-orange-700 tabular-nums">{formatINR(totalProjected)}</span>
+          </div>
         </div>
       </div>
 
       {/* Bar chart */}
-      <div className="card">
-        <h3 className="font-bold text-slate-700 mb-4">Asset-wise Projected Corpus</h3>
-        <ResponsiveContainer width="100%" height={280}>
-          <BarChart data={assetProjections} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-            <XAxis dataKey="label" tick={{ fontSize: 10 }} />
-            <YAxis tick={{ fontSize: 11 }} tickFormatter={v => formatINR(v, true)} width={70} />
+      <div className="bg-white rounded-2xl border border-slate-200 p-5">
+        <p className="text-sm font-semibold text-slate-700 mb-4">Asset-wise Projected Corpus at Retirement</p>
+        <ResponsiveContainer width="100%" height={240}>
+          <BarChart data={projections} margin={{ top: 5, right: 5, left: 0, bottom: 30 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+            <XAxis dataKey="label" tick={{ fontSize: 10, fill: '#94a3b8' }} angle={-30} textAnchor="end" interval={0} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} tickFormatter={v => formatINR(v, true)} width={65} axisLine={false} tickLine={false} />
             <Tooltip formatter={(v, n) => [formatINR(v), n]} />
-            <Bar dataKey="existingProjected" name="NW Growth" stackId="a" radius={[0, 0, 0, 0]}>
-              {assetProjections.map((a, i) => <Cell key={i} fill={a.color + 'aa'} />)}
+            <Bar dataKey="nwProj" name="NW Growth" stackId="a">
+              {projections.map((a, i) => <Cell key={i} fill={a.color + '88'} />)}
             </Bar>
-            <Bar dataKey="monthlyProjected" name="SIP Growth" stackId="a" radius={[4, 4, 0, 0]}>
-              {assetProjections.map((a, i) => <Cell key={i} fill={a.color} />)}
+            <Bar dataKey="moProj" name="SIP Growth" stackId="a" radius={[3, 3, 0, 0]}>
+              {projections.map((a, i) => <Cell key={i} fill={a.color} />)}
             </Bar>
           </BarChart>
         </ResponsiveContainer>
-        <div className="mt-3 flex items-center justify-center gap-6 text-xs">
-          <span className="flex items-center gap-1"><span className="w-4 h-2 rounded inline-block bg-slate-300"></span> Existing NW Growth</span>
-          <span className="flex items-center gap-1"><span className="w-4 h-2 rounded inline-block bg-orange-400"></span> Monthly SIP Growth</span>
-        </div>
       </div>
     </div>
   );

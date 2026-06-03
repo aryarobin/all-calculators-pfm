@@ -35,7 +35,7 @@ export default function LumpsumCalculator({ onNavigate }) {
       <div className="lg:col-span-1">
         <div className="card">
           <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-5">Parameters</p>
-          <SliderInput label="Investment Amount" hint="One-time amount you invest today" value={principal} min={10000} max={10000000} step={10000} onChange={setPrincipal} prefix="₹" />
+          <SliderInput label="Investment Amount" hint="One-time amount you invest today" value={principal} min={10000} max={100000000} step={10000} onChange={setPrincipal} prefix="₹" />
           <SliderInput label="Expected Annual Return (CAGR)" hint="Nifty 50 20yr avg ~15%, FD ~7%" value={rate} min={4} max={25} step={0.5} onChange={setRate} unit="%" />
           <SliderInput label="Duration" hint="Leave untouched for how long" value={years} min={1} max={40} onChange={setYears} unit=" yr" />
 

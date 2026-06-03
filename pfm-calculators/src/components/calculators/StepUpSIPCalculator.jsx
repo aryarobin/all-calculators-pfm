@@ -72,9 +72,9 @@ export default function StepUpSIPCalculator({ onNavigate }) {
       {/* Sliders */}
       <div className="bg-white rounded-xl border border-slate-100 px-6 py-5">
         <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-5">Adjust Parameters</p>
-        <SliderInput label="Starting Monthly SIP" value={monthly} min={500} max={50000} step={500} onChange={setMonthly} prefix="₹" />
-        <SliderInput label="Annual Step-Up Rate" hint="Match with your expected salary hike %" value={stepUp} min={0} max={30} step={1} onChange={setStepUp} unit="%" />
-        <SliderInput label="Expected Annual Return" value={rate} min={4} max={20} step={0.5} onChange={setRate} unit="%" />
+        <SliderInput label="Starting Monthly SIP" value={monthly} min={500} max={500000} step={500} onChange={setMonthly} prefix="₹" hint="Tap the value to type any amount" />
+        <SliderInput label="Annual Step-Up Rate" hint="Match with your expected salary hike %" value={stepUp} min={0} max={50} step={1} onChange={setStepUp} unit="%" />
+        <SliderInput label="Expected Annual Return" value={rate} min={4} max={30} step={0.5} onChange={setRate} unit="%" />
         <SliderInput label="Duration" value={years} min={1} max={40} onChange={setYears} unit=" yr" />
       </div>
 

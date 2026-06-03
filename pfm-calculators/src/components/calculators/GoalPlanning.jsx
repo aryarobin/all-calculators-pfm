@@ -75,7 +75,7 @@ export default function GoalPlanning({ onNavigate }) {
       {/* Sliders */}
       <div className="bg-white rounded-xl border border-slate-100 px-6 py-5">
         <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-5">Adjust Parameters</p>
-        <SliderInput label={`${GOALS.find(g => g.id === selectedGoal)?.label} — cost in today's money`} value={goalAmount} min={100000} max={50000000} step={100000} onChange={setGoalAmount} prefix="₹" hint="We'll inflate this automatically" />
+        <SliderInput label={`${GOALS.find(g => g.id === selectedGoal)?.label} — cost in today's money`} value={goalAmount} min={100000} max={500000000} step={100000} onChange={setGoalAmount} prefix="₹" hint="We'll inflate this automatically" />
         <SliderInput label="Years to Goal" value={years} min={1} max={30} onChange={setYears} unit=" yr" />
         <SliderInput label="Expected Investment Return" value={expectedReturn} min={5} max={20} step={0.5} onChange={setExpectedReturn} unit="%" />
 

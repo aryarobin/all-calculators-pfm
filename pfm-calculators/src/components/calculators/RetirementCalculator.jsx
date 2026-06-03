@@ -86,7 +86,7 @@ export default function RetirementCalculator({ onNavigate }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8">
           <SliderInput label="Current Age" value={currentAge} min={20} max={55} onChange={setCurrentAge} unit=" yr" />
           <SliderInput label="Retirement Age" value={Math.max(currentAge + 1, retirementAge)} min={currentAge + 1} max={70} onChange={setRetirementAge} unit=" yr" />
-          <SliderInput label="Current Monthly Expenses" hint="In today's money — we'll inflate it" value={monthlyExpenses} min={10000} max={500000} step={5000} onChange={setMonthlyExpenses} prefix="₹" />
+          <SliderInput label="Current Monthly Expenses" hint="In today's money — we'll inflate it" value={monthlyExpenses} min={10000} max={2000000} step={5000} onChange={setMonthlyExpenses} prefix="₹" />
           <SliderInput label="Expected Inflation" value={inflation} min={3} max={10} step={0.5} onChange={setInflation} unit="%" hint="India avg: 6%" />
         </div>
         <button onClick={() => setShowAdvanced(!showAdvanced)} className="text-xs text-blue-600 font-medium hover:text-blue-800 mt-1">
@@ -96,7 +96,7 @@ export default function RetirementCalculator({ onNavigate }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 mt-4 pt-4 border-t border-slate-100">
             <SliderInput label="Pre-Retirement Return" value={preReturn} min={6} max={18} step={0.5} onChange={setPreReturn} unit="%" />
             <SliderInput label="Post-Retirement Return" value={postReturn} min={4} max={12} step={0.5} onChange={setPostReturn} unit="%" />
-            <SliderInput label="Current Savings / Investments" value={currentSavings} min={0} max={10000000} step={100000} onChange={setCurrentSavings} prefix="₹" />
+            <SliderInput label="Current Savings / Investments" value={currentSavings} min={0} max={500000000} step={500000} onChange={setCurrentSavings} prefix="₹" />
             <SliderInput label="Life Expectancy" value={Math.max(retirementAge + 1, lifeExpectancy)} min={retirementAge + 1} max={100} onChange={setLifeExpectancy} unit=" yr" />
           </div>
         )}

@@ -95,8 +95,8 @@ export default function SIPCalculator({ onNavigate }) {
       {/* Sliders */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm px-6 py-5">
         <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-5">Adjust & Explore</p>
-        <SliderInput label="Monthly SIP" hint="How much you invest every month" value={s.monthly} min={500} max={100000} step={500} onChange={v => set({ monthly: v })} prefix="₹" />
-        <SliderInput label="Expected Annual Return" hint="Equity MF historical avg: 12–15%" value={s.rate} min={4} max={20} step={0.5} onChange={v => set({ rate: v })} unit="%" />
+        <SliderInput label="Monthly SIP" hint="How much you invest every month" value={s.monthly} min={500} max={500000} step={500} onChange={v => set({ monthly: v })} prefix="₹" />
+        <SliderInput label="Expected Annual Return" hint="Equity MF historical avg: 12–15%" value={s.rate} min={4} max={30} step={0.5} onChange={v => set({ rate: v })} unit="%" />
         <SliderInput label="Duration" hint="Time is your biggest wealth multiplier" value={s.years} min={1} max={40} onChange={v => set({ years: v })} unit=" yr" />
         <div className="mt-1">
           <button onClick={() => setShowAdv(!showAdv)} className="text-xs text-blue-600 font-semibold hover:text-blue-800">

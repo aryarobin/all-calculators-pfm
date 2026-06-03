@@ -8,7 +8,7 @@ import { useCalcState } from '../../hooks/useCalcState';
 import { calcEMI, calcEMISchedule, formatINR } from '../../utils/financialCalc';
 
 const LOAN_TYPES = [
-  { id: 'home',      label: 'Home',      rate: 8.5,  min: 500000,  max: 100000000, step: 100000, defaultYears: 20, maxYears: 30 },
+  { id: 'home',      label: 'Home',      rate: 8.5,  min: 500000,  max: 500000000, step: 100000, defaultYears: 20, maxYears: 30 },
   { id: 'car',       label: 'Car',       rate: 9.0,  min: 100000,  max: 3000000,   step: 50000,  defaultYears: 7,  maxYears: 10 },
   { id: 'personal',  label: 'Personal',  rate: 12.0, min: 50000,   max: 5000000,   step: 10000,  defaultYears: 5,  maxYears: 7  },
   { id: 'education', label: 'Education', rate: 9.5,  min: 100000,  max: 5000000,   step: 50000,  defaultYears: 10, maxYears: 15 },
