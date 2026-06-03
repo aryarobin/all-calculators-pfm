@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import SliderInput from '../shared/SliderInput';
 import HeroCard from '../shared/HeroCard';
+import GaugeRing from '../shared/GaugeRing';
 import NextSteps from '../shared/NextSteps';
 import { useCalcState } from '../../hooks/useCalcState';
 import { calcGoal, formatINR } from '../../utils/financialCalc';
@@ -60,9 +61,14 @@ export default function GoalPlanning({ onNavigate }) {
       />
 
       {result.growthOfCurrentSavings > 0 && (
-        <div className="bg-white rounded-2xl border border-slate-200 px-5 py-4">
-          <p className="text-sm text-slate-600">
-            Your existing savings of <strong className="text-emerald-700">{formatINR(s.currentSavings)}</strong> will grow to <strong className="text-emerald-700">{formatINR(result.growthOfCurrentSavings)}</strong> — covering <strong>{Math.round(result.growthOfCurrentSavings / result.futureGoalAmount * 100)}%</strong> of the goal.
+        <div className="bg-white rounded-2xl border border-slate-200 px-5 py-4 flex items-center gap-5">
+          <GaugeRing
+            pct={result.growthOfCurrentSavings / result.futureGoalAmount * 100}
+            sublabel="covered"
+            size={104}
+          />
+          <p className="text-sm text-slate-600 flex-1">
+            Your existing savings of <strong className="text-emerald-700">{formatINR(s.currentSavings)}</strong> will grow to <strong className="text-emerald-700">{formatINR(result.growthOfCurrentSavings)}</strong> by the goal date — the gauge shows how much of the goal that covers. Your SIP fills the rest.
           </p>
         </div>
       )}

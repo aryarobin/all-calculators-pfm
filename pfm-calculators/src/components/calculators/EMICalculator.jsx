@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
+  ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, PieChart, Pie, Cell, Legend,
 } from 'recharts';
 import SliderInput from '../shared/SliderInput';
@@ -235,23 +235,33 @@ export default function EMICalculator() {
         </div>
 
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={schedule.slice(0, 30)} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+          <ComposedChart data={schedule.slice(0, 30)} margin={{ top: 5, right: 8, left: 0, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
             <XAxis
               dataKey="year"
               tick={{ fontSize: 11, fill: '#94a3b8' }}
               tickFormatter={v => `Yr ${v}`}
+              axisLine={false} tickLine={false}
             />
             <YAxis
+              yAxisId="left"
               tick={{ fontSize: 10, fill: '#94a3b8' }}
               tickFormatter={v => formatINR(v, true)}
-              width={64}
+              width={56} axisLine={false} tickLine={false}
+            />
+            <YAxis
+              yAxisId="right" orientation="right"
+              tick={{ fontSize: 10, fill: '#cbd5e1' }}
+              tickFormatter={v => formatINR(v, true)}
+              width={50} axisLine={false} tickLine={false}
             />
             <Tooltip content={<CustomTooltip />} />
-            <Bar dataKey="principal" name="Principal" fill="#2563eb" stackId="a" />
-            <Bar dataKey="interest"  name="Interest"  fill="#f97316" stackId="a" radius={[3, 3, 0, 0]} />
-          </BarChart>
+            <Bar yAxisId="left" dataKey="principal" name="Principal" fill="#2563eb" stackId="a" />
+            <Bar yAxisId="left" dataKey="interest"  name="Interest"  fill="#f97316" stackId="a" radius={[3, 3, 0, 0]} />
+            <Line yAxisId="right" type="monotone" dataKey="balance" name="Outstanding" stroke="#94a3b8" strokeWidth={2} strokeDasharray="5 4" dot={false} />
+          </ComposedChart>
         </ResponsiveContainer>
+        <p className="text-[11px] text-slate-400 mt-2 text-center">Bars: yearly principal + interest split · Dashed line: outstanding balance</p>
       </div>
 
       {/* Next Steps */}

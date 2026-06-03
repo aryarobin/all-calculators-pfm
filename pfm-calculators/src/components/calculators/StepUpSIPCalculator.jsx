@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import SliderInput from '../shared/SliderInput';
 import HeroCard from '../shared/HeroCard';
+import WealthContext from '../shared/WealthContext';
 import NextSteps from '../shared/NextSteps';
 import { useCalcState } from '../../hooks/useCalcState';
 import { calcStepUpSIP, calcSIP, formatINR } from '../../utils/financialCalc';
@@ -93,6 +94,8 @@ export default function StepUpSIPCalculator({ onNavigate }) {
           </AreaChart>
         </ResponsiveContainer>
       </div>
+
+      <WealthContext corpus={stepUpResult.corpus} monthlyExpense={s.monthly * 2} />
 
       <NextSteps onNavigate={onNavigate} steps={[
         { id: 'goal', label: 'Plan a Goal', desc: 'How much SIP for a goal?' },

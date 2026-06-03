@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 import SliderInput from '../shared/SliderInput';
 import HeroCard from '../shared/HeroCard';
+import WealthContext from '../shared/WealthContext';
 import NextSteps from '../shared/NextSteps';
 import { useCalcState } from '../../hooks/useCalcState';
 import { calcLumpsumYearly, formatINR, calcMultipleTime } from '../../utils/financialCalc';
@@ -89,6 +90,8 @@ export default function LumpsumCalculator({ onNavigate }) {
           </AreaChart>
         </ResponsiveContainer>
       </div>
+
+      <WealthContext corpus={result.corpus} />
 
       <NextSteps onNavigate={onNavigate} steps={[
         { id: 'sip', label: 'SIP Calculator', desc: 'Invest monthly instead of one-time' },

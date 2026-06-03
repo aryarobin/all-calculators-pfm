@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 import SliderInput from '../shared/SliderInput';
 import HeroCard from '../shared/HeroCard';
+import GaugeRing from '../shared/GaugeRing';
 import NextSteps from '../shared/NextSteps';
 import { useCalcState } from '../../hooks/useCalcState';
 import { calcRetirement, formatINR, calcSIPYearly } from '../../utils/financialCalc';
@@ -59,9 +60,14 @@ export default function RetirementCalculator({ onNavigate }) {
       />
 
       {s.currentSavings > 0 && (
-        <div className="bg-white rounded-2xl border border-slate-200 px-5 py-4">
-          <p className="text-sm text-slate-600">
-            Your existing <strong className="text-emerald-700">{formatINR(s.currentSavings)}</strong> grows to <strong className="text-emerald-700">{formatINR(result.growthOfCurrentSavings)}</strong> by retirement — covering <strong>{Math.min(100, Math.round(result.growthOfCurrentSavings / result.corpusNeeded * 100))}%</strong> of your corpus.
+        <div className="bg-white rounded-2xl border border-slate-200 px-5 py-4 flex items-center gap-5">
+          <GaugeRing
+            pct={result.growthOfCurrentSavings / result.corpusNeeded * 100}
+            sublabel="covered"
+            size={104}
+          />
+          <p className="text-sm text-slate-600 flex-1">
+            Your existing <strong className="text-emerald-700">{formatINR(s.currentSavings)}</strong> grows to <strong className="text-emerald-700">{formatINR(result.growthOfCurrentSavings)}</strong> by retirement — already covering part of your target corpus. The rest comes from your monthly SIP of <strong className="text-slate-800">{formatINR(result.sipNeeded)}/mo</strong>.
           </p>
         </div>
       )}

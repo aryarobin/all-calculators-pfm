@@ -1,8 +1,9 @@
 import { useState, useMemo } from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 import SliderInput from '../shared/SliderInput';
 import HeroCard from '../shared/HeroCard';
 import GlowBar from '../shared/GlowBar';
+import WealthContext from '../shared/WealthContext';
 import NextSteps from '../shared/NextSteps';
 import { useCalcState } from '../../hooks/useCalcState';
 import { calcSIPYearly, formatINR, calcSIP } from '../../utils/financialCalc';
@@ -46,6 +47,12 @@ export default function SIPCalculator({ onNavigate }) {
   }, [s, res.corpus]);
 
   const tickInterval = Math.max(1, Math.floor(s.years / 8));
+
+  // The year your returns overtake the money you put in — a powerful moment
+  const crossoverYear = useMemo(() => {
+    const hit = data.find(d => d.gains > d.invested);
+    return hit ? hit.year : null;
+  }, [data]);
 
   return (
     <div className="space-y-4">
@@ -131,6 +138,10 @@ export default function SIPCalculator({ onNavigate }) {
             <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} tickFormatter={v => formatINR(v, true)}
               width={68} axisLine={false} tickLine={false} />
             <Tooltip content={<TTip />} />
+            {crossoverYear && crossoverYear < s.years && (
+              <ReferenceLine x={crossoverYear} stroke="#f59e0b" strokeDasharray="4 4"
+                label={{ value: `Yr ${crossoverYear}: returns > invested`, fill: '#d97706', fontSize: 10, position: 'insideTopRight' }} />
+            )}
             <Area type="monotone" dataKey="corpus"   name="Corpus"   stroke="#2563eb" strokeWidth={2.5} fill="url(#sipCorpus)"   dot={false} activeDot={{ r: 5, fill: '#2563eb' }} />
             <Area type="monotone" dataKey="invested" name="Invested" stroke="#10b981" strokeWidth={2}   fill="url(#sipInvested)" dot={false} activeDot={{ r: 4, fill: '#10b981' }} />
           </AreaChart>
@@ -163,6 +174,9 @@ export default function SIPCalculator({ onNavigate }) {
           </table>
         </div>
       </div>
+
+      {/* ── What this means ────────────────────────────────────────── */}
+      <WealthContext corpus={res.corpus} monthlyExpense={s.monthly * 2} />
 
       <NextSteps onNavigate={onNavigate} steps={[
         { id: 'stepup',  label: 'Step-Up SIP',          desc: 'Increase SIP yearly with salary hikes' },
