@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import SliderInput from '../shared/SliderInput';
 import NextSteps from '../shared/NextSteps';
+import HeroCard from '../shared/HeroCard';
 import { calcIncomeTax, formatINR, TAX_SLABS_NEW, TAX_SLABS_OLD } from '../../utils/financialCalc';
 import { useCalcState } from '../../hooks/useCalcState';
 
@@ -183,17 +184,13 @@ export default function TaxCalculator({ onNavigate }) {
         {/* RIGHT: Hero + insights */}
         <div className="space-y-4">
           {/* Hero: Monthly take-home */}
-          <div className="card bg-gradient-to-br from-slate-800 to-slate-900 text-white border-0">
-            <p className="text-sm font-semibold text-slate-400 uppercase tracking-wider">
-              Monthly Take-Home
-            </p>
-            <p className="text-5xl font-black mt-1 text-white">
-              {formatINR(monthlyTakeHome)}
-            </p>
-            <p className="text-sm text-slate-400 mt-1">
-              per month &nbsp;|&nbsp; Annual: {formatINR(currentTax.takeHome, true)}
-            </p>
-          </div>
+          <HeroCard
+            label="Monthly Take-Home"
+            value={monthlyTakeHome}
+            gradient="slate"
+            compact
+            sub={`Annual: ${formatINR(currentTax.takeHome, true)} · ${regime} regime`}
+          />
 
           {/* Tax Freedom Day */}
           <div className="card bg-amber-50 border-amber-200">

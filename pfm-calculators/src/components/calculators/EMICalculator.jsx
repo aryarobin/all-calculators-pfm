@@ -4,6 +4,7 @@ import {
   ResponsiveContainer, PieChart, Pie, Cell, Legend,
 } from 'recharts';
 import SliderInput from '../shared/SliderInput';
+import HeroCard from '../shared/HeroCard';
 import { useCalcState } from '../../hooks/useCalcState';
 import { calcEMI, calcEMISchedule, formatINR } from '../../utils/financialCalc';
 
@@ -62,44 +63,19 @@ export default function EMICalculator() {
   return (
     <div className="max-w-5xl mx-auto space-y-6">
 
-      {/* Story Header */}
-      <div className="text-center">
-        <p className="text-sm font-semibold text-blue-500 uppercase tracking-widest mb-2">EMI Calculator</p>
-        <h2 className="text-2xl font-bold text-slate-800 leading-snug">
-          Borrowing{' '}
-          <span className="text-blue-700">{formatINR(amount, true)}</span>
-          {' '}at{' '}
-          <span className="text-blue-700">{rate}%</span>
-          {' '}for{' '}
-          <span className="text-blue-700">{years} years</span>
-          {' '}costs you...
-        </h2>
-      </div>
-
       {/* Hero EMI */}
-      <div className="bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl p-6 text-center text-white shadow-xl">
-        <p className="text-sm font-semibold uppercase tracking-widest opacity-75 mb-2">Your Monthly EMI</p>
-        <p className="text-5xl font-black tracking-tight text-blue-700 bg-white rounded-xl inline-block px-6 py-3 mt-1 mb-2" style={{ color: '#1d4ed8' }}>
-          {formatINR(emi)}
-        </p>
-        <p className="text-sm opacity-70 mt-3">per month for {years * 12} EMIs</p>
-
-        {/* Insight Strip */}
-        <div className="grid grid-cols-3 gap-3 mt-5 border-t border-white/20 pt-5">
-          <div>
-            <p className="text-xs opacity-60 uppercase tracking-wide mb-1">Total Interest Paid</p>
-            <p className="text-lg font-black">{formatINR(totalInterest, true)}</p>
-          </div>
-          <div className="border-l border-r border-white/20">
-            <p className="text-xs opacity-60 uppercase tracking-wide mb-1">Interest % of Principal</p>
-            <p className="text-lg font-black">{interestPct}%</p>
-          </div>
-          <div>
-            <p className="text-xs opacity-60 uppercase tracking-wide mb-1">Daily Interest Cost</p>
-            <p className="text-lg font-black">{formatINR(dailyInterest)}/day</p>
-          </div>
-        </div>
-      </div>
+      <HeroCard
+        label={`${loan.label} loan · ${formatINR(amount, true)} at ${rate}% for ${years} yrs`}
+        value={emi}
+        rawValue={`${formatINR(emi)}/mo`}
+        gradient="blue"
+        sub={`${years * 12} monthly payments`}
+        meta={[
+          { label: 'Total Interest', value: formatINR(totalInterest, true) },
+          { label: 'Interest % of Loan', value: `${interestPct}%` },
+          { label: 'Daily Cost', value: `${formatINR(dailyInterest)}/day` },
+        ]}
+      />
 
       {/* Key Insight Banner */}
       <div className="bg-amber-50 border border-amber-200 rounded-xl px-5 py-4 text-sm text-amber-800 font-medium leading-relaxed">
