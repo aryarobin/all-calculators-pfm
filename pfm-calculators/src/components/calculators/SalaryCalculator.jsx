@@ -84,7 +84,7 @@ export default function SalaryCalculator() {
         <p className="text-slate-500 mt-1">CTC breakdown, in-hand salary, HRA exemption, gratuity</p>
       </div>
 
-      <div className="flex gap-2 mb-6 bg-slate-100 p-1 rounded-xl w-fit mx-auto">
+      <div className="flex gap-2 mb-6 bg-slate-100 p-1 rounded-xl flex-wrap justify-center mx-auto">
         {[['ctc', '💼 CTC Breakdown'], ['hra', '🏠 HRA Exemption'], ['gratuity', '🏆 Gratuity']].map(([t, l]) => (
           <button key={t} onClick={() => setTab(t)}
             className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${tab === t ? 'bg-white shadow text-orange-600' : 'text-slate-500 hover:text-slate-700'}`}>
@@ -130,7 +130,7 @@ export default function SalaryCalculator() {
           <div className="space-y-4">
             <div className="card bg-gradient-to-br from-emerald-500 to-teal-600 text-white border-0">
               <p className="text-sm font-semibold opacity-80 uppercase tracking-wider">Monthly In-Hand Salary</p>
-              <p className="text-4xl font-black mt-1">{formatINR(breakdown.monthlyInHand)}</p>
+              <p className="text-2xl sm:text-4xl font-black mt-1">{formatINR(breakdown.monthlyInHand)}</p>
               <p className="text-sm opacity-75 mt-1">Annual: {formatINR(breakdown.inHand)}</p>
             </div>
 
@@ -201,7 +201,7 @@ export default function SalaryCalculator() {
           <div className="space-y-4">
             <div className="card bg-gradient-to-br from-blue-600 to-indigo-700 text-white border-0">
               <p className="text-sm font-semibold opacity-80 uppercase tracking-wider">HRA Exemption (Annual)</p>
-              <p className="text-4xl font-black mt-1">{formatINR(hraExempt)}</p>
+              <p className="text-2xl sm:text-4xl font-black mt-1">{formatINR(hraExempt)}</p>
               <p className="text-sm opacity-75 mt-1">Saves {formatINR(hraExempt * 0.3)} in tax (at 30% slab)</p>
             </div>
             <div className="card bg-slate-50">
@@ -234,7 +234,7 @@ export default function SalaryCalculator() {
               <p className="text-sm font-semibold opacity-80 uppercase tracking-wider">
                 {yearsOfService >= 5 ? 'Gratuity Amount' : 'Not Eligible Yet'}
               </p>
-              <p className="text-4xl font-black mt-1">{yearsOfService >= 5 ? formatINR(gratuity) : '—'}</p>
+              <p className="text-2xl sm:text-4xl font-black mt-1">{yearsOfService >= 5 ? formatINR(gratuity) : '—'}</p>
               <p className="text-sm opacity-75 mt-1">
                 {yearsOfService >= 5 ? `Tax-free up to ₹20L` : `Need ${5 - yearsOfService} more year(s) of service`}
               </p>

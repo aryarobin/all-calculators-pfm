@@ -175,7 +175,7 @@ export default function SWPCalculator({ onNavigate }) {
 
         {sustainable ? (
           <>
-            <p className="text-5xl font-black tracking-tight">Yes ✓</p>
+            <p className="text-3xl sm:text-5xl font-black tracking-tight">Yes ✓</p>
             <p className="text-lg font-semibold opacity-90 mt-2">
               {formatINR(monthly)}/mo is sustainable for {years}+ years
             </p>
@@ -186,7 +186,7 @@ export default function SWPCalculator({ onNavigate }) {
           </>
         ) : (
           <>
-            <p className="text-4xl font-black tracking-tight">
+            <p className="text-2xl sm:text-4xl font-black tracking-tight">
               No — depletes in {depletionYears} years
             </p>
             <p className="text-lg font-semibold opacity-90 mt-2">

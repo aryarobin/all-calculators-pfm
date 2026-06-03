@@ -102,7 +102,7 @@ export default function FDPPFCalculator({ onNavigate }) {
       </div>
 
       {/* Tab bar */}
-      <div className="flex gap-1.5 bg-slate-100 p-1.5 rounded-xl w-fit mx-auto">
+      <div className="flex gap-1.5 bg-slate-100 p-1.5 rounded-xl flex-wrap justify-center mx-auto">
         {TABS.map(t => (
           <button
             key={t.id}
@@ -161,7 +161,7 @@ export default function FDPPFCalculator({ onNavigate }) {
             {/* Hero */}
             <div className={`card bg-gradient-to-br ${currentTab.gradient} text-white border-0`}>
               <p className="text-sm font-semibold opacity-80">Maturity Amount</p>
-              <p className="text-4xl font-black mt-1">{formatINR(fdResult.maturity)}</p>
+              <p className="text-2xl sm:text-4xl font-black mt-1">{formatINR(fdResult.maturity)}</p>
               <p className="text-sm opacity-75 mt-1">in {s.fdYears} {s.fdYears === 1 ? 'year' : 'years'} at {s.fdRate}% p.a.</p>
             </div>
 
@@ -237,7 +237,7 @@ export default function FDPPFCalculator({ onNavigate }) {
           <div className="space-y-4">
             <div className={`card bg-gradient-to-br ${currentTab.gradient} text-white border-0`}>
               <p className="text-sm font-semibold opacity-80">Maturity Amount</p>
-              <p className="text-4xl font-black mt-1">{formatINR(rdResult.maturity)}</p>
+              <p className="text-2xl sm:text-4xl font-black mt-1">{formatINR(rdResult.maturity)}</p>
               <p className="text-sm opacity-75 mt-1">in {s.rdYears} {s.rdYears === 1 ? 'year' : 'years'} at {s.rdRate}%</p>
             </div>
 
@@ -310,7 +310,7 @@ export default function FDPPFCalculator({ onNavigate }) {
           <div className="space-y-4">
             <div className={`card bg-gradient-to-br ${currentTab.gradient} text-white border-0`}>
               <p className="text-sm font-semibold opacity-80">PPF Maturity Value</p>
-              <p className="text-4xl font-black mt-1">{formatINR(ppfResult.maturity)}</p>
+              <p className="text-2xl sm:text-4xl font-black mt-1">{formatINR(ppfResult.maturity)}</p>
               <p className="text-sm opacity-75 mt-1">100% TAX FREE after {s.ppfYears} years</p>
             </div>
 
@@ -389,7 +389,7 @@ export default function FDPPFCalculator({ onNavigate }) {
           <div className="space-y-4">
             <div className={`card bg-gradient-to-br ${currentTab.gradient} text-white border-0`}>
               <p className="text-sm font-semibold opacity-80">NPS Corpus at Retirement</p>
-              <p className="text-4xl font-black mt-1">{formatINR(npsResult.corpus)}</p>
+              <p className="text-2xl sm:text-4xl font-black mt-1">{formatINR(npsResult.corpus)}</p>
               <p className="text-sm opacity-75 mt-1">in {s.npsYears} years at {s.npsReturn}% return</p>
             </div>
 

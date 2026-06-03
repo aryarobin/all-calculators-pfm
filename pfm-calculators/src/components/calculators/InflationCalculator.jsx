@@ -116,7 +116,7 @@ export default function InflationCalculator({ onNavigate }) {
               <div className="flex items-end gap-6 flex-wrap mt-2">
                 <div>
                   <p className="text-xs text-slate-400 font-medium mb-1">Future Cost</p>
-                  <p className="text-5xl font-black text-red-600 leading-none tabular-nums">{formatINR(futureValue)}</p>
+                  <p className="text-3xl sm:text-5xl font-black text-red-600 leading-none tabular-nums">{formatINR(futureValue)}</p>
                 </div>
                 <div className="flex gap-6 pb-1">
                   <div>
@@ -251,7 +251,7 @@ export default function InflationCalculator({ onNavigate }) {
               <div className="flex items-end gap-6 flex-wrap mt-2">
                 <div>
                   <p className="text-xs text-slate-400 font-medium mb-1">Today's Equivalent</p>
-                  <p className="text-5xl font-black text-blue-700 leading-none tabular-nums">{formatINR(presentValue)}</p>
+                  <p className="text-3xl sm:text-5xl font-black text-blue-700 leading-none tabular-nums">{formatINR(presentValue)}</p>
                 </div>
                 <div className="flex gap-6 pb-1">
                   <div>
@@ -388,7 +388,7 @@ export default function InflationCalculator({ onNavigate }) {
               <div className="flex items-end gap-6 flex-wrap mt-2">
                 <div>
                   <p className="text-xs text-slate-400 font-medium mb-1">Your Nominal Return</p>
-                  <p className="text-5xl font-black text-blue-700 leading-none tabular-nums">{s.nominalReturn}%</p>
+                  <p className="text-3xl sm:text-5xl font-black text-blue-700 leading-none tabular-nums">{s.nominalReturn}%</p>
                 </div>
                 <div className="flex gap-6 pb-1">
                   <div>
@@ -456,7 +456,7 @@ export default function InflationCalculator({ onNavigate }) {
           {/* Your selected investment result */}
           <div className={`rounded-2xl border shadow-sm p-5 ${realReturn >= 0 ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'}`}>
             <p className="text-xs font-semibold uppercase tracking-widest mb-1 text-slate-500">Your Investment at {s.nominalReturn}%</p>
-            <p className={`text-4xl font-black tabular-nums ${realReturn >= 0 ? 'text-emerald-700' : 'text-red-700'}`}>
+            <p className={`text-2xl sm:text-4xl font-black tabular-nums ${realReturn >= 0 ? 'text-emerald-700' : 'text-red-700'}`}>
               {realReturn >= 0 ? '+' : ''}{realReturn.toFixed(2)}% real
             </p>
             <p className={`text-sm mt-2 font-medium ${realReturn >= 0 ? 'text-emerald-700' : 'text-red-700'}`}>

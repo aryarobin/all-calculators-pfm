@@ -128,7 +128,7 @@ export default function BudgetPlanner({ onNavigate }) {
         <div className="px-6 pb-5 flex items-end gap-6 flex-wrap mt-2">
           <div>
             <p className="text-xs text-slate-400 font-medium mb-1">Monthly Savings</p>
-            <p className="text-5xl font-black text-emerald-600 leading-none tabular-nums">{formatINR(totals.savings)}</p>
+            <p className="text-3xl sm:text-5xl font-black text-emerald-600 leading-none tabular-nums">{formatINR(totals.savings)}</p>
           </div>
           <div className="flex gap-4 pb-1">
             <div>
@@ -268,7 +268,7 @@ export default function BudgetPlanner({ onNavigate }) {
               </span>
             </div>
             <div className="flex items-end gap-3 mb-3">
-              <p className={`text-5xl font-black leading-none tabular-nums ${health.text}`}>{health.score}</p>
+              <p className={`text-3xl sm:text-5xl font-black leading-none tabular-nums ${health.text}`}>{health.score}</p>
               <p className="text-slate-400 text-sm pb-1">/ 100</p>
               <p className={`text-2xl font-bold pb-0.5 tabular-nums ${health.text}`}>{savingsRate}% saved</p>
             </div>
@@ -310,7 +310,7 @@ export default function BudgetPlanner({ onNavigate }) {
           <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-sm p-5 text-white">
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1">Corpus in 10 Years</p>
             <p className="text-xs text-slate-400 mb-3">If you invest your savings at 12% p.a.</p>
-            <p className="text-4xl font-black text-emerald-400 leading-none tabular-nums mb-2">
+            <p className="text-2xl sm:text-4xl font-black text-emerald-400 leading-none tabular-nums mb-2">
               {formatINR(corpus10)}
             </p>
             <div className="flex gap-6 mt-3">

@@ -189,7 +189,7 @@ export default function InvestmentComparison({ onNavigate }) {
             <p className="text-xs text-slate-400 font-medium mb-1">
               Best vs Worst (post-tax gap)
             </p>
-            <p className="text-5xl font-black text-emerald-600 leading-none tabular-nums">
+            <p className="text-3xl sm:text-5xl font-black text-emerald-600 leading-none tabular-nums">
               {formatINR(heroDiff)}
             </p>
             <p className="text-sm text-slate-500 mt-1">

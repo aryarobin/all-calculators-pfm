@@ -134,7 +134,7 @@ function FindCAGRMode({ state, update }) {
           <p className="text-xs font-semibold opacity-70 uppercase tracking-wider">
             Compounded Annual Growth Rate
           </p>
-          <p className="text-5xl font-black mt-2 tracking-tight">
+          <p className="text-3xl sm:text-5xl font-black mt-2 tracking-tight">
             {isFinite(cagr) && cagr > 0 ? formatPercent(cagr) : '—'}
           </p>
           <p className="text-sm opacity-75 mt-2">
@@ -312,7 +312,7 @@ function FutureValueMode({ state, update }) {
           <p className="text-xs font-semibold opacity-70 uppercase tracking-wider">
             Future Value after {targetYears} years
           </p>
-          <p className="text-5xl font-black mt-2 tracking-tight">
+          <p className="text-3xl sm:text-5xl font-black mt-2 tracking-tight">
             {formatINR(futureVal)}
           </p>
           <div className="flex gap-4 mt-3 text-sm opacity-80">
@@ -621,7 +621,7 @@ export default function CAGRCalculator({ onNavigate }) {
       </div>
 
       {/* Mode tabs — clean toggle pills */}
-      <div className="flex gap-2 mb-6 bg-slate-100 p-1 rounded-xl w-fit mx-auto">
+      <div className="flex gap-2 mb-6 bg-slate-100 p-1 rounded-xl flex-wrap justify-center mx-auto">
         {TABS.map(tab => (
           <button
             key={tab.id}

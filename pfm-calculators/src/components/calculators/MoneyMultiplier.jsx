@@ -122,7 +122,7 @@ export default function MoneyMultiplier({ onNavigate }) {
       </div>
 
       {/* ── Mode toggle ────────────────────────────────────────────────────── */}
-      <div className="flex gap-2 bg-slate-100 p-1 rounded-xl w-fit mx-auto">
+      <div className="flex gap-2 bg-slate-100 p-1 rounded-xl flex-wrap justify-center mx-auto">
         {[
           ['time', 'Time to Multiply'],
           ['rate', 'Rate Needed'],
@@ -216,7 +216,7 @@ export default function MoneyMultiplier({ onNavigate }) {
           {/* Hero card */}
           <div className={`card ${heroBg} text-white border-0`}>
             <p className="text-xs font-semibold opacity-75 uppercase tracking-widest mb-1">{heroLabel}</p>
-            <p className="text-5xl font-black leading-none mt-2 mb-2">{heroValue}</p>
+            <p className="text-3xl sm:text-5xl font-black leading-none mt-2 mb-2">{heroValue}</p>
             <p className="text-sm opacity-80">{heroSub}</p>
           </div>
 

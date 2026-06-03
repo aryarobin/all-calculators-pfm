@@ -172,7 +172,7 @@ export default function App() {
             </div>
           </div>
 
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 py-5">
+          <div className="max-w-5xl mx-auto px-3 sm:px-6 py-4 sm:py-5">
             {/* Breadcrumb */}
             {activeCalc !== 'home' && currentCalc && (
               <div className="flex items-center gap-2 mb-5">

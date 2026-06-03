@@ -48,11 +48,11 @@ export default function LumpsumCalculator({ onNavigate }) {
       />
 
       {/* Milestones strip */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-2 sm:gap-3">
         {[{ label: '2× Double', year: doubleYear }, { label: '3× Triple', year: tripleYear }, { label: '10×', year: tenXYear }].map(m => (
-          <div key={m.label} className="bg-white rounded-2xl border border-slate-200 px-4 py-3 text-center">
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{m.label}</p>
-            <p className={`text-base font-black ${m.year <= s.years ? 'text-emerald-600' : 'text-slate-400'}`}>
+          <div key={m.label} className="bg-white rounded-xl sm:rounded-2xl border border-slate-200 px-2.5 sm:px-4 py-3 text-center">
+            <p className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{m.label}</p>
+            <p className={`text-sm sm:text-base font-black ${m.year <= s.years ? 'text-emerald-600' : 'text-slate-400'}`}>
               {m.year <= 60 ? `Yr ${m.year}` : '60+'}{m.year <= s.years && ' ✓'}
             </p>
           </div>
