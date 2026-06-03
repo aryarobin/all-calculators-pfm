@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { PERSONAS, DEFAULT_PERSONA } from './utils/personas';
 
 import SIPCalculator from './components/calculators/SIPCalculator';
 import LumpsumCalculator from './components/calculators/LumpsumCalculator';
@@ -17,209 +16,181 @@ import InvestmentComparison from './components/calculators/InvestmentComparison'
 import SWPCalculator from './components/calculators/SWPCalculator';
 import SalaryCalculator from './components/calculators/SalaryCalculator';
 import BudgetPlanner from './components/calculators/BudgetPlanner';
+import Dashboard from './components/Dashboard';
 
-const ALL_CALCULATORS = [
-  { id: 'sip', label: 'SIP', icon: '📈', name: 'SIP Calculator', desc: 'Monthly SIP → corpus', category: 'invest', component: SIPCalculator },
-  { id: 'lumpsum', label: 'Lumpsum', icon: '💰', name: 'Lumpsum', desc: 'One-time investment growth', category: 'invest', component: LumpsumCalculator },
-  { id: 'stepup', label: 'Step-Up SIP', icon: '🚀', name: 'Step-Up SIP', desc: 'Increase SIP every year', category: 'invest', component: StepUpSIPCalculator },
-  { id: 'compare', label: 'Compare', icon: '⚖️', name: 'Investment Compare', desc: 'FD vs MF vs PPF vs NPS', category: 'invest', component: InvestmentComparison },
-  { id: 'goal', label: 'Goals', icon: '🎯', name: 'Goal Planning', desc: 'Home, education, wedding', category: 'plan', component: GoalPlanning },
-  { id: 'retirement', label: 'Retire', icon: '🏖️', name: 'Retirement Planner', desc: 'Monthly SIP to retire', category: 'plan', component: RetirementCalculator },
-  { id: 'readiness', label: 'Readiness', icon: '🏆', name: 'Retirement Readiness', desc: 'Multi-asset readiness score', category: 'plan', component: RetirementReadiness },
-  { id: 'swp', label: 'SWP', icon: '💸', name: 'SWP Calculator', desc: 'Monthly income from corpus', category: 'plan', component: SWPCalculator },
-  { id: 'cagr', label: 'CAGR', icon: '📊', name: 'CAGR Calculator', desc: 'True annual return rate', category: 'analysis', component: CAGRCalculator },
-  { id: 'multiplier', label: '2x/10x', icon: '🔥', name: 'Money Multiplier', desc: 'When does money 2x/10x?', category: 'analysis', component: MoneyMultiplier },
-  { id: 'inflation', label: 'Inflation', icon: '📉', name: 'Inflation Calculator', desc: "Future cost of today's money", category: 'analysis', component: InflationCalculator },
-  { id: 'emi', label: 'EMI', icon: '🏠', name: 'EMI Calculator', desc: 'Home/car/personal loan', category: 'loans', component: EMICalculator },
-  { id: 'fdppf', label: 'FD/PPF/NPS', icon: '🛡️', name: 'FD / PPF / NPS', desc: 'Safe instruments calculator', category: 'save', component: FDPPFCalculator },
-  { id: 'tax', label: 'Tax', icon: '🧾', name: 'Tax Calculator', desc: 'New vs Old regime', category: 'tax', component: TaxCalculator },
-  { id: 'salary', label: 'Salary', icon: '💼', name: 'CTC & Salary', desc: 'In-hand, HRA, gratuity', category: 'tax', component: SalaryCalculator },
-  { id: 'budget', label: 'Budget', icon: '📋', name: 'Budget Planner', desc: '50/30/20 rule & tracking', category: 'plan', component: BudgetPlanner },
+const NAV_GROUPS = [
+  {
+    label: 'Investments',
+    items: [
+      { id: 'sip', name: 'SIP Calculator', component: SIPCalculator },
+      { id: 'lumpsum', name: 'Lumpsum', component: LumpsumCalculator },
+      { id: 'stepup', name: 'Step-Up SIP', component: StepUpSIPCalculator },
+      { id: 'compare', name: 'Compare Instruments', component: InvestmentComparison },
+    ],
+  },
+  {
+    label: 'Goals & Retirement',
+    items: [
+      { id: 'goal', name: 'Goal Planning', component: GoalPlanning },
+      { id: 'retirement', name: 'Retirement Planner', component: RetirementCalculator },
+      { id: 'readiness', name: 'Readiness Dashboard', component: RetirementReadiness },
+      { id: 'swp', name: 'Withdrawal Plan (SWP)', component: SWPCalculator },
+    ],
+  },
+  {
+    label: 'Analysis',
+    items: [
+      { id: 'cagr', name: 'CAGR Calculator', component: CAGRCalculator },
+      { id: 'multiplier', name: 'Money Multiplier', component: MoneyMultiplier },
+      { id: 'inflation', name: 'Inflation Calculator', component: InflationCalculator },
+    ],
+  },
+  {
+    label: 'Loans',
+    items: [
+      { id: 'emi', name: 'EMI Calculator', component: EMICalculator },
+    ],
+  },
+  {
+    label: 'Savings',
+    items: [
+      { id: 'fdppf', name: 'FD / RD / PPF / NPS', component: FDPPFCalculator },
+    ],
+  },
+  {
+    label: 'Tax & Salary',
+    items: [
+      { id: 'tax', name: 'Income Tax', component: TaxCalculator },
+      { id: 'salary', name: 'CTC & Salary', component: SalaryCalculator },
+      { id: 'budget', name: 'Budget Planner', component: BudgetPlanner },
+    ],
+  },
 ];
 
-const CATEGORIES = [
-  { id: 'all', label: 'All' },
-  { id: 'invest', label: 'Invest' },
-  { id: 'plan', label: 'Plan' },
-  { id: 'analysis', label: 'Analyse' },
-  { id: 'loans', label: 'Loans' },
-  { id: 'save', label: 'Save' },
-  { id: 'tax', label: 'Tax' },
-];
+const ALL_CALCS = NAV_GROUPS.flatMap(g => g.items);
+
+function NavItem({ item, active, onClick }) {
+  return (
+    <button onClick={() => onClick(item.id)}
+      className={`nav-item ${active ? 'nav-item-active' : 'nav-item-inactive'}`}>
+      <span className="text-xs leading-tight">{item.name}</span>
+    </button>
+  );
+}
 
 export default function App() {
-  const [activeCalc, setActiveCalc] = useState('sip');
-  const [persona, setPersona] = useState(DEFAULT_PERSONA);
-  const [category, setCategory] = useState('all');
-  const [showPersonaModal, setShowPersonaModal] = useState(false);
+  const [activeCalc, setActiveCalc] = useState('home');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const ActiveComponent = ALL_CALCULATORS.find(c => c.id === activeCalc)?.component;
-  const currentCalc = ALL_CALCULATORS.find(c => c.id === activeCalc);
-  const currentPersona = PERSONAS[persona];
-  const filteredCalcs = category === 'all' ? ALL_CALCULATORS : ALL_CALCULATORS.filter(c => c.category === category);
+  const ActiveComponent = activeCalc === 'home'
+    ? null
+    : ALL_CALCS.find(c => c.id === activeCalc)?.component;
 
-  useEffect(() => {
-    const saved = localStorage.getItem('pfm-persona');
-    if (saved && PERSONAS[saved]) setPersona(saved);
-  }, []);
+  const currentCalc = ALL_CALCS.find(c => c.id === activeCalc);
 
-  useEffect(() => {
-    localStorage.setItem('pfm-persona', persona);
-  }, [persona]);
-
-  const handleCalcSelect = (id) => {
+  const handleSelect = (id) => {
     setActiveCalc(id);
     setSidebarOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-100 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden p-2 rounded-xl hover:bg-slate-100 transition-colors" aria-label="Menu">
-              <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-            <div className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white text-lg font-black shadow-lg" style={{ background: `linear-gradient(135deg, ${currentPersona.color}, ${currentPersona.color}cc)` }}>
-                ₹
-              </div>
-              <div>
-                <p className="font-black text-slate-800 text-sm sm:text-base leading-tight">PFM Calculators</p>
-                <p className="text-xs text-slate-400 leading-tight hidden sm:block">India's Smartest Finance Tool</p>
-              </div>
-            </div>
-          </div>
+    <div className="min-h-screen bg-slate-100 flex flex-col">
+      {/* Top nav */}
+      <header className="h-12 bg-[#0f172a] border-b border-slate-800 flex items-center px-4 gap-4 sticky top-0 z-50">
+        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden text-slate-400 hover:text-white p-1">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <button onClick={() => handleSelect('home')} className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
+          <div className="w-7 h-7 rounded-md bg-blue-600 flex items-center justify-center text-white text-xs font-bold">₹</div>
+          <span className="text-white font-bold text-sm hidden sm:block">PFM Suite</span>
+          <span className="text-slate-500 text-xs hidden sm:block">India</span>
+        </button>
 
-          <div className="flex-1 text-center hidden md:block">
-            <p className="font-bold text-slate-700 text-sm">{currentCalc?.icon} {currentCalc?.name}</p>
-          </div>
+        <div className="flex-1"></div>
 
-          <button onClick={() => setShowPersonaModal(true)}
-            className="flex items-center gap-2 px-3 py-2 rounded-xl border-2 transition-all hover:shadow-md flex-shrink-0"
-            style={{ borderColor: currentPersona.color + '60', background: currentPersona.color + '10' }}>
-            <span className="text-lg">{currentPersona.emoji}</span>
-            <div className="hidden sm:block text-left">
-              <p className="text-xs font-bold leading-tight" style={{ color: currentPersona.color }}>{currentPersona.name}</p>
-              <p className="text-xs text-slate-400 leading-tight">Switch mode</p>
-            </div>
-          </button>
+        {/* Breadcrumb */}
+        {currentCalc && (
+          <div className="hidden sm:flex items-center gap-2 text-xs text-slate-400">
+            <button onClick={() => handleSelect('home')} className="hover:text-white transition-colors">Home</button>
+            <span>/</span>
+            <span className="text-slate-300">{currentCalc.name}</span>
+          </div>
+        )}
+
+        <div className="flex items-center gap-2 ml-4">
+          <span className="text-xs text-slate-500 hidden sm:block">FY 2024-25</span>
         </div>
       </header>
 
-      {/* Persona Modal */}
-      {showPersonaModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setShowPersonaModal(false)}>
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
-          <div className="relative bg-white rounded-3xl shadow-2xl p-6 w-full max-w-lg" onClick={e => e.stopPropagation()}>
-            <div className="flex justify-between items-center mb-5">
-              <div>
-                <h3 className="text-xl font-black text-slate-800">Choose Your Vibe ✨</h3>
-                <p className="text-sm text-slate-400">Each mode has its own tone, focus & language</p>
-              </div>
-              <button onClick={() => setShowPersonaModal(false)} className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 text-sm font-bold">✕</button>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {Object.values(PERSONAS).map(p => (
-                <button key={p.id} onClick={() => { setPersona(p.id); setShowPersonaModal(false); }}
-                  className={`flex flex-col items-center p-4 rounded-2xl border-2 transition-all text-center ${persona === p.id ? 'shadow-lg' : 'border-slate-100 hover:shadow-md'}`}
-                  style={persona === p.id ? { borderColor: p.color, background: p.color + '15' } : {}}>
-                  <span className="text-2xl">{p.emoji}</span>
-                  <p className="font-bold text-sm mt-2 leading-tight" style={persona === p.id ? { color: p.color } : { color: '#334155' }}>{p.name}</p>
-                  <p className="text-xs text-slate-400 mt-0.5 leading-tight">{p.tagline}</p>
-                </button>
-              ))}
-            </div>
-            <p className="text-xs text-slate-400 text-center mt-4">{currentPersona.description}</p>
-          </div>
-        </div>
-      )}
-
-      {/* Mobile overlay */}
-      {sidebarOpen && (
-        <div className="fixed inset-0 z-40 lg:hidden" onClick={() => setSidebarOpen(false)}>
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
-        </div>
-      )}
-
-      <div className="max-w-7xl mx-auto flex">
+      <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
-        <aside className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:sticky top-[57px] left-0 h-[calc(100vh-57px)] w-60 bg-white border-r border-slate-100 z-40 transition-transform duration-300 overflow-y-auto flex-shrink-0`}>
-          <div className="p-3">
-            {/* Persona banner */}
-            <div className="p-3 rounded-2xl mb-3 text-white cursor-pointer" style={{ background: `linear-gradient(135deg, ${currentPersona.color}, ${currentPersona.color}cc)` }}
-              onClick={() => { setShowPersonaModal(true); setSidebarOpen(false); }}>
-              <div className="flex items-center gap-2">
-                <span className="text-xl">{currentPersona.emoji}</span>
-                <div>
-                  <p className="font-bold text-sm leading-tight">{currentPersona.name}</p>
-                  <p className="text-xs opacity-80 leading-tight">{currentPersona.tagline}</p>
-                </div>
-              </div>
-            </div>
+        <aside className={`
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+          lg:translate-x-0 fixed lg:relative top-12 left-0 bottom-0
+          w-52 bg-[#0f172a] border-r border-slate-800
+          z-40 transition-transform duration-200 overflow-y-auto flex-shrink-0
+        `}>
+          <div className="p-3 pt-4">
+            {/* Home link */}
+            <button onClick={() => handleSelect('home')}
+              className={`nav-item w-full mb-2 text-sm font-semibold ${activeCalc === 'home' ? 'nav-item-active' : 'nav-item-inactive'}`}>
+              Overview
+            </button>
 
-            {/* Category filter */}
-            <div className="mb-3">
-              <div className="flex flex-wrap gap-1">
-                {CATEGORIES.map(cat => (
-                  <button key={cat.id} onClick={() => setCategory(cat.id)}
-                    className={`px-2 py-1 rounded-lg text-xs font-semibold transition-all ${category === cat.id ? 'text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}
-                    style={category === cat.id ? { background: currentPersona.color } : {}}>
-                    {cat.label}
-                  </button>
+            {NAV_GROUPS.map(group => (
+              <div key={group.label} className="mb-4">
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest px-3 mb-1">{group.label}</p>
+                {group.items.map(item => (
+                  <NavItem key={item.id} item={item} active={activeCalc === item.id} onClick={handleSelect} />
                 ))}
               </div>
-            </div>
-
-            {/* Calculator list */}
-            <div className="space-y-0.5">
-              {filteredCalcs.map(calc => (
-                <button key={calc.id} onClick={() => handleCalcSelect(calc.id)}
-                  className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all text-left ${activeCalc === calc.id ? 'text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'}`}
-                  style={activeCalc === calc.id ? { background: `linear-gradient(135deg, ${currentPersona.color}, ${currentPersona.color}cc)` } : {}}>
-                  <span className="text-lg flex-shrink-0">{calc.icon}</span>
-                  <div className="min-w-0">
-                    <p className={`font-semibold text-sm leading-tight truncate ${activeCalc === calc.id ? 'text-white' : ''}`}>{calc.name}</p>
-                    <p className={`text-xs leading-tight truncate ${activeCalc === calc.id ? 'text-white/70' : 'text-slate-400'}`}>{calc.desc}</p>
-                  </div>
-                </button>
-              ))}
-            </div>
+            ))}
           </div>
         </aside>
 
-        {/* Main content */}
-        <main className="flex-1 min-w-0 p-3 sm:p-4 lg:p-6">
-          {/* Mobile horizontal nav */}
-          <div className="lg:hidden mb-4 -mx-1">
-            <div className="overflow-x-auto pb-1">
-              <div className="flex gap-2 px-1 w-max">
-                {ALL_CALCULATORS.map(calc => (
-                  <button key={calc.id} onClick={() => setActiveCalc(calc.id)}
-                    className={`flex flex-col items-center p-2.5 rounded-xl border-2 transition-all flex-shrink-0 ${activeCalc === calc.id ? 'shadow-md' : 'border-slate-200 bg-white hover:border-slate-300'}`}
-                    style={activeCalc === calc.id ? { borderColor: currentPersona.color, background: currentPersona.color, color: 'white' } : {}}>
-                    <span className="text-xl">{calc.icon}</span>
-                    <span className={`text-xs font-semibold mt-0.5 whitespace-nowrap ${activeCalc === calc.id ? 'text-white' : 'text-slate-500'}`}>{calc.label}</span>
-                  </button>
-                ))}
-              </div>
+        {/* Mobile overlay */}
+        {sidebarOpen && (
+          <div className="fixed inset-0 top-12 z-30 bg-black/40 lg:hidden" onClick={() => setSidebarOpen(false)} />
+        )}
+
+        {/* Main */}
+        <main className="flex-1 overflow-y-auto min-w-0">
+          {/* Mobile calc tabs */}
+          <div className="lg:hidden bg-white border-b border-slate-100 px-4 py-2 overflow-x-auto">
+            <div className="flex gap-1.5 w-max">
+              {ALL_CALCS.map(calc => (
+                <button key={calc.id} onClick={() => handleSelect(calc.id)}
+                  className={`px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-all ${activeCalc === calc.id ? 'bg-blue-700 text-white' : 'text-slate-500 hover:bg-slate-100'}`}>
+                  {calc.name}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Active calculator */}
-          {ActiveComponent && <ActiveComponent persona={PERSONAS[persona]} />}
+          <div className="p-4 sm:p-6 max-w-6xl mx-auto">
+            {/* Page header */}
+            {activeCalc !== 'home' && currentCalc && (
+              <div className="mb-5 flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-slate-400 uppercase tracking-wider mb-0.5">Calculator</p>
+                  <h1 className="text-xl font-bold text-slate-900">{currentCalc.name}</h1>
+                </div>
+                <button onClick={() => handleSelect('home')} className="text-xs text-slate-400 hover:text-slate-700 font-medium px-3 py-1.5 rounded-lg hover:bg-white transition-all border border-transparent hover:border-slate-200">
+                  ← All Tools
+                </button>
+              </div>
+            )}
+
+            {activeCalc === 'home'
+              ? <Dashboard onSelect={handleSelect} />
+              : ActiveComponent && <ActiveComponent onNavigate={handleSelect} />
+            }
+          </div>
         </main>
       </div>
-
-      {/* Footer */}
-      <footer className="mt-8 py-4 bg-white border-t border-slate-100 text-center">
-        <p className="text-xs text-slate-400">PFM Calculators — India's most comprehensive personal finance tool</p>
-        <p className="text-xs text-slate-300 mt-0.5">All calculations are estimates. Consult a SEBI-registered advisor for personalized advice.</p>
-      </footer>
     </div>
   );
 }

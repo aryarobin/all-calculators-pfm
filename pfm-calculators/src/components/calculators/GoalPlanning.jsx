@@ -1,144 +1,109 @@
 import { useState, useMemo } from 'react';
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import SliderInput from '../shared/SliderInput';
 import { calcGoal, formatINR } from '../../utils/financialCalc';
 
 const GOALS = [
-  { id: 'home', label: '🏠 Dream Home', icon: '🏠', defaultAmount: 5000000, color: '#f97316', hint: 'Down payment or full cost' },
-  { id: 'education', label: '🎓 Child\'s Education', icon: '🎓', defaultAmount: 3000000, color: '#7c3aed', hint: 'College fees in today\'s money' },
-  { id: 'car', label: '🚗 Dream Car', icon: '🚗', defaultAmount: 1500000, color: '#3b82f6', hint: 'On-road price today' },
-  { id: 'wedding', label: '💍 Dream Wedding', icon: '💍', defaultAmount: 2000000, color: '#ec4899', hint: 'Total wedding budget' },
-  { id: 'vacation', label: '✈️ World Tour', icon: '✈️', defaultAmount: 500000, color: '#10b981', hint: 'Trip budget in today\'s money' },
-  { id: 'startup', label: '🚀 Startup / Business', icon: '🚀', defaultAmount: 2000000, color: '#f59e0b', hint: 'Seed capital needed' },
-  { id: 'custom', label: '🎯 Custom Goal', icon: '🎯', defaultAmount: 1000000, color: '#6366f1', hint: 'Your own financial goal' },
+  { id: 'home', label: 'Dream Home', defaultAmount: 5000000 },
+  { id: 'education', label: "Child's Education", defaultAmount: 3000000 },
+  { id: 'car', label: 'Dream Car', defaultAmount: 1500000 },
+  { id: 'wedding', label: 'Wedding', defaultAmount: 2000000 },
+  { id: 'vacation', label: 'World Tour', defaultAmount: 500000 },
+  { id: 'startup', label: 'Business / Startup', defaultAmount: 2000000 },
+  { id: 'retirement', label: 'Retirement Fund', defaultAmount: 10000000 },
+  { id: 'custom', label: 'Custom Goal', defaultAmount: 1000000 },
 ];
 
-export default function GoalPlanning() {
+export default function GoalPlanning({ onNavigate }) {
   const [selectedGoal, setSelectedGoal] = useState('home');
   const [goalAmount, setGoalAmount] = useState(5000000);
   const [years, setYears] = useState(10);
   const [inflation, setInflation] = useState(6);
   const [expectedReturn, setExpectedReturn] = useState(12);
   const [currentSavings, setCurrentSavings] = useState(0);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
-  const goal = GOALS.find(g => g.id === selectedGoal);
-
-  const result = useMemo(() => calcGoal({
-    goalAmount, yearsToGoal: years, inflation, expectedReturn, currentSavings
-  }), [goalAmount, years, inflation, expectedReturn, currentSavings]);
-
-  const pieData = [
-    { name: 'Existing Savings Growth', value: Math.round(result.growthOfCurrentSavings), color: '#10b981' },
-    { name: 'SIP Corpus Needed', value: Math.round(result.additionalNeeded), color: '#f97316' },
-  ].filter(d => d.value > 0);
+  const result = useMemo(() => calcGoal({ goalAmount, yearsToGoal: years, inflation, expectedReturn, currentSavings }), [goalAmount, years, inflation, expectedReturn, currentSavings]);
 
   return (
-    <div className="max-w-5xl mx-auto">
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-slate-800">Goal Planning Calculator</h2>
-        <p className="text-slate-500 mt-1">Pick a dream and find out exactly how to achieve it!</p>
-      </div>
-
-      {/* Goal selector */}
-      <div className="card mb-6">
-        <p className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">🎯 What are you saving for?</p>
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2">
+    <div className="space-y-4">
+      {/* Goal picker */}
+      <div className="bg-white rounded-xl border border-slate-100 p-5">
+        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">What are you saving for?</p>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {GOALS.map(g => (
-            <button
-              key={g.id}
-              onClick={() => { setSelectedGoal(g.id); setGoalAmount(g.defaultAmount); }}
-              className={`flex flex-col items-center p-3 rounded-xl border-2 transition-all text-center ${
-                selectedGoal === g.id
-                  ? 'border-orange-400 bg-orange-50 shadow-md shadow-orange-100'
-                  : 'border-slate-100 hover:border-slate-300 hover:bg-slate-50'
-              }`}
-            >
-              <span className="text-2xl">{g.icon}</span>
-              <span className="text-xs font-semibold text-slate-600 mt-1 leading-tight">{g.label.split(' ').slice(1).join(' ')}</span>
+            <button key={g.id} onClick={() => { setSelectedGoal(g.id); setGoalAmount(g.defaultAmount); }}
+              className={`px-3 py-2.5 rounded-xl border text-left text-sm font-medium transition-all ${selectedGoal === g.id ? 'bg-blue-700 border-blue-700 text-white' : 'border-slate-200 text-slate-600 hover:border-blue-300 bg-white'}`}>
+              {g.label}
             </button>
           ))}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="card">
-          <div className="mb-4 p-3 rounded-xl" style={{ background: goal?.color + '15', borderLeft: `4px solid ${goal?.color}` }}>
-            <p className="text-lg font-bold text-slate-700">{goal?.label}</p>
-            <p className="text-sm text-slate-400">{goal?.hint}</p>
-          </div>
-
-          <p className="text-lg font-bold text-slate-700 mb-1">💰 What is the cost in today's money?</p>
-          <p className="text-sm text-slate-400 mb-4">We'll automatically inflate it for you.</p>
-          <SliderInput label="Goal Amount (Today's Value)" value={goalAmount} min={100000} max={50000000} step={100000} onChange={setGoalAmount} prefix="₹" />
-
-          <p className="text-lg font-bold text-slate-700 mb-1 mt-2">⏳ When do you need this money?</p>
-          <SliderInput label="Years to Goal" value={years} min={1} max={30} onChange={setYears} unit=" yrs" />
-
-          <p className="text-lg font-bold text-slate-700 mb-1 mt-2">📈 Investment return expected?</p>
-          <SliderInput label="Expected Annual Return" value={expectedReturn} min={5} max={20} step={0.5} onChange={setExpectedReturn} unit="%" />
-
-          <p className="text-lg font-bold text-slate-700 mb-1 mt-2">📊 Inflation assumption?</p>
-          <SliderInput label="Expected Inflation" value={inflation} min={3} max={10} step={0.5} onChange={setInflation} unit="%" />
-
-          <p className="text-lg font-bold text-slate-700 mb-1 mt-2">🏦 Money already saved for this goal?</p>
-          <SliderInput label="Current Savings (for this goal)" value={currentSavings} min={0} max={goalAmount} step={10000} onChange={setCurrentSavings} prefix="₹" />
+      {/* Story header */}
+      <div className="bg-white rounded-xl border border-slate-100 overflow-hidden">
+        <div className="px-6 pt-6 pb-3">
+          <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Goal Summary</p>
+          <p className="text-xl font-bold text-slate-800 leading-snug">
+            <span className="text-blue-700">{GOALS.find(g => g.id === selectedGoal)?.label}</span> costing <span className="text-blue-700">{formatINR(goalAmount)}</span> today — needed in <span className="text-blue-700">{years} years</span>
+          </p>
         </div>
-
-        {/* Results */}
-        <div className="space-y-4">
-          <div className="card border-0 text-white" style={{ background: `linear-gradient(135deg, ${goal?.color}, ${goal?.color}dd)` }}>
-            <p className="text-sm font-semibold opacity-80 uppercase tracking-wider">Actual Goal Amount in {years} yrs</p>
-            <p className="text-4xl font-black mt-1">{formatINR(result.futureGoalAmount)}</p>
-            <p className="text-sm opacity-75 mt-1">Today: {formatINR(goalAmount)} → Inflation-adjusted</p>
-          </div>
-
-          <div className="card bg-gradient-to-br from-emerald-500 to-teal-600 text-white border-0">
-            <p className="text-sm font-semibold opacity-80 uppercase tracking-wider">Monthly SIP Required</p>
-            <p className="text-4xl font-black mt-1">{formatINR(result.sipRequired)}/mo</p>
-            <p className="text-sm opacity-75 mt-1">at {expectedReturn}% return for {years} years</p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div className="card p-3 bg-blue-50 border-blue-100">
-              <p className="text-xs text-blue-500 font-bold">Lumpsum Alternative</p>
-              <p className="text-xl font-black text-blue-700">{formatINR(result.lumpsumRequired)}</p>
-              <p className="text-xs text-blue-400">Invest today</p>
+        <div className="px-6 pb-4">
+          <p className="text-xs text-slate-400 mb-1">Inflation-adjusted goal amount</p>
+          <p className="text-5xl font-black text-blue-700 leading-none">{formatINR(result.futureGoalAmount)}</p>
+          <div className="flex gap-6 mt-3">
+            <div>
+              <p className="text-xs text-slate-400">Monthly SIP needed</p>
+              <p className="text-xl font-bold text-slate-800">{formatINR(result.sipRequired)}<span className="text-sm text-slate-400 font-normal">/mo</span></p>
             </div>
-            <div className="card p-3 bg-emerald-50 border-emerald-100">
-              <p className="text-xs text-emerald-500 font-bold">Savings Contribution</p>
-              <p className="text-xl font-black text-emerald-700">{formatINR(result.growthOfCurrentSavings)}</p>
-              <p className="text-xs text-emerald-400">From existing savings</p>
+            <div>
+              <p className="text-xs text-slate-400">Or invest lumpsum now</p>
+              <p className="text-xl font-bold text-slate-500">{formatINR(result.lumpsumRequired)}</p>
             </div>
-          </div>
-
-          {/* Pie Chart */}
-          {pieData.length > 0 && (
-            <div className="card p-4">
-              <p className="text-sm font-bold text-slate-600 mb-2">Funding Breakdown</p>
-              <ResponsiveContainer width="100%" height={160}>
-                <PieChart>
-                  <Pie data={pieData} dataKey="value" cx="50%" cy="50%" outerRadius={60} paddingAngle={3}>
-                    {pieData.map((d, i) => <Cell key={i} fill={d.color} />)}
-                  </Pie>
-                  <Tooltip formatter={v => formatINR(v)} />
-                  <Legend iconType="circle" iconSize={10} />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          )}
-
-          <div className="card bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200">
-            <p className="text-xs font-bold text-amber-700 uppercase tracking-wider mb-2">💡 Goal Insights</p>
-            <p className="text-sm text-amber-800 font-medium mb-1">
-              🎯 Inflation turns {formatINR(goalAmount)} → {formatINR(result.futureGoalAmount)} in {years} yrs
-            </p>
-            <p className="text-sm text-amber-800 font-medium mb-1">
-              📈 {formatINR(result.sipRequired)}/mo for {years} yrs builds your {goal?.icon} dream!
-            </p>
-            {result.sipRequired < 5000 && <p className="text-sm text-emerald-700 font-medium">✅ Very achievable! Start a SIP today.</p>}
           </div>
         </div>
+        {result.growthOfCurrentSavings > 0 && (
+          <div className="px-6 pb-5">
+            <div className="px-4 py-3 bg-emerald-50 border border-emerald-100 rounded-lg">
+              <p className="text-xs text-emerald-700 font-medium">
+                Your existing savings of <strong>{formatINR(currentSavings)}</strong> will grow to <strong>{formatINR(result.growthOfCurrentSavings)}</strong> — covering <strong>{Math.round(result.growthOfCurrentSavings / result.futureGoalAmount * 100)}%</strong> of the goal.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
+
+      {/* Sliders */}
+      <div className="bg-white rounded-xl border border-slate-100 px-6 py-5">
+        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-5">Adjust Parameters</p>
+        <SliderInput label={`${GOALS.find(g => g.id === selectedGoal)?.label} — cost in today's money`} value={goalAmount} min={100000} max={50000000} step={100000} onChange={setGoalAmount} prefix="₹" hint="We'll inflate this automatically" />
+        <SliderInput label="Years to Goal" value={years} min={1} max={30} onChange={setYears} unit=" yr" />
+        <SliderInput label="Expected Investment Return" value={expectedReturn} min={5} max={20} step={0.5} onChange={setExpectedReturn} unit="%" />
+
+        <button onClick={() => setShowAdvanced(!showAdvanced)} className="mt-2 text-xs text-blue-600 font-medium hover:text-blue-800">
+          {showAdvanced ? 'Hide advanced' : 'Show inflation & existing savings'} {showAdvanced ? '↑' : '↓'}
+        </button>
+
+        {showAdvanced && (
+          <div className="mt-4 pt-4 border-t border-slate-100">
+            <SliderInput label="Inflation Rate" value={inflation} min={3} max={10} step={0.5} onChange={setInflation} unit="%" hint="India avg: 6% | Education: 10–12% | Medical: 8%" />
+            <SliderInput label="Already Saved for This Goal" value={currentSavings} min={0} max={goalAmount} step={10000} onChange={setCurrentSavings} prefix="₹" />
+          </div>
+        )}
+      </div>
+
+      {onNavigate && (
+        <div className="bg-white rounded-xl border border-slate-100 p-5">
+          <p className="text-sm font-semibold text-slate-700 mb-3">Continue your journey</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            {[{ id: 'sip', label: 'SIP Calculator', desc: `See how ${formatINR(result.sipRequired)}/mo grows` }, { id: 'retirement', label: 'Retirement Planner', desc: 'Plan your largest goal' }, { id: 'inflation', label: 'Inflation Calculator', desc: 'Understand future costs better' }].map(n => (
+              <button key={n.id} onClick={() => onNavigate(n.id)} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-left hover:border-blue-300 hover:bg-blue-50 transition-all group">
+                <p className="text-sm font-semibold text-slate-700 group-hover:text-blue-700">{n.label}</p>
+                <p className="text-xs text-slate-400 mt-0.5">{n.desc}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

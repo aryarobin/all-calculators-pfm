@@ -1,17 +1,17 @@
-export default function SliderInput({ label, value, min, max, step = 1, onChange, format, unit = '', prefix = '', hint }) {
+export default function SliderInput({ label, value, min, max, step = 1, onChange, format, unit = '', prefix = '', hint, sublabel }) {
   const displayValue = format ? format(value) : `${prefix}${value.toLocaleString('en-IN')}${unit}`;
   const pct = Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100));
 
   return (
-    <div className="mb-6">
-      <div className="flex justify-between items-end mb-2">
+    <div className="mb-5">
+      <div className="flex justify-between items-center mb-2">
         <div>
-          <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider">{label}</p>
+          <p className="text-sm font-medium text-slate-700">{label}</p>
           {hint && <p className="text-xs text-slate-400 mt-0.5">{hint}</p>}
         </div>
-        <div className="text-xl font-bold text-orange-600 bg-orange-50 px-4 py-1.5 rounded-xl border border-orange-100">
+        <span className="text-sm font-bold text-blue-700 bg-blue-50 border border-blue-100 px-3 py-1 rounded-lg min-w-max">
           {displayValue}
-        </div>
+        </span>
       </div>
       <input
         type="range"
@@ -20,9 +20,8 @@ export default function SliderInput({ label, value, min, max, step = 1, onChange
         step={step}
         value={value}
         onChange={e => onChange(Number(e.target.value))}
-        className="w-full"
         style={{
-          background: `linear-gradient(to right, #f97316 0%, #f97316 ${pct}%, #e2e8f0 ${pct}%, #e2e8f0 100%)`
+          background: `linear-gradient(to right, #1e40af 0%, #1e40af ${pct}%, #e2e8f0 ${pct}%, #e2e8f0 100%)`
         }}
       />
       <div className="flex justify-between text-xs text-slate-400 mt-1 px-0.5">
