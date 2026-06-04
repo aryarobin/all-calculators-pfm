@@ -1,8 +1,6 @@
 import { ArrowRight } from 'lucide-react';
-import { trackSignupClick, trackCtaClick } from '../../lib/analytics';
-
-const APP_URL = 'https://app.goalfi.app';
-const WEB_URL = 'https://www.goalfi.app';
+import { trackSignupClick } from '../../lib/analytics';
+import { GOALFI_URL } from '../../calculators';
 
 const COLUMNS = [
   {
@@ -48,10 +46,10 @@ export default function GoalFiFooter({ onSelect }) {
               Goal-based SIPs and curated mutual funds — built by IIT-Kanpur quants, run by ex-HSBC.
             </p>
           </div>
-          <a href={`${APP_URL}/signup`} target="_blank" rel="noopener noreferrer"
+          <a href={GOALFI_URL} target="_blank" rel="noopener noreferrer"
             onClick={() => trackSignupClick('footer_band')}
             className="flex-shrink-0 inline-flex items-center gap-2 bg-[#CA8D1B] hover:bg-[#E6A125] text-[#030338] font-bold text-sm px-5 py-3 rounded-xl transition-colors">
-            Get started free <ArrowRight size={16} />
+            Explore GoalFi <ArrowRight size={16} />
           </a>
         </div>
       </div>
@@ -91,10 +89,9 @@ export default function GoalFiFooter({ onSelect }) {
         <div className="max-w-5xl mx-auto px-5 py-5">
           <div className="flex flex-wrap gap-x-6 gap-y-2 mb-4 text-sm">
             {[
-              { label: 'GoalFi Research', href: `${WEB_URL}/research` },
-              { label: 'GoalFi Plan', href: `${WEB_URL}/plan` },
+              { label: 'GoalFi Research', href: GOALFI_URL },
+              { label: 'Explore Portfolios', href: GOALFI_URL },
               { label: 'Markets · Pulse', href: 'https://pulse.goalfi.app' },
-              { label: 'Blog', href: 'https://blog.goalfi.app' },
               { label: 'Contact', href: 'mailto:hello@goalfi.app' },
             ].map(l => (
               <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer"

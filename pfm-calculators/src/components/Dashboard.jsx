@@ -5,6 +5,7 @@ import {
   Briefcase, PieChart, Landmark, Search, ArrowRight, Zap, Flame,
 } from 'lucide-react';
 import { findCalculator, getSuggestions, EXAMPLE_QUERIES } from '../utils/smartRouter';
+import { GOALFI_URL } from '../calculators';
 import InsightCards from './InsightCards';
 
 const JOURNEYS = [
@@ -135,8 +136,8 @@ export default function Dashboard({ onSelect }) {
             className="inline-flex items-center gap-2 bg-[#1E1963] hover:bg-[#030338] text-white font-semibold text-sm px-5 py-3 rounded-xl transition-colors">
             Explore calculators <ArrowRight size={16} />
           </button>
-          <a href="https://app.goalfi.app/signup" target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 font-semibold text-sm px-4 py-3 transition-colors">
+          <a href={GOALFI_URL} target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-slate-600 hover:text-[#1E1963] font-semibold text-sm px-4 py-3 transition-colors">
             Invest with GoalFi →
           </a>
         </div>

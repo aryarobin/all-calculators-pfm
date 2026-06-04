@@ -71,11 +71,20 @@ export const CALCULATORS = [
   { id: 'fdppf', slug: 'fd-rd-ppf-nps-calculator', name: 'FD / RD / PPF / NPS', group: 'Savings',
     seoTitle: 'FD, RD, PPF & NPS Calculator — Maturity & Interest | GoalFi',
     seoDesc: 'Calculate maturity and interest for Fixed Deposit, Recurring Deposit, PPF and NPS. Compare all safe, tax-advantaged instruments. Free calculator.' },
+  { id: 'ssy', slug: 'sukanya-samriddhi-calculator', name: 'Sukanya Samriddhi (SSY)', group: 'Savings',
+    seoTitle: 'Sukanya Samriddhi Yojana Calculator — SSY Maturity | GoalFi',
+    seoDesc: "Calculate Sukanya Samriddhi Yojana (SSY) maturity for your daughter — tax-free EEE returns at 8.2%. See the corpus at age 21. Free SSY calculator." },
+  { id: 'emergency', slug: 'emergency-fund-calculator', name: 'Emergency Fund', group: 'Goals & Retirement',
+    seoTitle: 'Emergency Fund Calculator — How Many Months Do You Need? | GoalFi',
+    seoDesc: 'How big should your emergency fund be? Calculate 3–12 months of expenses, see your coverage, and how long to build it. Free emergency fund calculator.' },
 
   // ── Tax & Salary ──
   { id: 'tax', slug: 'income-tax-calculator', name: 'Income Tax', group: 'Tax & Salary',
     seoTitle: 'Income Tax Calculator — New vs Old Regime (FY 2024-25) | GoalFi',
     seoDesc: 'Compare New vs Old tax regime, see your exact tax, take-home pay and effective rate. Free income tax calculator for salaried Indians.' },
+  { id: 'capgains', slug: 'capital-gains-tax-calculator', name: 'Capital Gains Tax', group: 'Tax & Salary',
+    seoTitle: 'Capital Gains Tax Calculator — Equity, Debt, Property, Gold | GoalFi',
+    seoDesc: 'Calculate LTCG and STCG tax on shares, mutual funds, property and gold under the FY 2024-25 rules — equity LTCG 12.5% with ₹1.25L exemption. Free.' },
   { id: 'salary', slug: 'salary-ctc-calculator', name: 'CTC & Salary', group: 'Tax & Salary',
     seoTitle: 'CTC to In-Hand Salary Calculator — HRA & Gratuity | GoalFi',
     seoDesc: 'Break down your CTC into actual in-hand salary, calculate HRA exemption and gratuity. Free salary calculator for India.' },
@@ -85,6 +94,10 @@ export const CALCULATORS = [
 ];
 
 export const SITE_URL = 'https://planner.goalfi.app';
+
+// GoalFi's live investment product (research portfolios on smallcase).
+// Every "explore / invest with GoalFi" CTA points here.
+export const GOALFI_URL = 'https://goalfiresearch.smallcase.com';
 
 export const NAV_GROUP_ORDER = [
   'Investments', 'Goals & Retirement', 'Smart Decisions', 'Analysis', 'Loans', 'Savings', 'Tax & Salary',

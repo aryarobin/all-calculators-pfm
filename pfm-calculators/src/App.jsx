@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import GoalFiFooter from './components/brand/GoalFiFooter';
 import Seo from './components/Seo';
 import { trackCalcView, trackSignupClick } from './lib/analytics';
-import { CALCULATORS, byId, bySlug, NAV_GROUP_ORDER } from './calculators';
+import { CALCULATORS, byId, bySlug, NAV_GROUP_ORDER, GOALFI_URL } from './calculators';
 
 import SIPCalculator from './components/calculators/SIPCalculator';
 import LumpsumCalculator from './components/calculators/LumpsumCalculator';
@@ -27,6 +27,9 @@ import CoastFire from './components/calculators/CoastFire';
 import PrepayVsInvest from './components/calculators/PrepayVsInvest';
 import RentVsBuy from './components/calculators/RentVsBuy';
 import XIRRCalculator from './components/calculators/XIRRCalculator';
+import CapitalGainsTax from './components/calculators/CapitalGainsTax';
+import EmergencyFund from './components/calculators/EmergencyFund';
+import SukanyaSamriddhi from './components/calculators/SukanyaSamriddhi';
 import Dashboard from './components/Dashboard';
 
 const COMPONENTS = {
@@ -37,6 +40,7 @@ const COMPONENTS = {
   xirr: XIRRCalculator, prepay: PrepayVsInvest, rentbuy: RentVsBuy,
   emi: EMICalculator, fdppf: FDPPFCalculator, tax: TaxCalculator,
   salary: SalaryCalculator, budget: BudgetPlanner,
+  capgains: CapitalGainsTax, ssy: SukanyaSamriddhi, emergency: EmergencyFund,
 };
 
 const NAV_GROUPS = NAV_GROUP_ORDER.map(label => ({
@@ -108,10 +112,10 @@ export default function App() {
 
         <div className="flex-1"></div>
 
-        <a href="https://app.goalfi.app/signup" target="_blank" rel="noopener noreferrer"
+        <a href={GOALFI_URL} target="_blank" rel="noopener noreferrer"
           onClick={() => trackSignupClick('header')}
           className="bg-[#CA8D1B] hover:bg-[#E6A125] text-[#030338] font-bold text-xs px-3.5 py-1.5 rounded-lg transition-colors whitespace-nowrap">
-          Sign up free
+          Explore GoalFi
         </a>
       </header>
 
