@@ -30,6 +30,9 @@ import XIRRCalculator from './components/calculators/XIRRCalculator';
 import CapitalGainsTax from './components/calculators/CapitalGainsTax';
 import EmergencyFund from './components/calculators/EmergencyFund';
 import SukanyaSamriddhi from './components/calculators/SukanyaSamriddhi';
+import CreditCardPayoff from './components/calculators/CreditCardPayoff';
+import NetWorth from './components/calculators/NetWorth';
+import SimpleVsCompound from './components/calculators/SimpleVsCompound';
 import Dashboard from './components/Dashboard';
 
 const COMPONENTS = {
@@ -41,6 +44,7 @@ const COMPONENTS = {
   emi: EMICalculator, fdppf: FDPPFCalculator, tax: TaxCalculator,
   salary: SalaryCalculator, budget: BudgetPlanner,
   capgains: CapitalGainsTax, ssy: SukanyaSamriddhi, emergency: EmergencyFund,
+  creditcard: CreditCardPayoff, networth: NetWorth, simplecompound: SimpleVsCompound,
 };
 
 const NAV_GROUPS = NAV_GROUP_ORDER.map(label => ({

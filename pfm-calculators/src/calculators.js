@@ -61,11 +61,20 @@ export const CALCULATORS = [
   { id: 'inflation', slug: 'inflation-calculator', name: 'Inflation Calculator', group: 'Analysis',
     seoTitle: 'Inflation Calculator — Future Cost & Real Returns | GoalFi',
     seoDesc: 'See what things will cost in the future, what a future amount is worth today, and your real (inflation-adjusted) returns. Free inflation calculator.' },
+  { id: 'simplecompound', slug: 'simple-vs-compound-interest-calculator', name: 'Simple vs Compound', group: 'Analysis',
+    seoTitle: 'Simple vs Compound Interest Calculator | GoalFi',
+    seoDesc: 'See the difference between simple and compound interest over time, with any compounding frequency. Understand why compounding builds wealth. Free.' },
+  { id: 'networth', slug: 'net-worth-calculator', name: 'Net Worth Tracker', group: 'Analysis',
+    seoTitle: 'Net Worth Calculator — Track Assets vs Liabilities | GoalFi',
+    seoDesc: 'Calculate your net worth — total assets (cash, FD, MF, stocks, gold, property) minus liabilities (loans, credit cards). See your asset allocation. Free.' },
 
   // ── Loans ──
   { id: 'emi', slug: 'emi-calculator', name: 'EMI Calculator', group: 'Loans',
     seoTitle: 'EMI Calculator — Home, Car & Personal Loan EMI | GoalFi',
     seoDesc: 'Calculate your monthly EMI, total interest, and full amortisation schedule for home, car, personal and education loans. Free EMI calculator with charts.' },
+  { id: 'creditcard', slug: 'credit-card-payoff-calculator', name: 'Credit Card Payoff', group: 'Loans',
+    seoTitle: 'Credit Card Payoff Calculator — Interest & Time to Clear | GoalFi',
+    seoDesc: 'See how long to clear your credit card debt and the total interest at 36–48% APR. Avoid the minimum-payment trap. Free credit card payoff calculator.' },
 
   // ── Savings ──
   { id: 'fdppf', slug: 'fd-rd-ppf-nps-calculator', name: 'FD / RD / PPF / NPS', group: 'Savings',
