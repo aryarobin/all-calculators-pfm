@@ -2,94 +2,94 @@ import { useState, useRef } from 'react';
 import {
   TrendingUp, Coins, Rocket, Scale, Target, Palmtree, Gauge, Wallet,
   Percent, Sparkles, TrendingDown, CalendarClock, Home, Receipt,
-  Briefcase, PieChart, Landmark, Search, ArrowRight, Zap, Flame,
+  Briefcase, PieChart, Landmark, Search, ArrowRight, Flame,
+  Gem, Hourglass, PiggyBank, Shield, Umbrella, HeartPulse, Shuffle,
+  LineChart, Trophy, Clock, Banknote, CreditCard, Baby, Calculator,
+  Building2,
 } from 'lucide-react';
 import { findCalculator, getSuggestions, EXAMPLE_QUERIES } from '../utils/smartRouter';
-import { GOALFI_URL } from '../calculators';
+import { CALCULATORS, NAV_GROUP_ORDER, GOALFI_URL } from '../calculators';
 import InsightCards from './InsightCards';
 
-const JOURNEYS = [
-  {
-    title: 'Build Wealth',
-    desc: 'Put every rupee to work',
-    accent: 'blue',
-    grad: 'from-blue-500 to-indigo-600',
-    tint: 'bg-blue-50 text-blue-600',
-    hover: 'hover:border-blue-300 hover:bg-blue-50/50',
-    steps: [
-      { id: 'sip',     label: 'SIP Calculator',       desc: 'Monthly investment → corpus', Icon: TrendingUp },
-      { id: 'lumpsum', label: 'Lumpsum',               desc: 'One-time investment growth', Icon: Coins },
-      { id: 'stepup',  label: 'Step-Up SIP',           desc: 'Raise SIP every year', Icon: Rocket },
-      { id: 'compare', label: 'Compare Instruments',   desc: 'FD vs PPF vs MF vs NPS', Icon: Scale },
-    ],
-  },
-  {
-    title: 'Plan for Goals',
-    desc: 'Work backwards from the target',
-    accent: 'violet',
-    grad: 'from-violet-500 to-purple-600',
-    tint: 'bg-violet-50 text-violet-600',
-    hover: 'hover:border-violet-300 hover:bg-violet-50/50',
-    steps: [
-      { id: 'fire',       label: 'Financial Freedom',    desc: 'Retire-now corpus, after tax', Icon: Flame },
-      { id: 'retirement', label: 'Retirement',           desc: 'Corpus & SIP to retire', Icon: Palmtree },
-      { id: 'goal',       label: 'Goal Planner',         desc: 'Inflation-adjusted SIP', Icon: Target },
-      { id: 'swp',        label: 'Income & Withdrawal',  desc: 'Income from your corpus', Icon: Wallet },
-      { id: 'readiness',  label: 'Readiness Score',      desc: 'Multi-asset readiness', Icon: Gauge },
-    ],
-  },
-  {
-    title: 'Smart Decisions',
-    desc: 'The big "should I…?" questions',
-    accent: 'cyan',
-    grad: 'from-cyan-500 to-blue-600',
-    tint: 'bg-cyan-50 text-cyan-600',
-    hover: 'hover:border-cyan-300 hover:bg-cyan-50/50',
-    steps: [
-      { id: 'prepay',  label: 'Prepay vs Invest', desc: 'Clear the loan or invest?', Icon: Scale },
-      { id: 'rentbuy', label: 'Rent vs Buy',       desc: 'Which builds more wealth?', Icon: Home },
-      { id: 'xirr',    label: 'XIRR Calculator',   desc: 'Your real SIP return', Icon: Percent },
-      { id: 'coast',   label: 'Coast FIRE',        desc: 'When can you stop?', Icon: Flame },
-    ],
-  },
-  {
-    title: 'Understand Returns',
-    desc: 'What are you really earning?',
-    accent: 'emerald',
-    grad: 'from-emerald-500 to-teal-600',
-    tint: 'bg-emerald-50 text-emerald-600',
-    hover: 'hover:border-emerald-300 hover:bg-emerald-50/50',
-    steps: [
-      { id: 'cagr',       label: 'CAGR Calculator',  desc: 'True annualised return', Icon: Percent },
-      { id: 'multiplier', label: 'Money Multiplier', desc: '2× / 5× / 10× timing', Icon: Sparkles },
-      { id: 'inflation',  label: 'Inflation Impact', desc: 'Future cost & real returns', Icon: TrendingDown },
-      { id: 'timeline',   label: 'Financial Timeline', desc: 'Your whole life on one view', Icon: CalendarClock },
-    ],
-  },
-  {
-    title: 'Loans, Tax & Salary',
-    desc: 'Know exactly where you stand',
-    accent: 'amber',
-    grad: 'from-amber-500 to-orange-600',
-    tint: 'bg-amber-50 text-amber-600',
-    hover: 'hover:border-amber-300 hover:bg-amber-50/50',
-    steps: [
-      { id: 'emi',    label: 'EMI Calculator', desc: 'Home / car / personal', Icon: Home },
-      { id: 'tax',    label: 'Income Tax',     desc: 'New vs Old regime', Icon: Receipt },
-      { id: 'salary', label: 'CTC & Salary',   desc: 'In-hand, HRA, gratuity', Icon: Briefcase },
-      { id: 'budget', label: 'Budget Planner', desc: '50/30/20 allocation', Icon: PieChart },
-    ],
-  },
-];
+// One icon + a short human tagline per calculator id. The cards themselves
+// are generated from the registry so this page always reflects everything built.
+const META = {
+  sip:            [TrendingUp,    'Monthly investment → corpus'],
+  lumpsum:        [Coins,         'One-time investment growth'],
+  stepup:         [Rocket,        'Raise your SIP every year'],
+  compare:        [Scale,         'FD vs PPF vs MF vs NPS'],
+  gold:           [Gem,           'SGB vs ETF vs physical'],
 
-// Quick "popular" gradient cards
+  goal:           [Target,        'Inflation-adjusted SIP'],
+  retirement:     [Palmtree,      'Corpus & SIP to retire'],
+  readiness:      [Gauge,         'Multi-asset readiness score'],
+  swp:            [Wallet,        'Income from your corpus'],
+  fire:           [Flame,         'Retire-now corpus, after tax'],
+  coast:          [Hourglass,     'When can you stop investing?'],
+  epfnpsvpf:      [PiggyBank,     'Best retirement scheme'],
+  emergency:      [Shield,        'How many months saved?'],
+
+  prepay:         [Scale,         'Clear the loan or invest?'],
+  rentbuy:        [Home,          'Which builds more wealth?'],
+  insurevsinvest: [Shuffle,       'Term + invest vs ULIP'],
+  lumpvssip:      [Shuffle,       'Deploy a windfall'],
+  directregular:  [Percent,       'The commission you lose'],
+  termcover:      [Umbrella,      'Life cover you need'],
+  healthcover:    [HeartPulse,    'Health cover you need'],
+
+  xirr:           [Percent,       'Your real SIP return'],
+  timeline:       [CalendarClock, 'Your life on one view'],
+  cagr:           [LineChart,     'True annualised return'],
+  multiplier:     [Sparkles,      '2× / 5× / 10× timing'],
+  inflation:      [TrendingDown,  'Future cost & real returns'],
+  simplecompound: [TrendingUp,    'Why compounding wins'],
+  networth:       [PieChart,      'Assets minus liabilities'],
+  crorepati:      [Trophy,        'When you hit ₹1 crore'],
+  costofdelay:    [Clock,         'The price of waiting'],
+  realreturn:     [TrendingDown,  'After tax & inflation'],
+  brokerage:      [Receipt,       'The true cost of trading'],
+
+  emi:            [Banknote,      'Home / car / personal'],
+  creditcard:     [CreditCard,    'Escape the debt trap'],
+
+  fdppf:          [Landmark,      'Safe maturity & interest'],
+  ssy:            [Baby,          "Your daughter's corpus"],
+  postoffice:     [Building2,     'NSC, KVP, SCSS, POMIS'],
+
+  tax:            [Receipt,       'New vs Old regime'],
+  capgains:       [Calculator,    'LTCG & STCG tax'],
+  salary:         [Briefcase,     'In-hand, HRA, gratuity'],
+  jobswitch:      [Shuffle,       'Is the hike real?'],
+  budget:         [PieChart,      '50/30/20 allocation'],
+};
+
+const GROUP_DESC = {
+  'Investments':        'Put every rupee to work',
+  'Goals & Retirement': 'Work backwards from the target',
+  'Smart Decisions':    'The big “should I…?” questions',
+  'Analysis':           'What are you really earning?',
+  'Loans':              'Borrow smart, pay less interest',
+  'Savings':            'Safe, tax-advantaged schemes',
+  'Tax & Salary':       'Know exactly where you stand',
+};
+
+// Build the section list straight from the registry, in nav order.
+const SECTIONS = NAV_GROUP_ORDER.map(group => ({
+  group,
+  desc: GROUP_DESC[group] || '',
+  items: CALCULATORS.filter(c => c.group === group),
+})).filter(s => s.items.length);
+
+const TOTAL = CALCULATORS.length;
+
+// Quick "popular" cards
 const POPULAR = [
-  { id: 'sip', label: 'SIP', grad: 'from-blue-500 to-indigo-600', Icon: TrendingUp },
-  { id: 'retirement', label: 'Retirement', grad: 'from-violet-500 to-purple-600', Icon: Palmtree },
-  { id: 'emi', label: 'EMI', grad: 'from-amber-500 to-orange-600', Icon: Home },
-  { id: 'tax', label: 'Income Tax', grad: 'from-rose-500 to-red-600', Icon: Receipt },
-  { id: 'readiness', label: 'Readiness', grad: 'from-emerald-500 to-teal-600', Icon: Gauge },
-  { id: 'fdppf', label: 'FD / PPF', grad: 'from-cyan-500 to-blue-600', Icon: Landmark },
+  { id: 'sip', label: 'SIP', Icon: TrendingUp },
+  { id: 'retirement', label: 'Retirement', Icon: Palmtree },
+  { id: 'emi', label: 'EMI', Icon: Banknote },
+  { id: 'tax', label: 'Income Tax', Icon: Receipt },
+  { id: 'crorepati', label: 'Crorepati', Icon: Trophy },
+  { id: 'fdppf', label: 'FD / PPF', Icon: Landmark },
 ];
 
 export default function Dashboard({ onSelect }) {
@@ -129,7 +129,7 @@ export default function Dashboard({ onSelect }) {
           Make every rupee decision<br className="hidden sm:block" /> with <span className="text-[#CA8D1B]">clarity</span>.
         </h1>
         <p className="text-slate-500 text-base sm:text-lg mt-5 max-w-xl leading-relaxed">
-          22 calculators that answer the questions people actually ask — from “how much SIP for ₹1 crore” to “can I retire today.” Live charts, no sign-up, built for Indian tax and inflation.
+          {TOTAL} calculators that answer the questions people actually ask — from “how much SIP for ₹1 crore” to “can I retire today.” Live charts, no sign-up, built for Indian tax and inflation.
         </p>
         <div className="flex flex-wrap items-center gap-3 mt-7">
           <button onClick={() => onSelect('sip')}
@@ -142,7 +142,7 @@ export default function Dashboard({ onSelect }) {
           </a>
         </div>
         <div className="flex flex-wrap gap-x-10 gap-y-3 mt-9">
-          {[['22', 'calculators'], ['Live', 'charts & insights'], ['Free', 'no sign-up'], ['India', 'tax & inflation']].map(([n, l]) => (
+          {[[String(TOTAL), 'calculators'], ['Live', 'charts & insights'], ['Free', 'no sign-up'], ['India', 'tax & inflation']].map(([n, l]) => (
             <div key={l} className="flex items-baseline gap-2">
               <span className="text-lg font-bold text-slate-900">{n}</span>
               <span className="text-[13px] text-slate-400">{l}</span>
@@ -230,45 +230,38 @@ export default function Dashboard({ onSelect }) {
         ))}
       </div>
 
-      {/* ── Journey sections ─────────────────────────────────────────── */}
+      {/* ── Every calculator, grouped (registry-driven) ──────────────── */}
       <div className="space-y-8">
-        {JOURNEYS.map(journey => (
-          <div key={journey.title}>
+        {SECTIONS.map(section => (
+          <div key={section.group}>
             <div className="flex items-baseline gap-3 mb-3 px-0.5">
               <span className="w-6 h-px mt-2.5" style={{ background: '#cbd5e1' }} />
-              <div>
-                <h2 className="font-serif-display text-lg font-semibold text-slate-900 leading-tight">{journey.title}</h2>
-                <p className="text-[13px] text-slate-400 leading-tight mt-0.5">{journey.desc}</p>
+              <div className="flex-1">
+                <div className="flex items-baseline gap-2">
+                  <h2 className="font-serif-display text-lg font-semibold text-slate-900 leading-tight">{section.group}</h2>
+                  <span className="text-[11px] text-slate-300 font-semibold">{section.items.length}</span>
+                </div>
+                <p className="text-[13px] text-slate-400 leading-tight mt-0.5">{section.desc}</p>
               </div>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {journey.steps.map(({ id, label, desc, Icon }) => (
-                <button key={id} onClick={() => onSelect(id)}
-                  className="bg-white rounded-xl border border-slate-200 p-3.5 text-left transition-colors hover:border-slate-900 group">
-                  <Icon size={17} className="mb-2.5 text-slate-400 group-hover:text-[#1E1963] transition-colors" strokeWidth={2} />
-                  <p className="text-[13px] font-semibold text-slate-800 leading-tight">{label}</p>
-                  <p className="text-[11px] text-slate-400 mt-0.5 leading-tight">{desc}</p>
-                </button>
-              ))}
+              {section.items.map(item => {
+                const [Icon, tagline] = META[item.id] || [Sparkles, ''];
+                return (
+                  <button key={item.id} onClick={() => onSelect(item.id)}
+                    className="bg-white rounded-xl border border-slate-200 p-3.5 text-left transition-colors hover:border-slate-900 group">
+                    <Icon size={17} className="mb-2.5 text-slate-400 group-hover:text-[#1E1963] transition-colors" strokeWidth={2} />
+                    <p className="text-[13px] font-semibold text-slate-800 leading-tight">{item.name}</p>
+                    <p className="text-[11px] text-slate-400 mt-0.5 leading-tight">{tagline}</p>
+                  </button>
+                );
+              })}
             </div>
           </div>
         ))}
-
-        {/* Safe savings — clean feature row */}
-        <button onClick={() => onSelect('fdppf')}
-          className="w-full rounded-xl border border-slate-200 bg-white p-5 text-left transition-colors hover:border-slate-900 flex items-center gap-4 group">
-          <div className="w-11 h-11 rounded-xl bg-slate-100 flex items-center justify-center flex-shrink-0 group-hover:bg-[#1E1963] transition-colors">
-            <Landmark size={22} strokeWidth={2} className="text-slate-500 group-hover:text-white transition-colors" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-[15px] font-semibold text-slate-900 leading-tight">Safe Savings — FD, RD, PPF, NPS</p>
-            <p className="text-xs text-slate-400 mt-0.5">Compare maturity across all guaranteed, tax-advantaged instruments</p>
-          </div>
-          <ArrowRight size={18} className="flex-shrink-0 text-slate-300 group-hover:text-[#1E1963] transition-colors" />
-        </button>
       </div>
 
-      <p className="text-[11px] text-slate-400 mt-6 text-center">
+      <p className="text-[11px] text-slate-400 mt-8 text-center">
         All calculations are estimates. Consult a SEBI-registered investment advisor before investing.
       </p>
     </div>

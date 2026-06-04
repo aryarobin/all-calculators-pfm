@@ -42,6 +42,10 @@ import HealthCoverNeeded from './components/calculators/HealthCoverNeeded';
 import EPFvsNPSvsVPF from './components/calculators/EPFvsNPSvsVPF';
 import CostOfDelay from './components/calculators/CostOfDelay';
 import GoldInvestment from './components/calculators/GoldInvestment';
+import RealReturn from './components/calculators/RealReturn';
+import JobSwitch from './components/calculators/JobSwitch';
+import PostOfficeSchemes from './components/calculators/PostOfficeSchemes';
+import BrokerageCharges from './components/calculators/BrokerageCharges';
 import Dashboard from './components/Dashboard';
 
 const COMPONENTS = {
@@ -57,6 +61,7 @@ const COMPONENTS = {
   insurevsinvest: InsuranceVsInvestment, termcover: TermCoverNeeded, directregular: DirectVsRegular,
   lumpvssip: LumpsumVsSIP, crorepati: CrorepatiTimeline,
   healthcover: HealthCoverNeeded, epfnpsvpf: EPFvsNPSvsVPF, costofdelay: CostOfDelay, gold: GoldInvestment,
+  realreturn: RealReturn, jobswitch: JobSwitch, postoffice: PostOfficeSchemes, brokerage: BrokerageCharges,
 };
 
 const NAV_GROUPS = NAV_GROUP_ORDER.map(label => ({
