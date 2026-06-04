@@ -1,8 +1,30 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Source+Serif+4:opsz,wght@8..60,400..700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ── GoalFi brand tokens ──────────────────────────────────────────────── */
+:root {
+  --gf-navy: #11161F;
+  --gf-navy-card: #1A2330;
+  --gf-cyan: #5EE5E5;
+  --gf-cyan-deep: #3DD6D6;
+  --gf-amber: #E8B23E;   /* Plan track accent */
+}
+
+@layer components {
+  /* GoalFi serif display for headlines */
+  .font-serif-display { font-family: 'Source Serif 4', Georgia, serif; }
+  .font-mono-label    { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+  /* GoalFi lettermark "G" */
+  .gf-mark {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 600;
+    letter-spacing: -0.04em;
+  }
+}
 
 @layer base {
   :root {

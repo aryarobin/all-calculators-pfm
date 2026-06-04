@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import GoalFiFooter from './components/brand/GoalFiFooter';
+import { trackCalcView, trackSignupClick } from './lib/analytics';
 
 import SIPCalculator from './components/calculators/SIPCalculator';
 import LumpsumCalculator from './components/calculators/LumpsumCalculator';
@@ -35,7 +37,7 @@ const NAV_GROUPS = [
       { id: 'goal', name: 'Goal Planning', component: GoalPlanning },
       { id: 'retirement', name: 'Retirement Planner', component: RetirementCalculator },
       { id: 'readiness', name: 'Readiness Dashboard', component: RetirementReadiness },
-      { id: 'swp', name: 'Withdrawal Plan', component: SWPCalculator },
+      { id: 'swp', name: 'Income & Withdrawal', component: SWPCalculator },
     ],
   },
   {
@@ -85,34 +87,45 @@ export default function App() {
     setActiveCalc(id);
     setSidebarOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (id !== 'home') {
+      const c = ALL_CALCS.find(x => x.id === id);
+      trackCalcView(id, c?.name);
+    }
   };
 
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-slate-50">
-      {/* Top bar */}
-      <header className="flex-shrink-0 h-11 bg-slate-900 border-b border-slate-800 flex items-center px-4 gap-3 z-50">
-        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden text-slate-400 hover:text-slate-200 transition-colors p-1" aria-label="Menu">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+      {/* Top bar — GoalFi branded */}
+      <header className="flex-shrink-0 h-12 bg-[#11161F] border-b border-white/10 flex items-center px-3 sm:px-4 gap-3 z-50">
+        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden text-slate-400 hover:text-white transition-colors p-1" aria-label="Menu">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
 
-        <button onClick={() => handleSelect('home')} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-          <div className="w-6 h-6 rounded bg-blue-600 flex items-center justify-center">
-            <span className="text-white text-xs font-bold">₹</span>
+        <button onClick={() => handleSelect('home')} className="flex items-center gap-2 hover:opacity-90 transition-opacity">
+          <div className="w-7 h-7 rounded-lg bg-[#1A2330] flex items-center justify-center">
+            <span className="gf-mark text-[#5EE5E5] text-base leading-none">G</span>
           </div>
-          <span className="text-white font-semibold text-sm tracking-tight hidden sm:block">PFM Suite</span>
+          <span className="font-serif-display font-semibold text-white text-[15px] tracking-tight">
+            GoalFi <span className="font-sans font-normal text-slate-400 text-xs">Planner</span>
+          </span>
         </button>
 
-        <div className="w-px h-4 bg-slate-700 hidden sm:block"></div>
-
         {currentCalc && (
-          <span className="text-slate-400 text-xs hidden sm:block">{currentCalc.name}</span>
+          <>
+            <span className="w-px h-4 bg-white/15 hidden sm:block"></span>
+            <span className="text-slate-400 text-xs hidden sm:block">{currentCalc.name}</span>
+          </>
         )}
 
         <div className="flex-1"></div>
 
-        <span className="text-xs text-slate-600 hidden sm:block">FY 2024–25 · India</span>
+        <a href="https://app.goalfi.app/signup" target="_blank" rel="noopener noreferrer"
+          onClick={() => trackSignupClick('header')}
+          className="bg-[#5EE5E5] hover:bg-[#3DD6D6] text-[#11161F] font-bold text-xs px-3.5 py-1.5 rounded-lg transition-colors whitespace-nowrap">
+          Sign up free
+        </a>
       </header>
 
       {/* Body */}
@@ -187,6 +200,9 @@ export default function App() {
               : ActiveComponent && <ActiveComponent onNavigate={handleSelect} />
             }
           </div>
+
+          {/* GoalFi branded footer — appears at the bottom of every page */}
+          <GoalFiFooter onSelect={handleSelect} />
         </main>
       </div>
     </div>
