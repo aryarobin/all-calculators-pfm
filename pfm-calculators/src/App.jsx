@@ -33,6 +33,7 @@ import SukanyaSamriddhi from './components/calculators/SukanyaSamriddhi';
 import CreditCardPayoff from './components/calculators/CreditCardPayoff';
 import NetWorth from './components/calculators/NetWorth';
 import SimpleVsCompound from './components/calculators/SimpleVsCompound';
+import InsuranceVsInvestment from './components/calculators/InsuranceVsInvestment';
 import Dashboard from './components/Dashboard';
 
 const COMPONENTS = {
@@ -45,6 +46,7 @@ const COMPONENTS = {
   salary: SalaryCalculator, budget: BudgetPlanner,
   capgains: CapitalGainsTax, ssy: SukanyaSamriddhi, emergency: EmergencyFund,
   creditcard: CreditCardPayoff, networth: NetWorth, simplecompound: SimpleVsCompound,
+  insurevsinvest: InsuranceVsInvestment,
 };
 
 const NAV_GROUPS = NAV_GROUP_ORDER.map(label => ({
