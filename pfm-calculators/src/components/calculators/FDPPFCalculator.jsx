@@ -7,10 +7,10 @@ import { useCalcState } from '../../hooks/useCalcState';
 import { calcFD, calcRD, calcPPF, calcNPS, formatINR } from '../../utils/financialCalc';
 
 const TABS = [
-  { id: 'fd',  label: 'FD',  name: 'Fixed Deposit',         color: 'blue',   gradient: 'from-blue-600 to-blue-700' },
-  { id: 'rd',  label: 'RD',  name: 'Recurring Deposit',     color: 'teal',   gradient: 'from-teal-500 to-teal-600' },
-  { id: 'ppf', label: 'PPF', name: 'Public Provident Fund', color: 'emerald',gradient: 'from-emerald-600 to-green-700' },
-  { id: 'nps', label: 'NPS', name: 'National Pension System',color: 'indigo', gradient: 'from-indigo-600 to-blue-700' },
+  { id: 'fd',  label: 'FD',  name: 'Fixed Deposit',         color: 'blue',   gradient: 'from-[#1E1963] to-[#030338]' },
+  { id: 'rd',  label: 'RD',  name: 'Recurring Deposit',     color: 'teal',   gradient: 'from-[#334BA0] to-[#1E1963]' },
+  { id: 'ppf', label: 'PPF', name: 'Public Provident Fund', color: 'emerald',gradient: 'from-[#3EA23C] to-[#1E5e3a]' },
+  { id: 'nps', label: 'NPS', name: 'National Pension System',color: 'indigo', gradient: 'from-[#1E1963] to-[#030338]' },
 ];
 
 const STORIES = {

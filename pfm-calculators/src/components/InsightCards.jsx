@@ -6,7 +6,7 @@ import { calcSIP, calcMultipleTime, calcInflation, formatINR } from '../utils/fi
 const CARDS = [
   {
     kind: 'Did you know',
-    accent: '#0891b2',
+    accent: '#1E1963',
     headline: () => {
       const a = calcSIP(10000, 12, 30).corpus;
       const b = calcSIP(10000, 12, 20).corpus;
@@ -17,7 +17,7 @@ const CARDS = [
   },
   {
     kind: 'SIP, in numbers',
-    accent: '#059669',
+    accent: '#3EA23C',
     headline: () => {
       const r = calcSIP(5000, 12, 25);
       return `A ₹5,000 monthly SIP for 25 years becomes ${formatINR(r.corpus)} — and ${formatINR(r.gains)} of it is pure returns.`;
@@ -27,7 +27,7 @@ const CARDS = [
   },
   {
     kind: 'The rule of 72',
-    accent: '#7c3aed',
+    accent: '#CA8D1B',
     headline: () => {
       const yrs = calcMultipleTime(10, 12);
       return `At 12% a year, money becomes 10× in roughly ${Math.round(yrs)} years — with no extra effort.`;
@@ -37,7 +37,7 @@ const CARDS = [
   },
   {
     kind: 'Inflation, quietly',
-    accent: '#dc2626',
+    accent: '#E33434',
     headline: () => {
       const future = calcInflation(50000, 6, 25);
       return `₹50,000/month of expenses today will cost ${formatINR(future)}/month in 25 years at 6% inflation.`;
@@ -47,7 +47,7 @@ const CARDS = [
   },
   {
     kind: 'Could you retire today',
-    accent: '#d97706',
+    accent: '#E6A125',
     headline: () => {
       const corpus = 200000 * 12 / 0.035;
       return `With ₹2L/month expenses, about ${formatINR(corpus)} could let you retire now and live off returns.`;
@@ -57,7 +57,7 @@ const CARDS = [
   },
   {
     kind: 'Prepay or invest',
-    accent: '#0d9488',
+    accent: '#334BA0',
     headline: () => `If your home loan costs 8.5% and equity returns 11% post-tax, investing the surplus usually wins.`,
     sub: 'Guaranteed savings vs uncertain returns — your numbers decide.',
     cta: 'Settle the debate', to: 'prepay',

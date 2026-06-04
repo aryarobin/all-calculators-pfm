@@ -85,7 +85,7 @@ export default function App() {
       <Seo {...seo} />
 
       {/* Top bar — GoalFi branded */}
-      <header className="flex-shrink-0 h-12 bg-[#11161F] border-b border-white/10 flex items-center px-3 sm:px-4 gap-3 z-50">
+      <header className="flex-shrink-0 h-12 bg-[#030338] border-b border-white/10 flex items-center px-3 sm:px-4 gap-3 z-50">
         {!isHome && (
           <button onClick={() => setSidebarOpen(o => !o)} className="lg:hidden text-slate-400 hover:text-white transition-colors p-1" aria-label="Menu">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
@@ -94,13 +94,9 @@ export default function App() {
           </button>
         )}
 
-        <button onClick={() => handleSelect('home')} className="flex items-center gap-2 hover:opacity-90 transition-opacity">
-          <div className="w-7 h-7 rounded-lg bg-[#1A2330] flex items-center justify-center">
-            <span className="gf-mark text-[#5EE5E5] text-base leading-none">G</span>
-          </div>
-          <span className="font-serif-display font-semibold text-white text-[15px] tracking-tight">
-            GoalFi <span className="font-sans font-normal text-slate-400 text-xs">Planner</span>
-          </span>
+        <button onClick={() => handleSelect('home')} className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
+          <img src="/goalfi-logo-white.png" alt="GoalFi" className="h-[22px] w-auto" />
+          <span className="text-slate-400 font-normal text-xs border-l border-white/15 pl-2.5 hidden sm:inline">Planner</span>
         </button>
 
         {currentCalc && (
@@ -114,7 +110,7 @@ export default function App() {
 
         <a href="https://app.goalfi.app/signup" target="_blank" rel="noopener noreferrer"
           onClick={() => trackSignupClick('header')}
-          className="bg-[#5EE5E5] hover:bg-[#3DD6D6] text-[#11161F] font-bold text-xs px-3.5 py-1.5 rounded-lg transition-colors whitespace-nowrap">
+          className="bg-[#CA8D1B] hover:bg-[#E6A125] text-[#030338] font-bold text-xs px-3.5 py-1.5 rounded-lg transition-colors whitespace-nowrap">
           Sign up free
         </a>
       </header>
@@ -122,7 +118,7 @@ export default function App() {
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar — hidden on the home/landing page for a full-width website feel */}
         {!isHome && (
-          <nav className={`fixed lg:relative top-12 left-0 bottom-0 z-40 w-52 bg-[#11161F] border-r border-white/10 overflow-y-auto flex-shrink-0 transition-transform duration-200 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+          <nav className={`fixed lg:relative top-12 left-0 bottom-0 z-40 w-52 bg-[#030338] border-r border-white/10 overflow-y-auto flex-shrink-0 transition-transform duration-200 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
             <div className="p-3 pt-3">
               <button onClick={() => handleSelect('home')}
                 className="nav-link w-full text-left mb-1">

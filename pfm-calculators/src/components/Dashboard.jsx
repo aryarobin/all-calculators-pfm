@@ -124,15 +124,15 @@ export default function Dashboard({ onSelect }) {
         <p className="font-mono-label text-[11px] uppercase tracking-[0.2em] text-slate-400 mb-5">
           GoalFi Planner — free financial calculators for India
         </p>
-        <h1 className="font-serif-display text-[34px] leading-[1.08] sm:text-[56px] sm:leading-[1.05] font-semibold text-slate-900 tracking-tight max-w-3xl">
-          Make every rupee decision<br className="hidden sm:block" /> with <span className="italic text-cyan-600">clarity</span>.
+        <h1 className="font-serif-display text-[34px] leading-[1.08] sm:text-[56px] sm:leading-[1.05] text-[#1E1963] tracking-tight max-w-3xl">
+          Make every rupee decision<br className="hidden sm:block" /> with <span className="text-[#CA8D1B]">clarity</span>.
         </h1>
         <p className="text-slate-500 text-base sm:text-lg mt-5 max-w-xl leading-relaxed">
           22 calculators that answer the questions people actually ask — from “how much SIP for ₹1 crore” to “can I retire today.” Live charts, no sign-up, built for Indian tax and inflation.
         </p>
         <div className="flex flex-wrap items-center gap-3 mt-7">
           <button onClick={() => onSelect('sip')}
-            className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm px-5 py-3 rounded-xl transition-colors">
+            className="inline-flex items-center gap-2 bg-[#1E1963] hover:bg-[#030338] text-white font-semibold text-sm px-5 py-3 rounded-xl transition-colors">
             Explore calculators <ArrowRight size={16} />
           </button>
           <a href="https://app.goalfi.app/signup" target="_blank" rel="noopener noreferrer"
@@ -222,8 +222,8 @@ export default function Dashboard({ onSelect }) {
       <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-10">
         {POPULAR.map(({ id, label, Icon }) => (
           <button key={id} onClick={() => onSelect(id)}
-            className="group bg-white rounded-xl border border-slate-200 p-3 text-left hover:border-slate-900 transition-colors">
-            <Icon size={18} className="mb-5 text-slate-400 group-hover:text-slate-900 transition-colors" strokeWidth={2} />
+            className="group bg-white rounded-xl border border-slate-200 p-3 text-left hover:border-[#1E1963] transition-colors">
+            <Icon size={18} className="mb-5 text-slate-400 group-hover:text-[#1E1963] transition-colors" strokeWidth={2} />
             <p className="text-[13px] font-semibold text-slate-700 leading-tight">{label}</p>
           </button>
         ))}
@@ -244,7 +244,7 @@ export default function Dashboard({ onSelect }) {
               {journey.steps.map(({ id, label, desc, Icon }) => (
                 <button key={id} onClick={() => onSelect(id)}
                   className="bg-white rounded-xl border border-slate-200 p-3.5 text-left transition-colors hover:border-slate-900 group">
-                  <Icon size={17} className="mb-2.5 text-slate-400 group-hover:text-slate-900 transition-colors" strokeWidth={2} />
+                  <Icon size={17} className="mb-2.5 text-slate-400 group-hover:text-[#1E1963] transition-colors" strokeWidth={2} />
                   <p className="text-[13px] font-semibold text-slate-800 leading-tight">{label}</p>
                   <p className="text-[11px] text-slate-400 mt-0.5 leading-tight">{desc}</p>
                 </button>
@@ -256,14 +256,14 @@ export default function Dashboard({ onSelect }) {
         {/* Safe savings — clean feature row */}
         <button onClick={() => onSelect('fdppf')}
           className="w-full rounded-xl border border-slate-200 bg-white p-5 text-left transition-colors hover:border-slate-900 flex items-center gap-4 group">
-          <div className="w-11 h-11 rounded-xl bg-slate-100 flex items-center justify-center flex-shrink-0 group-hover:bg-slate-900 transition-colors">
+          <div className="w-11 h-11 rounded-xl bg-slate-100 flex items-center justify-center flex-shrink-0 group-hover:bg-[#1E1963] transition-colors">
             <Landmark size={22} strokeWidth={2} className="text-slate-500 group-hover:text-white transition-colors" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-[15px] font-semibold text-slate-900 leading-tight">Safe Savings — FD, RD, PPF, NPS</p>
             <p className="text-xs text-slate-400 mt-0.5">Compare maturity across all guaranteed, tax-advantaged instruments</p>
           </div>
-          <ArrowRight size={18} className="flex-shrink-0 text-slate-300 group-hover:text-slate-900 transition-colors" />
+          <ArrowRight size={18} className="flex-shrink-0 text-slate-300 group-hover:text-[#1E1963] transition-colors" />
         </button>
       </div>
 

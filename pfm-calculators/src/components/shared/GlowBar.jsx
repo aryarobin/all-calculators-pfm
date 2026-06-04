@@ -12,10 +12,10 @@ export default function GlowBar({ pct = 0, leftLabel = 'Invested', rightLabel = 
           style={{ width: `${100 - safe}%` }}
         />
         <div
-          className="h-full rounded-r-full bg-emerald-500 transition-all duration-700 ease-out"
+          className="h-full rounded-r-full bg-[#3EA23C] transition-all duration-700 ease-out"
           style={{
             width: `${safe}%`,
-            boxShadow: safe > 5 ? '0 0 14px 3px rgba(16,185,129,0.55)' : 'none',
+            boxShadow: safe > 5 ? '0 0 14px 3px rgba(62,162,60,0.5)' : 'none',
           }}
         />
       </div>

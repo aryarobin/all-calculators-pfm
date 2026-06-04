@@ -11,11 +11,11 @@ export default function GaugeRing({ pct = 0, label, sublabel, size = 120, color 
   const circ = 2 * Math.PI * r;
   const offset = circ * (1 - animated / 100);
 
+  // Brand semantic scale: Pigment Green → Harvest Gold → Imperial Red
   const autoColor =
-    animated >= 100 ? '#10b981' :
-    animated >= 75  ? '#22c55e' :
-    animated >= 50  ? '#f59e0b' :
-    animated >= 25  ? '#f97316' : '#ef4444';
+    animated >= 90 ? '#3EA23C' :
+    animated >= 60 ? '#CA8D1B' :
+    animated >= 30 ? '#E6A125' : '#E33434';
   const ringColor = color || autoColor;
 
   return (

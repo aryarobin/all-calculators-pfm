@@ -1,15 +1,17 @@
 import { useAnimatedValue } from '../../hooks/useAnimatedValue';
 import { formatINR } from '../../utils/financialCalc';
 
+// GoalFi brand gradients (Brand Book 2023): Federal Blue, Penn Blue, Marian
+// Blue, Harvest Gold, plus semantic Pigment Green / Imperial Red.
 const GRADIENTS = {
-  blue:    'from-blue-600 to-blue-800',
-  indigo:  'from-indigo-600 to-violet-700',
-  emerald: 'from-emerald-500 to-teal-700',
-  slate:   'from-slate-700 to-slate-900',
-  amber:   'from-amber-500 to-orange-600',
-  rose:    'from-rose-500 to-red-700',
-  violet:  'from-violet-600 to-purple-800',
-  cyan:    'from-cyan-500 to-blue-700',
+  blue:    'from-[#1E1963] to-[#030338]',   // Federal → Penn (default brand)
+  indigo:  'from-[#334BA0] to-[#1E1963]',   // Marian → Federal
+  violet:  'from-[#1E1963] to-[#030338]',   // brand blue
+  cyan:    'from-[#334BA0] to-[#030338]',   // Marian → Penn
+  emerald: 'from-[#3EA23C] to-[#1E5e3a]',   // Pigment Green (positive)
+  slate:   'from-[#18181C] to-[#030338]',   // Ink → Penn (sophisticated dark)
+  amber:   'from-[#CA8D1B] to-[#8a5e10]',   // Harvest Gold (caution / gold moment)
+  rose:    'from-[#E33434] to-[#8a1f1f]',   // Imperial Red (warning)
 };
 
 export default function HeroCard({
