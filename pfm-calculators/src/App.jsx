@@ -34,6 +34,10 @@ import CreditCardPayoff from './components/calculators/CreditCardPayoff';
 import NetWorth from './components/calculators/NetWorth';
 import SimpleVsCompound from './components/calculators/SimpleVsCompound';
 import InsuranceVsInvestment from './components/calculators/InsuranceVsInvestment';
+import TermCoverNeeded from './components/calculators/TermCoverNeeded';
+import DirectVsRegular from './components/calculators/DirectVsRegular';
+import LumpsumVsSIP from './components/calculators/LumpsumVsSIP';
+import CrorepatiTimeline from './components/calculators/CrorepatiTimeline';
 import Dashboard from './components/Dashboard';
 
 const COMPONENTS = {
@@ -46,7 +50,8 @@ const COMPONENTS = {
   salary: SalaryCalculator, budget: BudgetPlanner,
   capgains: CapitalGainsTax, ssy: SukanyaSamriddhi, emergency: EmergencyFund,
   creditcard: CreditCardPayoff, networth: NetWorth, simplecompound: SimpleVsCompound,
-  insurevsinvest: InsuranceVsInvestment,
+  insurevsinvest: InsuranceVsInvestment, termcover: TermCoverNeeded, directregular: DirectVsRegular,
+  lumpvssip: LumpsumVsSIP, crorepati: CrorepatiTimeline,
 };
 
 const NAV_GROUPS = NAV_GROUP_ORDER.map(label => ({
