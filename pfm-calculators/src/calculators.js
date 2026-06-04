@@ -19,6 +19,12 @@ export const CALCULATORS = [
   { id: 'gold', slug: 'gold-investment-calculator', name: 'Gold: SGB vs ETF vs Physical', group: 'Investments',
     seoTitle: 'Gold Investment Calculator — SGB vs Gold ETF vs Physical | GoalFi',
     seoDesc: 'Compare Sovereign Gold Bonds, Gold ETFs and physical gold on the same investment — after interest, expenses, making charges and tax. Free gold calculator.' },
+  { id: 'siplumpsum', slug: 'sip-plus-lumpsum-calculator', name: 'SIP + Lumpsum Combo', group: 'Investments',
+    seoTitle: 'SIP + Lumpsum Calculator — Combined Investment Growth | GoalFi',
+    seoDesc: 'Project a one-time lumpsum and a monthly SIP together, with optional annual step-up. See your combined corpus, invested amount and gains. Free calculator.' },
+  { id: 'assetalloc', slug: 'asset-allocation-calculator', name: 'Asset Allocation & Rebalancing', group: 'Investments',
+    seoTitle: 'Asset Allocation Calculator — Equity vs Debt by Age | GoalFi',
+    seoDesc: 'Find your ideal equity-debt split by age, see how far your portfolio has drifted, and how much to rebalance. Free asset allocation calculator for India.' },
 
   // ── Goals & Retirement ──
   { id: 'goal', slug: 'goal-planning-calculator', name: 'Goal Planning', group: 'Goals & Retirement',
@@ -72,6 +78,9 @@ export const CALCULATORS = [
   { id: 'elss', slug: 'elss-tax-saver-calculator', name: 'ELSS Tax-Saver', group: 'Mutual Funds',
     seoTitle: 'ELSS Calculator — Tax-Saving Mutual Fund Returns & 80C | GoalFi',
     seoDesc: 'Calculate ELSS corpus plus the 80C tax you save — the only tax-saving option with equity returns and just a 3-year lock-in. Free ELSS calculator.' },
+  { id: 'ltcgharvest', slug: 'ltcg-tax-harvesting-calculator', name: 'LTCG Tax Harvesting', group: 'Mutual Funds',
+    seoTitle: 'LTCG Tax Harvesting Calculator — Use the ₹1.25L Exemption | GoalFi',
+    seoDesc: 'See how booking up to ₹1.25 lakh of equity gains tax-free every year and rebuying resets your cost basis — cutting the tax you pay at redemption. Free.' },
   { id: 'termcover', slug: 'term-insurance-cover-calculator', name: 'Term Cover Needed', group: 'Smart Decisions',
     seoTitle: 'Term Insurance Cover Calculator — How Much Do You Need? | GoalFi',
     seoDesc: 'How much life insurance cover do you really need? Calculate it from income replacement, loans, and goals minus existing assets. Free term cover calculator.' },

@@ -4,28 +4,33 @@ import SliderInput from '../shared/SliderInput';
 import HeroCard from '../shared/HeroCard';
 import NextSteps from '../shared/NextSteps';
 import { useCalcState } from '../../hooks/useCalcState';
-import { calcSIP, formatINR } from '../../utils/financialCalc';
+import { calcSIP, calcLumpsum, formatINR } from '../../utils/financialCalc';
 
 export default function DirectVsRegular({ onNavigate }) {
   const [s, set] = useCalcState('directregular', {
-    monthly: 25000, years: 20, grossReturn: 12, regularER: 1.5, directER: 0.6,
+    mode: 'sip', monthly: 25000, amount: 1000000, years: 20, grossReturn: 12, regularER: 1.5, directER: 0.6,
   });
+
+  const isSIP = s.mode === 'sip';
+  const corpusAt = (netRate, yrs) => isSIP
+    ? calcSIP(s.monthly, netRate, yrs).corpus
+    : calcLumpsum(s.amount, netRate, yrs).corpus;
 
   const r = useMemo(() => {
     const directNet = s.grossReturn - s.directER;
     const regularNet = s.grossReturn - s.regularER;
-    const direct = calcSIP(s.monthly, directNet, s.years).corpus;
-    const regular = calcSIP(s.monthly, regularNet, s.years).corpus;
+    const direct = corpusAt(directNet, s.years);
+    const regular = corpusAt(regularNet, s.years);
     const data = [];
     for (let y = 1; y <= s.years; y++) {
       data.push({
         year: y,
-        direct: Math.round(calcSIP(s.monthly, directNet, y).corpus),
-        regular: Math.round(calcSIP(s.monthly, regularNet, y).corpus),
+        direct: Math.round(corpusAt(directNet, y)),
+        regular: Math.round(corpusAt(regularNet, y)),
       });
     }
     return { direct, regular, lost: direct - regular, directNet, regularNet, data };
-  }, [s]);
+  }, [s]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="space-y-4">
@@ -43,13 +48,23 @@ export default function DirectVsRegular({ onNavigate }) {
 
       <div className="bg-white rounded-2xl border border-slate-200 px-5 py-4">
         <p className="text-sm text-slate-600">
-          A <strong>regular plan</strong> quietly pays your distributor a trail commission via a higher expense ratio ({s.regularER}% vs {s.directER}% for <strong>direct</strong>). It looks tiny, but on a {formatINR(s.monthly)}/mo SIP over {s.years} years it silently eats <strong className="text-[#E33434]">{formatINR(r.lost)}</strong> — money that stays yours in a direct plan. Same fund, same manager, zero advice difference if you DIY.
+          A <strong>regular plan</strong> quietly pays your distributor a trail commission via a higher expense ratio ({s.regularER}% vs {s.directER}% for <strong>direct</strong>). It looks tiny, but on a {isSIP ? <>{formatINR(s.monthly)}/mo SIP</> : <>{formatINR(s.amount)} lumpsum</>} over {s.years} years it silently eats <strong className="text-[#E33434]">{formatINR(r.lost)}</strong> — money that stays yours in a direct plan. Same fund, same manager, zero advice difference if you DIY.
         </p>
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200 px-5 pt-5 pb-4">
-        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-5">Your SIP</p>
-        <SliderInput label="Monthly SIP" value={s.monthly} min={1000} max={500000} step={1000} onChange={v => set({ monthly: v })} prefix="₹" hint="Tap to type" />
+        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-3">Your Investment</p>
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          {[['sip', 'Monthly SIP'], ['lumpsum', 'One-time Lumpsum']].map(([id, label]) => (
+            <button key={id} onClick={() => set({ mode: id })}
+              className={`px-3 py-2.5 rounded-xl border-2 text-[13px] font-bold transition-all ${s.mode === id ? 'border-[#1E1963] bg-[#1E1963]/5 text-[#1E1963]' : 'border-slate-200 text-slate-600 hover:border-slate-300'}`}>
+              {label}
+            </button>
+          ))}
+        </div>
+        {isSIP
+          ? <SliderInput label="Monthly SIP" value={s.monthly} min={1000} max={500000} step={1000} onChange={v => set({ monthly: v })} prefix="₹" hint="Tap to type" />
+          : <SliderInput label="Lumpsum amount" value={s.amount} min={50000} max={50000000} step={50000} onChange={v => set({ amount: v })} prefix="₹" hint="Tap to type" />}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8">
           <SliderInput label="Duration" value={s.years} min={3} max={40} onChange={v => set({ years: v })} unit=" yr" />
           <SliderInput label="Gross fund return" value={s.grossReturn} min={6} max={18} step={0.5} onChange={v => set({ grossReturn: v })} unit="%" />

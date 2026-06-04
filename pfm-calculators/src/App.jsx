@@ -2,7 +2,9 @@ import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import GoalFiFooter from './components/brand/GoalFiFooter';
 import Seo from './components/Seo';
+import CalcFAQ from './components/CalcFAQ';
 import { trackCalcView, trackSignupClick } from './lib/analytics';
+import { buildShareUrl } from './lib/share';
 import { CALCULATORS, byId, bySlug, NAV_GROUP_ORDER, GOALFI_URL } from './calculators';
 
 import SIPCalculator from './components/calculators/SIPCalculator';
@@ -50,6 +52,9 @@ import IndexVsActive from './components/calculators/IndexVsActive';
 import GrowthVsIDCW from './components/calculators/GrowthVsIDCW';
 import DebtFundVsFD from './components/calculators/DebtFundVsFD';
 import ELSSCalculator from './components/calculators/ELSSCalculator';
+import LTCGHarvest from './components/calculators/LTCGHarvest';
+import AssetAllocation from './components/calculators/AssetAllocation';
+import SIPLumpsumCombo from './components/calculators/SIPLumpsumCombo';
 import Dashboard from './components/Dashboard';
 
 const COMPONENTS = {
@@ -67,6 +72,7 @@ const COMPONENTS = {
   healthcover: HealthCoverNeeded, epfnpsvpf: EPFvsNPSvsVPF, costofdelay: CostOfDelay, gold: GoldInvestment,
   realreturn: RealReturn, jobswitch: JobSwitch, postoffice: PostOfficeSchemes, brokerage: BrokerageCharges,
   indexactive: IndexVsActive, growthidcw: GrowthVsIDCW, debtvsfd: DebtFundVsFD, elss: ELSSCalculator,
+  ltcgharvest: LTCGHarvest, assetalloc: AssetAllocation, siplumpsum: SIPLumpsumCombo,
 };
 
 const NAV_GROUPS = NAV_GROUP_ORDER.map(label => ({
@@ -83,6 +89,7 @@ export default function App() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [shared, setShared] = useState(false);
   const mainRef = useRef(null);
 
   const currentCalc = slug ? bySlug[slug] : null;
@@ -107,6 +114,23 @@ export default function App() {
     if (id === 'home') { navigate('/'); return; }
     const cal = byId[id];
     navigate(cal ? `/${cal.slug}` : '/');
+  };
+
+  // Copy a shareable link with the current calculator's inputs encoded in the URL
+  const handleShare = async () => {
+    if (!currentCalc) return;
+    let state = {};
+    try { state = JSON.parse(localStorage.getItem(`pfm-${currentCalc.id}`) || '{}'); } catch {}
+    const url = buildShareUrl(currentCalc.slug, currentCalc.id, state);
+    try {
+      if (navigator.share && /Mobi|Android/i.test(navigator.userAgent)) {
+        await navigator.share({ title: `${currentCalc.name} — GoalFi Planner`, url });
+      } else {
+        await navigator.clipboard.writeText(url);
+      }
+      setShared(true);
+      setTimeout(() => setShared(false), 1800);
+    } catch { /* user dismissed share sheet */ }
   };
 
   const seo = currentCalc
@@ -140,6 +164,24 @@ export default function App() {
         )}
 
         <div className="flex-1"></div>
+
+        {currentCalc && (
+          <button onClick={handleShare}
+            className="flex items-center gap-1.5 text-slate-300 hover:text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg hover:bg-white/10 transition-colors whitespace-nowrap"
+            aria-label="Share this calculation">
+            {shared ? (
+              <>
+                <svg className="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                <span className="hidden sm:inline">Copied</span>
+              </>
+            ) : (
+              <>
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>
+                <span className="hidden sm:inline">Share</span>
+              </>
+            )}
+          </button>
+        )}
 
         <a href={GOALFI_URL} target="_blank" rel="noopener noreferrer"
           onClick={() => trackSignupClick('header')}
@@ -209,7 +251,12 @@ export default function App() {
 
             {isHome
               ? <Dashboard onSelect={handleSelect} />
-              : ActiveComponent && <ActiveComponent onNavigate={handleSelect} />
+              : ActiveComponent && (
+                <>
+                  <ActiveComponent onNavigate={handleSelect} />
+                  <CalcFAQ id={currentCalc.id} />
+                </>
+              )
             }
           </div>
 

@@ -10,6 +10,7 @@ import { readFileSync, writeFileSync } from 'fs';
 import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 import { CALCULATORS, SITE_URL } from '../src/calculators.js';
+import { FAQS, INTROS } from '../src/data/faqs.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DIST = resolve(__dirname, '../dist');
@@ -38,15 +39,36 @@ function pageHtml(calc) {
     publisher: { '@type': 'Organization', name: 'GoalFi', url: 'https://www.goalfi.app' },
   });
 
+  const faqs = FAQS[calc.id] || [];
+  const intro = INTROS[calc.id] || `Free ${calc.name} from GoalFi Planner — India's most complete financial calculator suite. Adjust the inputs to see results update live with charts.`;
+
+  // FAQPage JSON-LD — eligible for FAQ rich results on Google
+  const faqJsonLd = faqs.length ? `<script type="application/ld+json">${JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map(f => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  })}</script>` : '';
+
   // Crawlable content shown before React boots (replaced on hydrate)
+  const faqHtml = faqs.length ? `
+      <section style="margin-top:28px">
+        <h2 style="font-size:18px;color:#0f172a;font-weight:700">Frequently asked questions</h2>
+        ${faqs.map(f => `<div style="margin-top:14px">
+          <h3 style="font-size:15px;color:#1e293b;font-weight:600">${esc(f.q)}</h3>
+          <p style="color:#475569;font-size:14px;line-height:1.6;margin-top:4px">${esc(f.a)}</p>
+        </div>`).join('')}
+      </section>` : '';
+
   const seoBlock = `
     <main style="max-width:760px;margin:0 auto;padding:24px;font-family:Inter,system-ui,sans-serif">
       <h1 style="font-size:28px;font-weight:800;color:#0f172a">${esc(calc.name)}</h1>
       <p style="color:#475569;font-size:16px;line-height:1.6;margin-top:8px">${desc}</p>
-      <p style="color:#64748b;font-size:14px;margin-top:16px">
-        Free ${esc(calc.name)} from GoalFi Planner — India's most complete financial calculator suite.
-        Adjust the inputs to see results update live with charts. Loading the interactive calculator…
-      </p>
+      <p style="color:#64748b;font-size:14px;margin-top:16px">${esc(intro)}</p>
+      ${faqHtml}
       <nav style="margin-top:24px">
         <h2 style="font-size:15px;color:#334155;font-weight:700">More calculators</h2>
         <ul style="columns:2;font-size:14px;margin-top:8px;color:#2563eb">
@@ -68,8 +90,9 @@ function pageHtml(calc) {
   html = html.replace(/<meta property="og:url"[^>]*>/, `<meta property="og:url" content="${url}" />`);
   html = html.replace(/<meta name="twitter:title"[^>]*>/, `<meta name="twitter:title" content="${title}" />`);
   html = html.replace(/<meta name="twitter:description"[^>]*>/, `<meta name="twitter:description" content="${desc}" />`);
-  // Replace the WebApplication JSON-LD with this page's SoftwareApplication
-  html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, `<script type="application/ld+json">${jsonLd}</script>`);
+  // Replace the WebApplication JSON-LD with this page's SoftwareApplication,
+  // and append the FAQPage JSON-LD right after it when present.
+  html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, `<script type="application/ld+json">${jsonLd}</script>${faqJsonLd}`);
   // Inject crawlable content into #root
   html = html.replace('<div id="root"></div>', `<div id="root">${seoBlock}</div>`);
 

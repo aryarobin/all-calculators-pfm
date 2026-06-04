@@ -18,8 +18,10 @@ const META = {
   sip:            [TrendingUp,    'Monthly investment → corpus'],
   lumpsum:        [Coins,         'One-time investment growth'],
   stepup:         [Rocket,        'Raise your SIP every year'],
+  siplumpsum:     [Rocket,        'Lumpsum + monthly SIP together'],
   compare:        [Scale,         'FD vs PPF vs MF vs NPS'],
   gold:           [Gem,           'SGB vs ETF vs physical'],
+  assetalloc:     [PieChart,      'Equity vs debt by age'],
 
   goal:           [Target,        'Inflation-adjusted SIP'],
   retirement:     [Palmtree,      'Corpus & SIP to retire'],
@@ -42,6 +44,7 @@ const META = {
   growthidcw:     [Coins,         'Growth or dividend option?'],
   debtvsfd:       [Landmark,      'Is debt MF better than FD?'],
   elss:           [Receipt,       '80C + equity, 3-yr lock-in'],
+  ltcgharvest:    [Sparkles,      'Book ₹1.25L gains tax-free/yr'],
 
   xirr:           [Percent,       'Your real SIP return'],
   timeline:       [CalendarClock, 'Your life on one view'],

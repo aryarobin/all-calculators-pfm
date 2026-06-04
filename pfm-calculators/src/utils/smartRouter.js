@@ -365,6 +365,30 @@ const CALCS = [
     low: ['80c', 'tax saver', 'elss'],
     response: 'ELSS Tax-Saver — equity returns plus 80C tax savings with just a 3-year lock-in.',
   },
+  {
+    id: 'ltcgharvest',
+    label: 'LTCG Tax Harvesting',
+    high: ['tax harvesting', 'ltcg harvesting', 'tax loss harvesting', 'book gains', 'reset cost basis', '1.25 lakh exemption', 'harvest gains'],
+    med: ['save ltcg', 'reduce capital gains tax', 'use exemption', 'rebuy units'],
+    low: ['harvest', 'exemption'],
+    response: 'LTCG Harvesting — book ₹1.25L of gains tax-free each year to cut tax at redemption.',
+  },
+  {
+    id: 'assetalloc',
+    label: 'Asset Allocation & Rebalancing',
+    high: ['asset allocation', 'equity debt split', 'rebalancing', 'rebalance portfolio', 'equity vs debt ratio', '100 minus age', 'portfolio allocation'],
+    med: ['allocation by age', 'how much equity', 'how much debt', 'portfolio mix', 'glide path'],
+    low: ['allocation', 'rebalance', 'mix'],
+    response: 'Asset Allocation — your ideal equity-debt split by age, drift, and how much to rebalance.',
+  },
+  {
+    id: 'siplumpsum',
+    label: 'SIP + Lumpsum Combo',
+    high: ['sip plus lumpsum', 'sip and lumpsum', 'lumpsum and sip together', 'combined sip lumpsum', 'one time plus monthly'],
+    med: ['lumpsum with sip', 'initial investment plus sip', 'sip with initial amount'],
+    low: ['combine', 'together'],
+    response: 'SIP + Lumpsum — project a one-time amount and a monthly SIP together.',
+  },
 ];
 
 // Score a query against a calculator
