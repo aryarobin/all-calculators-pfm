@@ -46,6 +46,10 @@ import RealReturn from './components/calculators/RealReturn';
 import JobSwitch from './components/calculators/JobSwitch';
 import PostOfficeSchemes from './components/calculators/PostOfficeSchemes';
 import BrokerageCharges from './components/calculators/BrokerageCharges';
+import IndexVsActive from './components/calculators/IndexVsActive';
+import GrowthVsIDCW from './components/calculators/GrowthVsIDCW';
+import DebtFundVsFD from './components/calculators/DebtFundVsFD';
+import ELSSCalculator from './components/calculators/ELSSCalculator';
 import Dashboard from './components/Dashboard';
 
 const COMPONENTS = {
@@ -62,6 +66,7 @@ const COMPONENTS = {
   lumpvssip: LumpsumVsSIP, crorepati: CrorepatiTimeline,
   healthcover: HealthCoverNeeded, epfnpsvpf: EPFvsNPSvsVPF, costofdelay: CostOfDelay, gold: GoldInvestment,
   realreturn: RealReturn, jobswitch: JobSwitch, postoffice: PostOfficeSchemes, brokerage: BrokerageCharges,
+  indexactive: IndexVsActive, growthidcw: GrowthVsIDCW, debtvsfd: DebtFundVsFD, elss: ELSSCalculator,
 };
 
 const NAV_GROUPS = NAV_GROUP_ORDER.map(label => ({

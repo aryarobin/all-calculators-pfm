@@ -333,6 +333,38 @@ const CALCS = [
     low: ['interest', 'compound'],
     response: 'Simple vs Compound — see why compounding quietly builds wealth over simple interest.',
   },
+  {
+    id: 'indexactive',
+    label: 'Index vs Active Fund',
+    high: ['index vs active', 'index fund vs active', 'active vs passive', 'passive investing', 'index fund', 'nifty index fund', 'beat the index', 'expense ratio active'],
+    med: ['index fund return', 'active fund', 'passive fund', 'should i buy index', 'etf vs active'],
+    low: ['index', 'passive', 'active fund'],
+    response: 'Index vs Active — the extra return an active fund must earn just to beat a cheap index fund.',
+  },
+  {
+    id: 'growthidcw',
+    label: 'Growth vs IDCW (Dividend)',
+    high: ['growth vs idcw', 'growth or dividend', 'idcw', 'dividend option', 'growth option', 'dividend vs growth mutual fund', 'reinvestment vs payout'],
+    med: ['dividend mutual fund', 'mutual fund dividend', 'payout option', 'which option mutual fund'],
+    low: ['idcw', 'dividend', 'growth option'],
+    response: 'Growth vs IDCW — which mutual fund option wins after tax (growth almost always does).',
+  },
+  {
+    id: 'debtvsfd',
+    label: 'Debt Fund vs FD',
+    high: ['debt fund vs fd', 'debt mutual fund vs fd', 'debt fund or fd', 'liquid fund vs fd', 'debt fund tax', 'is debt fund better than fd', 'arbitrage fund vs fd'],
+    med: ['debt fund', 'debt mutual fund', 'fd alternative', 'better than fd', 'park money'],
+    low: ['debt fund', 'liquid fund'],
+    response: 'Debt Fund vs FD — are debt mutual funds still better than FDs after the 2023 tax change?',
+  },
+  {
+    id: 'elss',
+    label: 'ELSS Tax-Saver',
+    high: ['elss', 'tax saver fund', 'tax saving mutual fund', 'elss calculator', '80c mutual fund', 'tax saver sip', 'equity linked savings'],
+    med: ['save tax mutual fund', 'tax saving sip', '3 year lock in', 'tax saver'],
+    low: ['80c', 'tax saver', 'elss'],
+    response: 'ELSS Tax-Saver — equity returns plus 80C tax savings with just a 3-year lock-in.',
+  },
 ];
 
 // Score a query against a calculator

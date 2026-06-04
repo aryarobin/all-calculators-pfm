@@ -94,15 +94,15 @@ const JOURNEYS = [
     ],
   },
   {
-    id: 'investor', Icon: LineChart, tag: 'Active investor',
-    title: "I'm an active investor",
+    id: 'investor', Icon: LineChart, tag: 'Mutual fund investor',
+    title: 'I invest in mutual funds',
     chip: 'bg-slate-100 text-slate-700',
-    intro: 'Sharpen the decisions that quietly decide whether you actually beat the index.',
+    intro: 'Sharpen the fund choices that quietly decide whether you actually build wealth.',
     steps: [
-      { id: 'xirr',          why: 'Your true annualised return, accounting for every cashflow.' },
+      { id: 'indexactive',   why: 'Index or active? See the fee hurdle a manager must clear.' },
       { id: 'directregular', why: 'Are you bleeding lakhs to regular-plan commissions?' },
-      { id: 'brokerage',     why: 'What trading charges really cost you every year.' },
-      { id: 'gold',          why: 'The smartest wrapper for any gold allocation.' },
+      { id: 'growthidcw',    why: 'Growth or dividend (IDCW) — the after-tax winner.' },
+      { id: 'xirr',          why: 'Your fund\'s true annualised return, every cashflow counted.' },
     ],
   },
 ];

@@ -53,12 +53,25 @@ export const CALCULATORS = [
   { id: 'insurevsinvest', slug: 'insurance-vs-investment-calculator', name: 'Insurance vs Investment', group: 'Smart Decisions',
     seoTitle: 'Insurance vs Investment — Term + Invest vs ULIP / LIC | GoalFi',
     seoDesc: 'Should you buy a ULIP or LIC endowment, or buy term insurance and invest the rest? See how "Buy Term + Invest the Difference" builds far more wealth. Free.' },
-  { id: 'lumpvssip', slug: 'lumpsum-vs-sip-calculator', name: 'Lumpsum vs SIP (STP)', group: 'Smart Decisions',
+  // ── Mutual Funds ──
+  { id: 'lumpvssip', slug: 'lumpsum-vs-sip-calculator', name: 'Lumpsum vs SIP (STP)', group: 'Mutual Funds',
     seoTitle: 'Lumpsum vs SIP / STP Calculator — Deploy a Windfall | GoalFi',
     seoDesc: 'Got a bonus, ESOP or inheritance? Compare investing it all at once vs staggering via STP. See which builds more wealth and the timing-risk trade-off. Free.' },
-  { id: 'directregular', slug: 'direct-vs-regular-mutual-fund-calculator', name: 'Direct vs Regular MF', group: 'Smart Decisions',
+  { id: 'directregular', slug: 'direct-vs-regular-mutual-fund-calculator', name: 'Direct vs Regular MF', group: 'Mutual Funds',
     seoTitle: 'Direct vs Regular Mutual Fund Calculator — Commission Cost | GoalFi',
     seoDesc: 'See how the higher expense ratio of regular mutual fund plans silently costs you lakhs over time vs direct plans. Same fund, your money. Free calculator.' },
+  { id: 'indexactive', slug: 'index-vs-active-fund-calculator', name: 'Index vs Active Fund', group: 'Mutual Funds',
+    seoTitle: 'Index vs Active Fund Calculator — The Fee Hurdle | GoalFi',
+    seoDesc: 'See the extra return an active fund must earn every year just to beat a low-cost index fund after fees — and when it actually wins. Free calculator.' },
+  { id: 'growthidcw', slug: 'growth-vs-idcw-dividend-calculator', name: 'Growth vs IDCW (Dividend)', group: 'Mutual Funds',
+    seoTitle: 'Growth vs IDCW (Dividend) Mutual Fund Calculator | GoalFi',
+    seoDesc: 'Growth or IDCW (dividend) option? See the after-tax difference — growth defers to 12.5% LTCG while IDCW is taxed at your slab every payout. Free calculator.' },
+  { id: 'debtvsfd', slug: 'debt-fund-vs-fd-calculator', name: 'Debt Fund vs FD', group: 'Mutual Funds',
+    seoTitle: 'Debt Mutual Fund vs Fixed Deposit Calculator — After Tax | GoalFi',
+    seoDesc: 'Are debt mutual funds still better than FDs after the 2023 tax change? Compare post-tax returns — the deferral advantage of debt funds vs yearly-taxed FDs. Free.' },
+  { id: 'elss', slug: 'elss-tax-saver-calculator', name: 'ELSS Tax-Saver', group: 'Mutual Funds',
+    seoTitle: 'ELSS Calculator — Tax-Saving Mutual Fund Returns & 80C | GoalFi',
+    seoDesc: 'Calculate ELSS corpus plus the 80C tax you save — the only tax-saving option with equity returns and just a 3-year lock-in. Free ELSS calculator.' },
   { id: 'termcover', slug: 'term-insurance-cover-calculator', name: 'Term Cover Needed', group: 'Smart Decisions',
     seoTitle: 'Term Insurance Cover Calculator — How Much Do You Need? | GoalFi',
     seoDesc: 'How much life insurance cover do you really need? Calculate it from income replacement, loans, and goals minus existing assets. Free term cover calculator.' },
@@ -148,7 +161,7 @@ export const SITE_URL = 'https://planner.goalfi.app';
 export const GOALFI_URL = 'https://goalfiresearch.smallcase.com';
 
 export const NAV_GROUP_ORDER = [
-  'Investments', 'Goals & Retirement', 'Smart Decisions', 'Analysis', 'Loans', 'Savings', 'Tax & Salary',
+  'Investments', 'Mutual Funds', 'Goals & Retirement', 'Smart Decisions', 'Analysis', 'Loans', 'Savings', 'Tax & Salary',
 ];
 
 // Helpers

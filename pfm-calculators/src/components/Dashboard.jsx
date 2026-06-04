@@ -33,10 +33,15 @@ const META = {
   prepay:         [Scale,         'Clear the loan or invest?'],
   rentbuy:        [Home,          'Which builds more wealth?'],
   insurevsinvest: [Shuffle,       'Term + invest vs ULIP'],
-  lumpvssip:      [Shuffle,       'Deploy a windfall'],
-  directregular:  [Percent,       'The commission you lose'],
   termcover:      [Umbrella,      'Life cover you need'],
   healthcover:    [HeartPulse,    'Health cover you need'],
+
+  lumpvssip:      [Shuffle,       'Deploy a windfall'],
+  directregular:  [Percent,       'The commission you lose'],
+  indexactive:    [LineChart,     'Can active beat the index?'],
+  growthidcw:     [Coins,         'Growth or dividend option?'],
+  debtvsfd:       [Landmark,      'Is debt MF better than FD?'],
+  elss:           [Receipt,       '80C + equity, 3-yr lock-in'],
 
   xirr:           [Percent,       'Your real SIP return'],
   timeline:       [CalendarClock, 'Your life on one view'],
@@ -66,6 +71,7 @@ const META = {
 
 const GROUP_DESC = {
   'Investments':        'Put every rupee to work',
+  'Mutual Funds':       'Smarter fund decisions, after tax & fees',
   'Goals & Retirement': 'Work backwards from the target',
   'Smart Decisions':    'The big “should I…?” questions',
   'Analysis':           'What are you really earning?',
