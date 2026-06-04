@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import SliderInput from '../shared/SliderInput';
+import HeroCard from '../shared/HeroCard';
 import NextSteps from '../shared/NextSteps';
 import { useCalcState } from '../../hooks/useCalcState';
 import { formatINR } from '../../utils/financialCalc';
@@ -116,32 +117,19 @@ export default function BudgetPlanner({ onNavigate }) {
 
   return (
     <div className="space-y-4">
-      {/* Story + Hero */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="px-6 pt-6 pb-2">
-          <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1">Budget Planner</p>
-          <p className="text-lg font-semibold text-slate-700 leading-snug">
-            On <span className="text-blue-700 font-bold">{formatINR(s.income)}</span> income, you should save{' '}
-            <span className="text-emerald-600 font-bold">{formatINR(totals.savings)}/month</span> — are you?
-          </p>
-        </div>
-        <div className="px-6 pb-5 flex items-end gap-6 flex-wrap mt-2">
-          <div>
-            <p className="text-xs text-slate-400 font-medium mb-1">Monthly Savings</p>
-            <p className="text-3xl sm:text-5xl font-black text-emerald-600 leading-none tabular-nums">{formatINR(totals.savings)}</p>
-          </div>
-          <div className="flex gap-4 pb-1">
-            <div>
-              <p className="text-xs text-slate-400">Needs</p>
-              <p className="text-xl font-bold text-blue-600 tabular-nums">{formatINR(totals.needs)}</p>
-            </div>
-            <div>
-              <p className="text-xs text-slate-400">Wants</p>
-              <p className="text-xl font-bold text-orange-500 tabular-nums">{formatINR(totals.wants)}</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Hero */}
+      <HeroCard
+        label={`On ${formatINR(s.income)}/mo income`}
+        value={totals.savings}
+        rawValue={`${formatINR(totals.savings)}/mo`}
+        gradient="emerald"
+        sub="What you should be saving every month"
+        meta={[
+          { label: 'Needs', value: formatINR(totals.needs) },
+          { label: 'Wants', value: formatINR(totals.wants) },
+          { label: 'Savings rate', value: `${s.income > 0 ? Math.round(totals.savings / s.income * 100) : 0}%` },
+        ]}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Left: Inputs */}

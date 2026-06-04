@@ -132,7 +132,7 @@ export default function MoneyMultiplier({ onNavigate }) {
             onClick={() => update({ mode: m })}
             className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all ${
               mode === m
-                ? 'bg-white shadow text-orange-600'
+                ? 'bg-white shadow text-blue-700'
                 : 'text-slate-500 hover:text-slate-700'
             }`}
           >
@@ -190,7 +190,7 @@ export default function MoneyMultiplier({ onNavigate }) {
                   onClick={() => update({ targetMultiple: m.value })}
                   className={`py-3 rounded-xl text-sm font-bold border-2 transition-all ${
                     targetMultiple === m.value
-                      ? 'border-orange-400 bg-orange-50 text-orange-700'
+                      ? 'border-blue-400 bg-blue-50 text-blue-700'
                       : 'border-slate-100 text-slate-500 hover:border-slate-300 hover:bg-slate-50'
                   }`}
                 >
@@ -252,7 +252,7 @@ export default function MoneyMultiplier({ onNavigate }) {
                     onClick={() => update({ targetMultiple: m.value })}
                     className={`flex items-center gap-2 p-3 rounded-xl text-left transition-all ${
                       isActive
-                        ? 'ring-2 ring-orange-400 bg-orange-50'
+                        ? 'ring-2 ring-blue-400 bg-blue-50'
                         : 'bg-slate-50 hover:bg-slate-100'
                     }`}
                   >

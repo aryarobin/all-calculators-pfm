@@ -556,7 +556,7 @@ function NextSteps({ onNavigate }) {
       id: 'multiplier',
       label: 'Money Multiplier',
       desc: 'When will your money 2x, 5x, 10x?',
-      color: 'bg-orange-50 border-orange-100 text-orange-700',
+      color: 'bg-blue-50 border-blue-100 text-blue-700',
     },
     {
       id: 'compare',

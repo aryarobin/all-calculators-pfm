@@ -91,7 +91,7 @@ export default function InflationCalculator({ onNavigate }) {
           <button key={m.id} onClick={() => set({ mode: m.id })}
             className={`flex-1 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
               s.mode === m.id
-                ? 'bg-orange-600 text-white shadow-sm'
+                ? 'bg-blue-600 text-white shadow-sm'
                 : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
             }`}>
             {m.label}

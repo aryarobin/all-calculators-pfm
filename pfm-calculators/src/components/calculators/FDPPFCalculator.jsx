@@ -109,7 +109,7 @@ export default function FDPPFCalculator({ onNavigate }) {
             onClick={() => set({ tab: t.id })}
             className={`px-5 py-2 rounded-lg text-sm font-bold transition-all ${
               s.tab === t.id
-                ? 'bg-white shadow text-orange-600'
+                ? 'bg-white shadow text-blue-700'
                 : 'text-slate-500 hover:text-slate-700'
             }`}
           >
@@ -450,7 +450,7 @@ export default function FDPPFCalculator({ onNavigate }) {
                 onClick={() => set({ tab: item.label.toLowerCase() })}
                 className={`rounded-xl p-4 border-2 cursor-pointer transition-all ${
                   s.tab === item.label.toLowerCase()
-                    ? 'border-orange-400 bg-orange-50'
+                    ? 'border-blue-400 bg-blue-50'
                     : 'border-slate-100 bg-slate-50 hover:border-slate-300'
                 }`}
               >

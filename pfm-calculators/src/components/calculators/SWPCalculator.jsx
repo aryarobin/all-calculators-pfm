@@ -7,14 +7,17 @@ import { useCalcState } from '../../hooks/useCalcState';
 import { formatINR, calcIncomePlan, calcInflation } from '../../utils/financialCalc';
 
 // ── Forward SWP: does a corpus sustain a withdrawal? ──────────────────────────
-function calcSWP(corpus, monthlyWithdrawal, annualReturn, years) {
+function calcSWP(corpus, monthlyWithdrawal, annualReturn, years, stepUpPct = 0) {
   const r = annualReturn / 100 / 12;
   let balance = corpus;
+  let wd = monthlyWithdrawal;
+  const stepUp = stepUpPct / 100;   // annual withdrawal growth (inflation-linked)
   const data = [];
   let totalWithdrawn = 0, depletedAt = null;
   for (let m = 1; m <= years * 12; m++) {
-    balance = balance * (1 + r) - monthlyWithdrawal;
-    totalWithdrawn += monthlyWithdrawal;
+    if (m > 1 && (m - 1) % 12 === 0) wd = wd * (1 + stepUp);  // raise income each year
+    balance = balance * (1 + r) - wd;
+    totalWithdrawn += wd;
     if (balance <= 0 && !depletedAt) { depletedAt = m; balance = 0; }
     if (m % 12 === 0) data.push({ year: m / 12, balance: Math.max(0, Math.round(balance)) });
   }
@@ -49,7 +52,7 @@ export default function SWPCalculator({ onNavigate }) {
     incomeToday: 50000, yearsToStart: 20, incomeYears: 25,
     inflation: 6, accReturn: 12, wdReturn: 8, savings: 0,
     // forward-mode inputs
-    corpus: 10000000, monthly: 50000, returnRate: 8, years: 25,
+    corpus: 10000000, monthly: 50000, returnRate: 8, years: 25, stepUpWd: 0,
   });
 
   // ── Reverse: how much do I need? ──
@@ -60,7 +63,7 @@ export default function SWPCalculator({ onNavigate }) {
   }), [s.incomeToday, s.yearsToStart, s.incomeYears, s.inflation, s.accReturn, s.wdReturn, s.savings]);
 
   // ── Forward: will it last? ──
-  const fwd = useMemo(() => calcSWP(s.corpus, s.monthly, s.returnRate, s.years), [s.corpus, s.monthly, s.returnRate, s.years]);
+  const fwd = useMemo(() => calcSWP(s.corpus, s.monthly, s.returnRate, s.years, s.stepUpWd), [s.corpus, s.monthly, s.returnRate, s.years, s.stepUpWd]);
   const maxMonthly = useMemo(() => Math.round(calcMaxSWP(s.corpus, s.returnRate, s.years)), [s.corpus, s.returnRate, s.years]);
   const perpetualMonthly = useMemo(() => Math.round(s.corpus * s.returnRate / 100 / 12), [s.corpus, s.returnRate]);
   const sustainable = s.monthly <= maxMonthly;
@@ -156,7 +159,13 @@ export default function SWPCalculator({ onNavigate }) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8">
               <SliderInput label="Return on corpus" hint="Conservative 6% · Moderate 8%" value={s.returnRate} min={4} max={14} step={0.5} onChange={v => set({ returnRate: v })} unit="%" />
               <SliderInput label="Withdrawal period" value={s.years} min={5} max={50} onChange={v => set({ years: v })} unit=" yr" />
+              <SliderInput label="Step up withdrawal yearly" hint="Grow income with inflation (e.g. 6%)" value={s.stepUpWd} min={0} max={12} step={0.5} onChange={v => set({ stepUpWd: v })} unit="%" />
             </div>
+            {s.stepUpWd > 0 && (
+              <p className="text-xs text-slate-500 mt-2 px-1">
+                Income rises {s.stepUpWd}%/yr to beat inflation — so withdrawals start at {formatINR(s.monthly)}/mo and climb over time, which depletes the corpus faster than a flat withdrawal.
+              </p>
+            )}
             <div className="grid grid-cols-3 gap-2 mt-3">
               {[
                 { label: 'Interest only', val: perpetualMonthly, note: 'never depletes' },
