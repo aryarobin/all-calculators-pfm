@@ -130,6 +130,15 @@ export const CALCULATORS = [
   { id: 'creditcard', slug: 'credit-card-payoff-calculator', name: 'Credit Card Payoff', group: 'Loans',
     seoTitle: 'Credit Card Payoff Calculator — Interest & Time to Clear | GoalFi',
     seoDesc: 'See how long to clear your credit card debt and the total interest at 36–48% APR. Avoid the minimum-payment trap. Free credit card payoff calculator.' },
+  { id: 'loaneligibility', slug: 'home-loan-eligibility-calculator', name: 'Home Loan Eligibility', group: 'Loans',
+    seoTitle: 'Home Loan Eligibility Calculator — How Much Can You Borrow? | GoalFi',
+    seoDesc: 'Find the home loan you qualify for based on your income, existing EMIs and FOIR — plus the property you can afford. Free eligibility calculator for India.' },
+  { id: 'prepayimpact', slug: 'loan-prepayment-calculator', name: 'Loan Prepayment Impact', group: 'Loans',
+    seoTitle: 'Loan Prepayment Calculator — Interest & Tenure Saved | GoalFi',
+    seoDesc: 'See how much interest you save and how many months earlier your loan closes when you prepay a lumpsum or pay extra each month. Free prepayment calculator.' },
+  { id: 'balancetransfer', slug: 'home-loan-balance-transfer-calculator', name: 'Balance Transfer / Refinance', group: 'Loans',
+    seoTitle: 'Home Loan Balance Transfer Calculator — Net Savings | GoalFi',
+    seoDesc: 'Should you transfer your home loan to a lower rate? See net savings after the processing fee, the EMI drop and breakeven. Free balance transfer calculator.' },
 
   // ── Savings ──
   { id: 'fdppf', slug: 'fd-rd-ppf-nps-calculator', name: 'FD / RD / PPF / NPS', group: 'Savings',
@@ -144,6 +153,15 @@ export const CALCULATORS = [
   { id: 'emergency', slug: 'emergency-fund-calculator', name: 'Emergency Fund', group: 'Goals & Retirement',
     seoTitle: 'Emergency Fund Calculator — How Many Months Do You Need? | GoalFi',
     seoDesc: 'How big should your emergency fund be? Calculate 3–12 months of expenses, see your coverage, and how long to build it. Free emergency fund calculator.' },
+  { id: 'nps', slug: 'nps-calculator', name: 'NPS Calculator', group: 'Goals & Retirement',
+    seoTitle: 'NPS Calculator — Corpus, Lumpsum & Monthly Pension | GoalFi',
+    seoDesc: 'Calculate your NPS corpus at 60, the tax-free lumpsum, and the monthly pension your annuity will pay — plus the extra ₹50k 80CCD(1B) tax break. Free.' },
+  { id: 'epf', slug: 'epf-calculator', name: 'EPF Calculator', group: 'Goals & Retirement',
+    seoTitle: 'EPF Calculator — Provident Fund Corpus at Retirement | GoalFi',
+    seoDesc: 'Calculate your EPF corpus at retirement from employee and employer contributions, salary growth and 8.25% interest — tax-free. Free EPF calculator for India.' },
+  { id: 'education', slug: 'child-education-calculator', name: 'Child Education Planner', group: 'Goals & Retirement',
+    seoTitle: 'Child Education Calculator — Future Cost & SIP Needed | GoalFi',
+    seoDesc: "Plan your child's education: see the future cost at 10% education inflation and the exact monthly SIP needed to fund it. Free child education calculator." },
 
   // ── Tax & Salary ──
   { id: 'tax', slug: 'income-tax-calculator', name: 'Income Tax', group: 'Tax & Salary',
@@ -161,6 +179,15 @@ export const CALCULATORS = [
   { id: 'budget', slug: 'budget-planner', name: 'Budget Planner', group: 'Tax & Salary',
     seoTitle: 'Budget Planner — 50/30/20 Rule Calculator | GoalFi',
     seoDesc: 'Plan your monthly budget with the 50/30/20 rule, get a savings health score, and see how your savings grow if invested. Free budget planner.' },
+  { id: 'freelancetax', slug: 'freelancer-tax-calculator', name: 'Freelancer Tax (44ADA)', group: 'Tax & Salary',
+    seoTitle: 'Freelancer Tax Calculator — Presumptive Tax 44ADA | GoalFi',
+    seoDesc: 'Calculate your tax as a freelancer or professional under Section 44ADA presumptive taxation — declare 50% of receipts, no books, no audit. Free calculator.' },
+  { id: 'gratuity', slug: 'gratuity-calculator', name: 'Gratuity Calculator', group: 'Tax & Salary',
+    seoTitle: 'Gratuity Calculator — Amount & Tax Exemption | GoalFi',
+    seoDesc: 'Calculate your gratuity under the Payment of Gratuity Act from your last salary and years of service, and see the ₹20 lakh tax-free limit. Free calculator.' },
+  { id: 'hra', slug: 'hra-exemption-calculator', name: 'HRA Exemption', group: 'Tax & Salary',
+    seoTitle: 'HRA Exemption Calculator — Tax-Free House Rent Allowance | GoalFi',
+    seoDesc: 'Calculate your HRA exemption — the least of actual HRA, rent minus 10% of basic, and 50%/40% of basic. See how much of your HRA is tax-free. Free calculator.' },
 ];
 
 export const SITE_URL = 'https://planner.goalfi.app';

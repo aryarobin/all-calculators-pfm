@@ -55,6 +55,15 @@ import ELSSCalculator from './components/calculators/ELSSCalculator';
 import LTCGHarvest from './components/calculators/LTCGHarvest';
 import AssetAllocation from './components/calculators/AssetAllocation';
 import SIPLumpsumCombo from './components/calculators/SIPLumpsumCombo';
+import HomeLoanEligibility from './components/calculators/HomeLoanEligibility';
+import PrepaymentImpact from './components/calculators/PrepaymentImpact';
+import BalanceTransfer from './components/calculators/BalanceTransfer';
+import NPSCalculator from './components/calculators/NPSCalculator';
+import EPFCalculator from './components/calculators/EPFCalculator';
+import ChildEducation from './components/calculators/ChildEducation';
+import FreelancerTax from './components/calculators/FreelancerTax';
+import GratuityCalculator from './components/calculators/GratuityCalculator';
+import HRACalculator from './components/calculators/HRACalculator';
 import Dashboard from './components/Dashboard';
 
 const COMPONENTS = {
@@ -73,6 +82,9 @@ const COMPONENTS = {
   realreturn: RealReturn, jobswitch: JobSwitch, postoffice: PostOfficeSchemes, brokerage: BrokerageCharges,
   indexactive: IndexVsActive, growthidcw: GrowthVsIDCW, debtvsfd: DebtFundVsFD, elss: ELSSCalculator,
   ltcgharvest: LTCGHarvest, assetalloc: AssetAllocation, siplumpsum: SIPLumpsumCombo,
+  loaneligibility: HomeLoanEligibility, prepayimpact: PrepaymentImpact, balancetransfer: BalanceTransfer,
+  nps: NPSCalculator, epf: EPFCalculator, education: ChildEducation,
+  freelancetax: FreelancerTax, gratuity: GratuityCalculator, hra: HRACalculator,
 };
 
 const NAV_GROUPS = NAV_GROUP_ORDER.map(label => ({

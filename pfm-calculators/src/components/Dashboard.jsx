@@ -5,7 +5,7 @@ import {
   Briefcase, PieChart, Landmark, Search, ArrowRight, Flame,
   Gem, Hourglass, PiggyBank, Shield, Umbrella, HeartPulse, Shuffle,
   LineChart, Trophy, Clock, Banknote, CreditCard, Baby, Calculator,
-  Building2,
+  Building2, GraduationCap,
 } from 'lucide-react';
 import { findCalculator, getSuggestions, EXAMPLE_QUERIES } from '../utils/smartRouter';
 import { CALCULATORS, NAV_GROUP_ORDER, GOALFI_URL } from '../calculators';
@@ -58,8 +58,15 @@ const META = {
   realreturn:     [TrendingDown,  'After tax & inflation'],
   brokerage:      [Receipt,       'The true cost of trading'],
 
+  nps:            [PiggyBank,     'Pension + tax-free lumpsum'],
+  epf:            [Landmark,      'Provident fund corpus'],
+  education:      [GraduationCap, 'Fund your child\'s degree'],
+
   emi:            [Banknote,      'Home / car / personal'],
   creditcard:     [CreditCard,    'Escape the debt trap'],
+  loaneligibility:[Home,          'How much can you borrow?'],
+  prepayimpact:   [Scale,         'Interest saved by prepaying'],
+  balancetransfer:[Shuffle,       'Switch to a lower rate'],
 
   fdppf:          [Landmark,      'Safe maturity & interest'],
   ssy:            [Baby,          "Your daughter's corpus"],
@@ -69,6 +76,9 @@ const META = {
   capgains:       [Calculator,    'LTCG & STCG tax'],
   salary:         [Briefcase,     'In-hand, HRA, gratuity'],
   jobswitch:      [Shuffle,       'Is the hike real?'],
+  freelancetax:   [Briefcase,     'Presumptive tax (44ADA)'],
+  gratuity:       [Coins,         'Your exit payout'],
+  hra:            [Home,          'Tax-free house rent'],
   budget:         [PieChart,      '50/30/20 allocation'],
 };
 
