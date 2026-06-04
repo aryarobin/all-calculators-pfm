@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Coffee, GraduationCap, Stethoscope, Plane } from 'lucide-react';
 import SliderInput from '../shared/SliderInput';
 import NextSteps from '../shared/NextSteps';
 import { useCalcState } from '../../hooks/useCalcState';
@@ -7,10 +8,10 @@ import { calcInflation, calcPresentValue, calcRealReturn, formatINR } from '../.
 
 // ─── Real-world items (base price today + own growth rate) ─────────────────
 const ITEMS = [
-  { label: 'Coffee (Cafe)', icon: '☕', today: 200,    rate: 7   },
-  { label: 'School Fees',   icon: '🎓', today: 120000, rate: 10  },
-  { label: 'Hospital Bill', icon: '🏥', today: 80000,  rate: 9   },
-  { label: 'Flight Ticket', icon: '✈️', today: 8000,   rate: 5.5 },
+  { label: 'Coffee (Cafe)', Icon: Coffee,        today: 200,    rate: 7   },
+  { label: 'School Fees',   Icon: GraduationCap, today: 120000, rate: 10  },
+  { label: 'Hospital Bill', Icon: Stethoscope,   today: 80000,  rate: 9   },
+  { label: 'Flight Ticket', Icon: Plane,         today: 8000,   rate: 5.5 },
 ];
 
 // ─── Instruments for Real Returns tab ────────────────────────────────────────
@@ -187,7 +188,7 @@ export default function InflationCalculator({ onNavigate }) {
                   {examples.map(it => (
                     <tr key={it.label} className="border-b border-slate-50 hover:bg-slate-50">
                       <td className="py-2.5 pr-4">
-                        <span className="mr-1.5">{it.icon}</span>
+                        <it.Icon size={15} className="inline mr-1.5 text-slate-400" />
                         <span className="text-slate-700 font-medium">{it.label}</span>
                       </td>
                       <td className="py-2.5 pr-4 text-slate-600 tabular-nums">{formatINR(it.today)}</td>
@@ -321,7 +322,7 @@ export default function InflationCalculator({ onNavigate }) {
                   {examples.map(it => (
                     <tr key={it.label} className="border-b border-slate-50 hover:bg-slate-50">
                       <td className="py-2.5 pr-4">
-                        <span className="mr-1.5">{it.icon}</span>
+                        <it.Icon size={15} className="inline mr-1.5 text-slate-400" />
                         <span className="text-slate-700 font-medium">{it.label}</span>
                       </td>
                       <td className="py-2.5 pr-4 text-slate-600 tabular-nums">{formatINR(it.today)}</td>

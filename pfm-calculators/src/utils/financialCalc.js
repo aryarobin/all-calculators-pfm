@@ -238,6 +238,54 @@ export function calcGoal({ goalAmount, yearsToGoal, inflation, expectedReturn, c
   return { futureGoalAmount, growthOfCurrentSavings, additionalNeeded, sipRequired, lumpsumRequired };
 }
 
+// ─── Income Planning (reverse SWP: target income → corpus → SIP/lumpsum) ──────
+// Answers: "I want ₹X/month income for Y years starting Z years from now —
+// how much corpus do I need, and what SIP/lumpsum gets me there?"
+export function calcIncomePlan({
+  monthlyIncomeToday,   // desired income in TODAY's rupees
+  yearsToStart,         // accumulation period before income begins
+  incomeYears,          // how long the income must last
+  inflation,            // % — grows the income, both before and during payout
+  accumulationReturn,   // % — return while building the corpus
+  withdrawalReturn,     // % — (usually lower) return during the payout phase
+  currentSavings = 0,   // money already saved toward this
+}) {
+  const g = inflation / 100;
+  const r = withdrawalReturn / 100;
+
+  // Income at the moment payouts begin (today's amount inflated forward)
+  const monthlyIncomeAtStart = calcInflation(monthlyIncomeToday, inflation, yearsToStart);
+  const annualIncomeAtStart = monthlyIncomeAtStart * 12;
+
+  // Corpus required at payout-start to fund an inflation-growing withdrawal
+  // for incomeYears (present value of a growing annuity).
+  let corpusNeeded;
+  if (Math.abs(r - g) < 0.0001) {
+    corpusNeeded = annualIncomeAtStart * incomeYears;
+  } else {
+    corpusNeeded = annualIncomeAtStart * (1 - Math.pow((1 + g) / (1 + r), incomeYears)) / (r - g);
+  }
+
+  // What you must do NOW to reach that corpus
+  const growthOfCurrentSavings = currentSavings * Math.pow(1 + accumulationReturn / 100, yearsToStart);
+  const additionalNeeded = Math.max(0, corpusNeeded - growthOfCurrentSavings);
+  const sipRequired = calcSIPFromCorpus(additionalNeeded, accumulationReturn, yearsToStart);
+  const lumpsumRequired = additionalNeeded / Math.pow(1 + accumulationReturn / 100, yearsToStart);
+
+  // The "forever" alternative — corpus that lets you live on returns alone
+  const corpusForPerpetual = annualIncomeAtStart / Math.max(0.0001, (r - g));
+
+  return {
+    monthlyIncomeAtStart,
+    corpusNeeded,
+    growthOfCurrentSavings,
+    additionalNeeded,
+    sipRequired,
+    lumpsumRequired,
+    corpusForPerpetual,
+  };
+}
+
 // ─── FD/RD ───────────────────────────────────────────────────────────────────
 
 export function calcFD(principal, annualRate, years, compoundFrequency = 4) {
