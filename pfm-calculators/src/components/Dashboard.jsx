@@ -119,38 +119,34 @@ export default function Dashboard({ onSelect }) {
   return (
     <div className="max-w-4xl mx-auto">
 
-      {/* ── Hero banner ──────────────────────────────────────────────── */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#11161F] via-indigo-900 to-violet-900 text-white p-6 sm:p-10 mb-6">
-        <div className="pointer-events-none absolute -top-12 -right-10 w-60 h-60 rounded-full bg-[#5EE5E5]/20 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-16 -left-10 w-64 h-64 rounded-full bg-fuchsia-500/20 blur-3xl" />
-        <div className="relative">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur text-[11px] font-semibold mb-4">
-            <Zap size={12} className="fill-[#5EE5E5] text-[#5EE5E5]" /> India's most complete money toolkit · free
-          </div>
-          <h1 className="font-serif-display text-3xl sm:text-5xl font-bold tracking-tight leading-[1.1]">
-            Make every rupee<br /> decision with <span className="text-[#5EE5E5]">confidence</span>.
-          </h1>
-          <p className="text-white/65 text-sm sm:text-base mt-4 max-w-xl leading-relaxed">
-            22 calculators with live charts — SIP, retirement, FIRE, EMI, rent-vs-buy, prepay-vs-invest and more. Ask a question in plain English, or pick a tool. Answers update as you move the sliders.
-          </p>
-          <div className="flex flex-wrap gap-3 mt-6">
-            <button onClick={() => onSelect('sip')}
-              className="inline-flex items-center gap-2 bg-[#5EE5E5] hover:bg-[#3DD6D6] text-[#11161F] font-bold text-sm px-5 py-3 rounded-xl transition-colors">
-              Explore calculators <ArrowRight size={16} />
-            </button>
-            <a href="https://app.goalfi.app/signup" target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/15 backdrop-blur text-white font-semibold text-sm px-5 py-3 rounded-xl transition-colors">
-              Invest with GoalFi
-            </a>
-          </div>
-          <div className="flex flex-wrap gap-x-6 gap-y-3 sm:gap-x-8 mt-7 pt-6 border-t border-white/10">
-            {[['22', 'Calculators'], ['100%', 'Free & live'], ['🇮🇳', 'Built for India'], ['0', 'Sign-up needed']].map(([n, l]) => (
-              <div key={l}>
-                <p className="text-lg sm:text-xl font-black">{n}</p>
-                <p className="text-[10px] sm:text-[11px] text-white/55 font-medium">{l}</p>
-              </div>
-            ))}
-          </div>
+      {/* ── Hero ─────────────────────────────────────────────────────── */}
+      <div className="pt-6 sm:pt-10 pb-8 sm:pb-12 border-b border-slate-200/70 mb-8">
+        <p className="font-mono-label text-[11px] uppercase tracking-[0.2em] text-slate-400 mb-5">
+          GoalFi Planner — free financial calculators for India
+        </p>
+        <h1 className="font-serif-display text-[34px] leading-[1.08] sm:text-[56px] sm:leading-[1.05] font-semibold text-slate-900 tracking-tight max-w-3xl">
+          Make every rupee decision<br className="hidden sm:block" /> with <span className="italic text-cyan-600">clarity</span>.
+        </h1>
+        <p className="text-slate-500 text-base sm:text-lg mt-5 max-w-xl leading-relaxed">
+          22 calculators that answer the questions people actually ask — from “how much SIP for ₹1 crore” to “can I retire today.” Live charts, no sign-up, built for Indian tax and inflation.
+        </p>
+        <div className="flex flex-wrap items-center gap-3 mt-7">
+          <button onClick={() => onSelect('sip')}
+            className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm px-5 py-3 rounded-xl transition-colors">
+            Explore calculators <ArrowRight size={16} />
+          </button>
+          <a href="https://app.goalfi.app/signup" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 font-semibold text-sm px-4 py-3 transition-colors">
+            Invest with GoalFi →
+          </a>
+        </div>
+        <div className="flex flex-wrap gap-x-10 gap-y-3 mt-9">
+          {[['22', 'calculators'], ['Live', 'charts & insights'], ['Free', 'no sign-up'], ['India', 'tax & inflation']].map(([n, l]) => (
+            <div key={l} className="flex items-baseline gap-2">
+              <span className="text-lg font-bold text-slate-900">{n}</span>
+              <span className="text-[13px] text-slate-400">{l}</span>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -221,38 +217,35 @@ export default function Dashboard({ onSelect }) {
         </div>
       </div>
 
-      {/* ── Popular gradient cards ───────────────────────────────────── */}
-      <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2.5 px-1">Most used</p>
-      <div className="grid grid-cols-3 sm:grid-cols-6 gap-2.5 mb-6">
-        {POPULAR.map(({ id, label, grad, Icon }) => (
+      {/* ── Most used ────────────────────────────────────────────────── */}
+      <p className="font-mono-label text-[11px] uppercase tracking-[0.15em] text-slate-400 mb-3 px-0.5">Most used</p>
+      <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-10">
+        {POPULAR.map(({ id, label, Icon }) => (
           <button key={id} onClick={() => onSelect(id)}
-            className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${grad} p-3 text-white text-left transition-transform active:scale-95 hover:shadow-lg`}>
-            <div className="pointer-events-none absolute -top-4 -right-4 w-14 h-14 rounded-full bg-white/15 blur-xl" />
-            <Icon size={20} className="mb-6 relative" strokeWidth={2.2} />
-            <p className="text-xs font-bold leading-tight relative">{label}</p>
+            className="group bg-white rounded-xl border border-slate-200 p-3 text-left hover:border-slate-900 transition-colors">
+            <Icon size={18} className="mb-5 text-slate-400 group-hover:text-slate-900 transition-colors" strokeWidth={2} />
+            <p className="text-[13px] font-semibold text-slate-700 leading-tight">{label}</p>
           </button>
         ))}
       </div>
 
       {/* ── Journey sections ─────────────────────────────────────────── */}
-      <div className="space-y-5">
+      <div className="space-y-8">
         {JOURNEYS.map(journey => (
           <div key={journey.title}>
-            <div className="flex items-center gap-2.5 mb-2.5 px-1">
-              <span className={`w-1.5 h-6 rounded-full bg-gradient-to-b ${journey.grad}`} />
+            <div className="flex items-baseline gap-3 mb-3 px-0.5">
+              <span className="w-6 h-px mt-2.5" style={{ background: '#cbd5e1' }} />
               <div>
-                <h2 className="text-sm font-bold text-slate-800 leading-tight">{journey.title}</h2>
-                <p className="text-xs text-slate-400 leading-tight">{journey.desc}</p>
+                <h2 className="font-serif-display text-lg font-semibold text-slate-900 leading-tight">{journey.title}</h2>
+                <p className="text-[13px] text-slate-400 leading-tight mt-0.5">{journey.desc}</p>
               </div>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {journey.steps.map(({ id, label, desc, Icon }) => (
                 <button key={id} onClick={() => onSelect(id)}
-                  className={`bg-white rounded-2xl border border-slate-200 p-3.5 text-left transition-all ${journey.hover} hover:shadow-sm group`}>
-                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center mb-2.5 ${journey.tint}`}>
-                    <Icon size={18} strokeWidth={2.2} />
-                  </div>
-                  <p className="text-[13px] font-bold text-slate-800 leading-tight">{label}</p>
+                  className="bg-white rounded-xl border border-slate-200 p-3.5 text-left transition-colors hover:border-slate-900 group">
+                  <Icon size={17} className="mb-2.5 text-slate-400 group-hover:text-slate-900 transition-colors" strokeWidth={2} />
+                  <p className="text-[13px] font-semibold text-slate-800 leading-tight">{label}</p>
                   <p className="text-[11px] text-slate-400 mt-0.5 leading-tight">{desc}</p>
                 </button>
               ))}
@@ -260,18 +253,17 @@ export default function Dashboard({ onSelect }) {
           </div>
         ))}
 
-        {/* Safe savings — full-width gradient feature card */}
+        {/* Safe savings — clean feature row */}
         <button onClick={() => onSelect('fdppf')}
-          className="w-full relative overflow-hidden rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 p-5 text-white text-left transition-transform active:scale-[0.99] hover:shadow-lg flex items-center gap-4">
-          <div className="pointer-events-none absolute -top-8 -right-6 w-32 h-32 rounded-full bg-white/10 blur-2xl" />
-          <div className="w-12 h-12 rounded-2xl bg-white/15 flex items-center justify-center flex-shrink-0 relative">
-            <Landmark size={24} strokeWidth={2.2} />
+          className="w-full rounded-xl border border-slate-200 bg-white p-5 text-left transition-colors hover:border-slate-900 flex items-center gap-4 group">
+          <div className="w-11 h-11 rounded-xl bg-slate-100 flex items-center justify-center flex-shrink-0 group-hover:bg-slate-900 transition-colors">
+            <Landmark size={22} strokeWidth={2} className="text-slate-500 group-hover:text-white transition-colors" />
           </div>
-          <div className="relative flex-1 min-w-0">
-            <p className="text-base font-black leading-tight">Safe Savings — FD, RD, PPF, NPS</p>
-            <p className="text-xs text-white/70 mt-0.5">Compare maturity across all guaranteed, tax-advantaged instruments</p>
+          <div className="flex-1 min-w-0">
+            <p className="text-[15px] font-semibold text-slate-900 leading-tight">Safe Savings — FD, RD, PPF, NPS</p>
+            <p className="text-xs text-slate-400 mt-0.5">Compare maturity across all guaranteed, tax-advantaged instruments</p>
           </div>
-          <ArrowRight size={20} className="relative flex-shrink-0" />
+          <ArrowRight size={18} className="flex-shrink-0 text-slate-300 group-hover:text-slate-900 transition-colors" />
         </button>
       </div>
 
