@@ -169,7 +169,7 @@ export default function App() {
         )}
 
         <button onClick={() => handleSelect('home')} className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
-          <img src="/goalfi-logo-white.png" alt="GoalFi" className="h-[22px] w-auto" />
+          <img src="/goalfi-logo-white.png" alt="GoalFi" className="h-[22px] w-auto brightness-0 invert" />
           <span className="text-slate-400 font-normal text-xs border-l border-white/15 pl-2.5 hidden sm:inline">Planner</span>
         </button>
 

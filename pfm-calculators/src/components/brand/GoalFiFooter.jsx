@@ -61,7 +61,7 @@ export default function GoalFiFooter({ onSelect }) {
         {/* Brand col */}
         <div className="col-span-2 md:col-span-1">
           <div className="flex items-center gap-2.5 mb-3">
-            <img src="/goalfi-logo-white.png" alt="GoalFi" className="h-6 w-auto" />
+            <img src="/goalfi-logo-white.png" alt="GoalFi" className="h-6 w-auto brightness-0 invert" />
             <span className="text-slate-400 font-normal text-sm border-l border-white/15 pl-2.5">Planner</span>
           </div>
           <p className="text-xs text-slate-400 leading-relaxed">

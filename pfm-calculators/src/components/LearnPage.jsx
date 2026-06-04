@@ -11,7 +11,7 @@ function Header({ onHome }) {
   return (
     <header className="h-12 bg-[#030338] border-b border-white/10 flex items-center px-3 sm:px-4 gap-3 sticky top-0 z-50">
       <Link to="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
-        <img src="/goalfi-logo-white.png" alt="GoalFi" className="h-[22px] w-auto" />
+        <img src="/goalfi-logo-white.png" alt="GoalFi" className="h-[22px] w-auto brightness-0 invert" />
         <span className="text-slate-400 font-normal text-xs border-l border-white/15 pl-2.5 hidden sm:inline">Planner</span>
       </Link>
       <span className="text-slate-400 text-xs hidden sm:block">· Learn</span>
