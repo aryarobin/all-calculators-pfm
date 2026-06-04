@@ -286,6 +286,118 @@ export function calcIncomePlan({
   };
 }
 
+// ─── Prepay loan vs Invest the surplus ───────────────────────────────────────
+// Both paths spend the same total each month (EMI + surplus) over the same
+// horizon (the loan's remaining tenure). Prepay closes the loan early then
+// invests the freed-up cash; Invest keeps the loan and invests the surplus.
+export function calcPrepayVsInvest({ loanBalance, loanRate, remainingYears, monthlySurplus, investReturn }) {
+  const n = Math.round(remainingYears * 12);
+  const rl = loanRate / 100 / 12;
+  const ri = investReturn / 100 / 12;
+  const emi = rl === 0 ? loanBalance / n : loanBalance * rl * Math.pow(1 + rl, n) / (Math.pow(1 + rl, n) - 1);
+
+  // ── Prepay path: EMI + surplus → loan, then invest freed cash ──
+  let bal = loanBalance, corpusA = 0, loanClosedMonth = n, interestPaidA = 0;
+  for (let m = 1; m <= n; m++) {
+    if (bal > 0.5) {
+      const interest = bal * rl;
+      interestPaidA += interest;
+      let principalPaid = (emi + monthlySurplus) - interest;
+      if (principalPaid >= bal) {
+        const leftover = principalPaid - bal;
+        bal = 0; loanClosedMonth = m;
+        corpusA = corpusA * (1 + ri) + leftover;
+      } else {
+        bal -= principalPaid;
+        corpusA = corpusA * (1 + ri); // nothing invested yet
+      }
+    } else {
+      corpusA = corpusA * (1 + ri) + (emi + monthlySurplus);
+    }
+  }
+
+  // ── Invest path: pay normal EMI, invest surplus the whole time ──
+  let balB = loanBalance, corpusB = 0, interestPaidB = 0;
+  for (let m = 1; m <= n; m++) {
+    if (balB > 0.5) { const interest = balB * rl; interestPaidB += interest; balB = balB * (1 + rl) - emi; if (balB < 0) balB = 0; }
+    corpusB = corpusB * (1 + ri) + monthlySurplus;
+  }
+
+  return {
+    emi,
+    prepay:  { corpus: corpusA, interestPaid: interestPaidA, loanClosedYears: loanClosedMonth / 12, netWorth: corpusA },
+    invest:  { corpus: corpusB, interestPaid: interestPaidB, loanClosedYears: n / 12, netWorth: corpusB },
+    winner: corpusA >= corpusB ? 'prepay' : 'invest',
+    difference: Math.abs(corpusA - corpusB),
+  };
+}
+
+// ─── Rent vs Buy ──────────────────────────────────────────────────────────────
+// Compares net worth after `years` of buying (equity + appreciation − costs)
+// vs renting and investing every rupee the buyer spends that the renter doesn't.
+export function calcRentVsBuy({ homePrice, downPaymentPct, loanRate, loanYears, years,
+  rentMonthly, rentHikePct, homeAppreciation, investReturn, maintenancePct, propertyTaxPct }) {
+  const down = homePrice * downPaymentPct / 100;
+  const loan = homePrice - down;
+  const n = loanYears * 12;
+  const rl = loanRate / 100 / 12;
+  const emi = rl === 0 ? loan / n : loan * rl * Math.pow(1 + rl, n) / (Math.pow(1 + rl, n) - 1);
+  const ri = investReturn / 100 / 12;
+  const months = years * 12;
+
+  // BUY: track loan balance + invest any month where renting is cheaper isn't relevant here;
+  // we compute buyer's monthly housing outflow and renter invests the difference.
+  let bal = loan, buyerInvest = 0, renterInvest = down; // renter starts by investing the down payment
+  let rent = rentMonthly;
+  for (let m = 1; m <= months; m++) {
+    // Buyer monthly cost: EMI (if loan active) + maintenance + property tax (annual %/12 of home value)
+    const annualOwnCost = homePrice * (maintenancePct + propertyTaxPct) / 100;
+    const buyerMonthly = (m <= n ? emi : 0) + annualOwnCost / 12;
+    // Renter monthly cost: rent (hiked yearly)
+    if (m > 1 && (m - 1) % 12 === 0) rent = rent * (1 + rentHikePct / 100);
+    const renterMonthly = rent;
+    // Whoever spends less, the other "saves" — to compare fairly, the renter
+    // invests (buyerMonthly − renterMonthly) when positive; buyer invests the reverse.
+    const diff = buyerMonthly - renterMonthly;
+    if (diff > 0) renterInvest = renterInvest * (1 + ri) + diff;
+    else { buyerInvest = buyerInvest * (1 + ri) + (-diff); renterInvest = renterInvest * (1 + ri); }
+    if (diff > 0) buyerInvest = buyerInvest * (1 + ri);
+    // amortize loan
+    if (m <= n && bal > 0) { bal = bal * (1 + rl) - emi; if (bal < 0) bal = 0; }
+  }
+
+  const homeValue = homePrice * Math.pow(1 + homeAppreciation / 100, years);
+  const buyerNetWorth = homeValue - bal + buyerInvest;       // home equity + any side investments
+  const renterNetWorth = renterInvest;                        // pure investment portfolio
+
+  return {
+    emi, down, loan,
+    buyer: { netWorth: buyerNetWorth, homeValue, loanLeft: bal, sideInvest: buyerInvest },
+    renter: { netWorth: renterNetWorth },
+    winner: buyerNetWorth >= renterNetWorth ? 'buy' : 'rent',
+    difference: Math.abs(buyerNetWorth - renterNetWorth),
+  };
+}
+
+// ─── Coast FIRE ───────────────────────────────────────────────────────────────
+// The corpus you need TODAY so that, with NO further investing, compounding
+// alone grows it to your FIRE number by retirement age.
+export function calcCoastFire({ currentAge, retirementAge, monthlyExpenseToday, inflation, swr, preReturn, currentCorpus }) {
+  const yearsToRetire = Math.max(0, retirementAge - currentAge);
+  const annualExpenseAtRetirement = monthlyExpenseToday * 12 * Math.pow(1 + inflation / 100, yearsToRetire);
+  const fireNumber = annualExpenseAtRetirement / (swr / 100);          // corpus needed at retirement
+  const realGrowth = Math.pow(1 + preReturn / 100, yearsToRetire);
+  const coastNumber = fireNumber / realGrowth;                          // needed today, then coast
+  const projectedFromCurrent = currentCorpus * realGrowth;             // where current corpus lands
+  const hasCoasted = currentCorpus >= coastNumber;
+  const stillNeededToday = Math.max(0, coastNumber - currentCorpus);
+
+  return {
+    yearsToRetire, fireNumber, coastNumber, projectedFromCurrent, hasCoasted, stillNeededToday,
+    coveragePct: coastNumber > 0 ? Math.min(100, currentCorpus / coastNumber * 100) : 0,
+  };
+}
+
 // ─── FD/RD ───────────────────────────────────────────────────────────────────
 
 export function calcFD(principal, annualRate, years, compoundFrequency = 4) {

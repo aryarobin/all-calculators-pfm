@@ -23,13 +23,18 @@ import SalaryCalculator from './components/calculators/SalaryCalculator';
 import BudgetPlanner from './components/calculators/BudgetPlanner';
 import FinancialTimeline from './components/calculators/FinancialTimeline';
 import FinancialFreedom from './components/calculators/FinancialFreedom';
+import CoastFire from './components/calculators/CoastFire';
+import PrepayVsInvest from './components/calculators/PrepayVsInvest';
+import RentVsBuy from './components/calculators/RentVsBuy';
+import XIRRCalculator from './components/calculators/XIRRCalculator';
 import Dashboard from './components/Dashboard';
 
 const COMPONENTS = {
   sip: SIPCalculator, lumpsum: LumpsumCalculator, stepup: StepUpSIPCalculator,
   compare: InvestmentComparison, goal: GoalPlanning, retirement: RetirementCalculator,
-  readiness: RetirementReadiness, swp: SWPCalculator, fire: FinancialFreedom, timeline: FinancialTimeline,
-  cagr: CAGRCalculator, multiplier: MoneyMultiplier, inflation: InflationCalculator,
+  readiness: RetirementReadiness, swp: SWPCalculator, fire: FinancialFreedom, coast: CoastFire,
+  timeline: FinancialTimeline, cagr: CAGRCalculator, multiplier: MoneyMultiplier, inflation: InflationCalculator,
+  xirr: XIRRCalculator, prepay: PrepayVsInvest, rentbuy: RentVsBuy,
   emi: EMICalculator, fdppf: FDPPFCalculator, tax: TaxCalculator,
   salary: SalaryCalculator, budget: BudgetPlanner,
 };
@@ -81,11 +86,13 @@ export default function App() {
 
       {/* Top bar — GoalFi branded */}
       <header className="flex-shrink-0 h-12 bg-[#11161F] border-b border-white/10 flex items-center px-3 sm:px-4 gap-3 z-50">
-        <button onClick={() => setSidebarOpen(o => !o)} className="lg:hidden text-slate-400 hover:text-white transition-colors p-1" aria-label="Menu">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
+        {!isHome && (
+          <button onClick={() => setSidebarOpen(o => !o)} className="lg:hidden text-slate-400 hover:text-white transition-colors p-1" aria-label="Menu">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        )}
 
         <button onClick={() => handleSelect('home')} className="flex items-center gap-2 hover:opacity-90 transition-opacity">
           <div className="w-7 h-7 rounded-lg bg-[#1A2330] flex items-center justify-center">
@@ -113,31 +120,33 @@ export default function App() {
       </header>
 
       <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar */}
-        <nav className={`fixed lg:relative top-12 left-0 bottom-0 z-40 w-52 bg-[#11161F] border-r border-white/10 overflow-y-auto flex-shrink-0 transition-transform duration-200 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
-          <div className="p-3 pt-3">
-            <button onClick={() => handleSelect('home')}
-              className={isHome ? 'nav-link-active w-full text-left mb-1' : 'nav-link w-full text-left mb-1'}>
-              Overview
-            </button>
-            {NAV_GROUPS.map(group => (
-              <div key={group.label} className="mt-4">
-                <p className="px-3 mb-1 text-[11px] font-semibold text-slate-600 uppercase tracking-widest">{group.label}</p>
-                {group.items.map(item => (
-                  <button key={item.id} onClick={() => handleSelect(item.id)}
-                    className={currentCalc?.id === item.id ? 'nav-link-active w-full text-left' : 'nav-link w-full text-left'}>
-                    {item.name}
-                  </button>
-                ))}
+        {/* Sidebar — hidden on the home/landing page for a full-width website feel */}
+        {!isHome && (
+          <nav className={`fixed lg:relative top-12 left-0 bottom-0 z-40 w-52 bg-[#11161F] border-r border-white/10 overflow-y-auto flex-shrink-0 transition-transform duration-200 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+            <div className="p-3 pt-3">
+              <button onClick={() => handleSelect('home')}
+                className="nav-link w-full text-left mb-1">
+                ← Home
+              </button>
+              {NAV_GROUPS.map(group => (
+                <div key={group.label} className="mt-4">
+                  <p className="px-3 mb-1 text-[11px] font-semibold text-slate-600 uppercase tracking-widest">{group.label}</p>
+                  {group.items.map(item => (
+                    <button key={item.id} onClick={() => handleSelect(item.id)}
+                      className={currentCalc?.id === item.id ? 'nav-link-active w-full text-left' : 'nav-link w-full text-left'}>
+                      {item.name}
+                    </button>
+                  ))}
+                </div>
+              ))}
+              <div className="mt-6 pt-4 border-t border-white/10">
+                <p className="px-3 text-[11px] text-slate-600">All calculations are estimates. Consult a SEBI-registered advisor.</p>
               </div>
-            ))}
-            <div className="mt-6 pt-4 border-t border-white/10">
-              <p className="px-3 text-[11px] text-slate-600">All calculations are estimates. Consult a SEBI-registered advisor.</p>
             </div>
-          </div>
-        </nav>
+          </nav>
+        )}
 
-        {sidebarOpen && (
+        {!isHome && sidebarOpen && (
           <div className="fixed inset-0 top-12 z-30 lg:hidden" onClick={() => setSidebarOpen(false)}>
             <div className="absolute inset-0 bg-black/50"></div>
           </div>
@@ -145,20 +154,22 @@ export default function App() {
 
         {/* Main */}
         <main className="flex-1 overflow-y-auto">
-          <div className="lg:hidden sticky top-0 z-20 bg-white border-b border-slate-100 px-3 py-2">
-            <div className="overflow-x-auto scrollbar-none">
-              <div className="flex gap-1 w-max">
-                {CALCULATORS.map(c => (
-                  <button key={c.id} onClick={() => handleSelect(c.id)}
-                    className={`px-3 py-1.5 rounded-md text-[12px] font-medium whitespace-nowrap transition-colors ${currentCalc?.id === c.id ? 'bg-blue-600 text-white' : 'text-slate-500 hover:bg-slate-100'}`}>
-                    {c.name}
-                  </button>
-                ))}
+          {!isHome && (
+            <div className="lg:hidden sticky top-0 z-20 bg-white border-b border-slate-100 px-3 py-2">
+              <div className="overflow-x-auto scrollbar-none">
+                <div className="flex gap-1 w-max">
+                  {CALCULATORS.map(c => (
+                    <button key={c.id} onClick={() => handleSelect(c.id)}
+                      className={`px-3 py-1.5 rounded-md text-[12px] font-medium whitespace-nowrap transition-colors ${currentCalc?.id === c.id ? 'bg-blue-600 text-white' : 'text-slate-500 hover:bg-slate-100'}`}>
+                      {c.name}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
-          <div className="max-w-5xl mx-auto px-3 sm:px-6 py-4 sm:py-5">
+          <div className={`${isHome ? 'max-w-6xl' : 'max-w-5xl'} mx-auto px-3 sm:px-6 py-4 sm:py-6`}>
             {!isHome && currentCalc && (
               <div className="flex items-center gap-2 mb-5">
                 <button onClick={() => handleSelect('home')} className="text-xs text-slate-400 hover:text-slate-600 transition-colors">Overview</button>

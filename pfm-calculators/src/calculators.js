@@ -33,6 +33,20 @@ export const CALCULATORS = [
   { id: 'fire', slug: 'financial-freedom-calculator', name: 'Financial Freedom (FIRE)', group: 'Goals & Retirement',
     seoTitle: 'Financial Freedom Calculator (FIRE) — Retire Now Corpus | GoalFi',
     seoDesc: 'How much do you need to retire today and live off returns forever? FIRE number for India — after tax, comparing FD vs Equity MF vs your target return.' },
+  { id: 'coast', slug: 'coast-fire-calculator', name: 'Coast FIRE', group: 'Goals & Retirement',
+    seoTitle: 'Coast FIRE Calculator — When Can You Stop Investing? | GoalFi',
+    seoDesc: 'Coast FIRE calculator for India: find the corpus where compounding alone reaches your retirement number — so you can stop investing aggressively and coast.' },
+
+  // ── Smart Decisions ──
+  { id: 'prepay', slug: 'loan-prepayment-vs-investment-calculator', name: 'Prepay vs Invest', group: 'Smart Decisions',
+    seoTitle: 'Home Loan Prepayment vs Investment Calculator | GoalFi',
+    seoDesc: 'Should you prepay your home loan or invest the surplus? Compare both paths to final net worth — accounts for loan rate vs post-tax investment return.' },
+  { id: 'rentbuy', slug: 'rent-vs-buy-calculator', name: 'Rent vs Buy', group: 'Smart Decisions',
+    seoTitle: 'Rent vs Buy Calculator India — Which Builds More Wealth? | GoalFi',
+    seoDesc: 'Rent vs buy a home in India: compare net worth after N years of buying (equity + appreciation) vs renting and investing the difference. Free calculator.' },
+  { id: 'xirr', slug: 'xirr-calculator', name: 'XIRR Calculator', group: 'Analysis',
+    seoTitle: 'XIRR Calculator — Actual SIP & Mutual Fund Returns | GoalFi',
+    seoDesc: 'Calculate XIRR — your true annualised return on SIPs and irregular investments, accounting for the exact timing of every cashflow. Free XIRR calculator.' },
 
   // ── Analysis ──
   { id: 'timeline', slug: 'financial-timeline', name: 'Financial Timeline', group: 'Analysis',
@@ -73,7 +87,7 @@ export const CALCULATORS = [
 export const SITE_URL = 'https://planner.goalfi.app';
 
 export const NAV_GROUP_ORDER = [
-  'Investments', 'Goals & Retirement', 'Analysis', 'Loans', 'Savings', 'Tax & Salary',
+  'Investments', 'Goals & Retirement', 'Smart Decisions', 'Analysis', 'Loans', 'Savings', 'Tax & Salary',
 ];
 
 // Helpers

@@ -5,6 +5,7 @@ import {
   Briefcase, PieChart, Landmark, Search, ArrowRight, Zap, Flame,
 } from 'lucide-react';
 import { findCalculator, getSuggestions, EXAMPLE_QUERIES } from '../utils/smartRouter';
+import InsightCards from './InsightCards';
 
 const JOURNEYS = [
   {
@@ -34,6 +35,20 @@ const JOURNEYS = [
       { id: 'goal',       label: 'Goal Planner',         desc: 'Inflation-adjusted SIP', Icon: Target },
       { id: 'swp',        label: 'Income & Withdrawal',  desc: 'Income from your corpus', Icon: Wallet },
       { id: 'readiness',  label: 'Readiness Score',      desc: 'Multi-asset readiness', Icon: Gauge },
+    ],
+  },
+  {
+    title: 'Smart Decisions',
+    desc: 'The big "should I…?" questions',
+    accent: 'cyan',
+    grad: 'from-cyan-500 to-blue-600',
+    tint: 'bg-cyan-50 text-cyan-600',
+    hover: 'hover:border-cyan-300 hover:bg-cyan-50/50',
+    steps: [
+      { id: 'prepay',  label: 'Prepay vs Invest', desc: 'Clear the loan or invest?', Icon: Scale },
+      { id: 'rentbuy', label: 'Rent vs Buy',       desc: 'Which builds more wealth?', Icon: Home },
+      { id: 'xirr',    label: 'XIRR Calculator',   desc: 'Your real SIP return', Icon: Percent },
+      { id: 'coast',   label: 'Coast FIRE',        desc: 'When can you stop?', Icon: Flame },
     ],
   },
   {
@@ -102,32 +117,45 @@ export default function Dashboard({ onSelect }) {
   };
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-4xl mx-auto">
 
       {/* ── Hero banner ──────────────────────────────────────────────── */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-700 text-white p-6 sm:p-8 mb-5">
-        <div className="pointer-events-none absolute -top-12 -right-10 w-52 h-52 rounded-full bg-white/10 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-16 -left-10 w-56 h-56 rounded-full bg-fuchsia-400/20 blur-3xl" />
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#11161F] via-indigo-900 to-violet-900 text-white p-6 sm:p-10 mb-6">
+        <div className="pointer-events-none absolute -top-12 -right-10 w-60 h-60 rounded-full bg-[#5EE5E5]/20 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-16 -left-10 w-64 h-64 rounded-full bg-fuchsia-500/20 blur-3xl" />
         <div className="relative">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur text-[11px] font-semibold mb-3">
-            <Zap size={12} className="fill-white" /> India's most complete money toolkit
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur text-[11px] font-semibold mb-4">
+            <Zap size={12} className="fill-[#5EE5E5] text-[#5EE5E5]" /> India's most complete money toolkit · free
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight">
-            Every personal-finance<br className="hidden sm:block" /> calculation, in one place.
+          <h1 className="font-serif-display text-3xl sm:text-5xl font-bold tracking-tight leading-[1.1]">
+            Make every rupee<br /> decision with <span className="text-[#5EE5E5]">confidence</span>.
           </h1>
-          <p className="text-white/70 text-sm mt-2 max-w-md">
-            17 calculators with live charts. Ask a question, or pick a tool — answers update as you move the sliders.
+          <p className="text-white/65 text-sm sm:text-base mt-4 max-w-xl leading-relaxed">
+            22 calculators with live charts — SIP, retirement, FIRE, EMI, rent-vs-buy, prepay-vs-invest and more. Ask a question in plain English, or pick a tool. Answers update as you move the sliders.
           </p>
-          <div className="flex gap-5 mt-5">
-            {[['17', 'Calculators'], ['100%', 'Free & live'], ['₹', 'Built for India']].map(([n, l]) => (
+          <div className="flex flex-wrap gap-3 mt-6">
+            <button onClick={() => onSelect('sip')}
+              className="inline-flex items-center gap-2 bg-[#5EE5E5] hover:bg-[#3DD6D6] text-[#11161F] font-bold text-sm px-5 py-3 rounded-xl transition-colors">
+              Explore calculators <ArrowRight size={16} />
+            </button>
+            <a href="https://app.goalfi.app/signup" target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/15 backdrop-blur text-white font-semibold text-sm px-5 py-3 rounded-xl transition-colors">
+              Invest with GoalFi
+            </a>
+          </div>
+          <div className="flex flex-wrap gap-x-6 gap-y-3 sm:gap-x-8 mt-7 pt-6 border-t border-white/10">
+            {[['22', 'Calculators'], ['100%', 'Free & live'], ['🇮🇳', 'Built for India'], ['0', 'Sign-up needed']].map(([n, l]) => (
               <div key={l}>
-                <p className="text-xl font-black">{n}</p>
-                <p className="text-[11px] text-white/60 font-medium">{l}</p>
+                <p className="text-lg sm:text-xl font-black">{n}</p>
+                <p className="text-[10px] sm:text-[11px] text-white/55 font-medium">{l}</p>
               </div>
             ))}
           </div>
         </div>
       </div>
+
+      {/* ── Conversational insight cards ─────────────────────────────── */}
+      <InsightCards onSelect={onSelect} />
 
       {/* ── Smart search ─────────────────────────────────────────────── */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm mb-5 overflow-hidden">
