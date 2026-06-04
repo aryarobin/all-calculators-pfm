@@ -16,6 +16,9 @@ export const CALCULATORS = [
   { id: 'compare', slug: 'investment-comparison', name: 'Compare Instruments', group: 'Investments',
     seoTitle: 'Investment Comparison — FD vs PPF vs Mutual Fund vs NPS | GoalFi',
     seoDesc: 'Compare FD, PPF, ELSS, Equity MF, NPS and Gold side by side — pre-tax and post-tax returns on the same monthly investment. Free comparison tool.' },
+  { id: 'gold', slug: 'gold-investment-calculator', name: 'Gold: SGB vs ETF vs Physical', group: 'Investments',
+    seoTitle: 'Gold Investment Calculator — SGB vs Gold ETF vs Physical | GoalFi',
+    seoDesc: 'Compare Sovereign Gold Bonds, Gold ETFs and physical gold on the same investment — after interest, expenses, making charges and tax. Free gold calculator.' },
 
   // ── Goals & Retirement ──
   { id: 'goal', slug: 'goal-planning-calculator', name: 'Goal Planning', group: 'Goals & Retirement',
@@ -36,6 +39,9 @@ export const CALCULATORS = [
   { id: 'coast', slug: 'coast-fire-calculator', name: 'Coast FIRE', group: 'Goals & Retirement',
     seoTitle: 'Coast FIRE Calculator — When Can You Stop Investing? | GoalFi',
     seoDesc: 'Coast FIRE calculator for India: find the corpus where compounding alone reaches your retirement number — so you can stop investing aggressively and coast.' },
+  { id: 'epfnpsvpf', slug: 'epf-vs-nps-vs-vpf-calculator', name: 'EPF vs NPS vs VPF', group: 'Goals & Retirement',
+    seoTitle: 'EPF vs NPS vs VPF Calculator — Best Retirement Scheme | GoalFi',
+    seoDesc: 'Compare EPF, VPF and NPS for retirement on the same contribution — guaranteed tax-free returns vs market-linked growth, after the annuity tax and 80CCD benefit.' },
 
   // ── Smart Decisions ──
   { id: 'prepay', slug: 'loan-prepayment-vs-investment-calculator', name: 'Prepay vs Invest', group: 'Smart Decisions',
@@ -56,6 +62,9 @@ export const CALCULATORS = [
   { id: 'termcover', slug: 'term-insurance-cover-calculator', name: 'Term Cover Needed', group: 'Smart Decisions',
     seoTitle: 'Term Insurance Cover Calculator — How Much Do You Need? | GoalFi',
     seoDesc: 'How much life insurance cover do you really need? Calculate it from income replacement, loans, and goals minus existing assets. Free term cover calculator.' },
+  { id: 'healthcover', slug: 'health-insurance-cover-calculator', name: 'Health Cover Needed', group: 'Smart Decisions',
+    seoTitle: 'Health Insurance Cover Calculator — How Much Do You Need? | GoalFi',
+    seoDesc: 'How much health insurance should your family carry? Calculate it by city, family size and age, and see how medical inflation erodes a fixed cover. Free tool.' },
   { id: 'xirr', slug: 'xirr-calculator', name: 'XIRR Calculator', group: 'Analysis',
     seoTitle: 'XIRR Calculator — Actual SIP & Mutual Fund Returns | GoalFi',
     seoDesc: 'Calculate XIRR — your true annualised return on SIPs and irregular investments, accounting for the exact timing of every cashflow. Free XIRR calculator.' },
@@ -82,6 +91,9 @@ export const CALCULATORS = [
   { id: 'crorepati', slug: 'crorepati-calculator', name: 'Crorepati Timeline', group: 'Analysis',
     seoTitle: 'Crorepati Calculator — When Will You Reach ₹1 Crore? | GoalFi',
     seoDesc: 'Find out exactly when your SIP will make you a crorepati, or the SIP needed to reach ₹1 / ₹5 / ₹10 crore by a target date. Free crorepati calculator.' },
+  { id: 'costofdelay', slug: 'cost-of-delay-calculator', name: 'Cost of Delay', group: 'Analysis',
+    seoTitle: 'Cost of Delay Calculator — What Waiting to Invest Costs You | GoalFi',
+    seoDesc: 'See exactly what delaying your SIP by a few years costs your final corpus — the price of procrastination, and the bigger SIP needed to catch up. Free.' },
 
   // ── Loans ──
   { id: 'emi', slug: 'emi-calculator', name: 'EMI Calculator', group: 'Loans',
