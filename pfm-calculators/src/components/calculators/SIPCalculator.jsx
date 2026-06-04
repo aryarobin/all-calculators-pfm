@@ -6,7 +6,7 @@ import GlowBar from '../shared/GlowBar';
 import WealthContext from '../shared/WealthContext';
 import NextSteps from '../shared/NextSteps';
 import { useCalcState } from '../../hooks/useCalcState';
-import { calcSIPYearly, formatINR, calcSIP } from '../../utils/financialCalc';
+import { calcSIPYearly, formatINR, calcSIP, calcSIPFromCorpus } from '../../utils/financialCalc';
 
 const TTip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
@@ -32,42 +32,76 @@ const RATES = [
 ];
 
 export default function SIPCalculator({ onNavigate }) {
-  const [s, set] = useCalcState('sip', { monthly: 5000, rate: 12, years: 15 });
+  const [s, set] = useCalcState('sip', { mode: 'invest', monthly: 5000, rate: 12, years: 15, target: 10000000 });
   const [showBench, setShowBench] = useState(false);
 
-  const data = useMemo(() => calcSIPYearly(s.monthly, s.rate, s.years), [s]);
+  // In "target" mode the monthly SIP is derived from the goal corpus
+  const computedMonthly = useMemo(
+    () => Math.max(0, Math.round(calcSIPFromCorpus(s.target, s.rate, s.years))),
+    [s.target, s.rate, s.years]
+  );
+  const effectiveMonthly = s.mode === 'target' ? computedMonthly : s.monthly;
+
+  const data = useMemo(() => calcSIPYearly(effectiveMonthly, s.rate, s.years), [effectiveMonthly, s.rate, s.years]);
   const res  = data[data.length - 1] || { corpus: 0, invested: 0, gains: 0 };
   const gainsPct  = res.corpus > 0 ? Math.round(res.gains / res.corpus * 100) : 0;
   const multiple  = res.invested > 0 ? (res.corpus / res.invested).toFixed(1) : '—';
 
-  const extra500  = useMemo(() => formatINR(calcSIP(s.monthly + 500, s.rate, s.years).corpus - res.corpus), [s, res.corpus]);
+  const extra500  = useMemo(() => formatINR(calcSIP(effectiveMonthly + 500, s.rate, s.years).corpus - res.corpus), [effectiveMonthly, s.rate, s.years, res.corpus]);
   const delay5loss = useMemo(() => {
-    const withDelay = calcSIP(s.monthly, s.rate, Math.max(1, s.years - 5)).corpus;
+    const withDelay = calcSIP(effectiveMonthly, s.rate, Math.max(1, s.years - 5)).corpus;
     return formatINR(res.corpus - withDelay);
-  }, [s, res.corpus]);
+  }, [effectiveMonthly, s.rate, s.years, res.corpus]);
 
   const tickInterval = Math.max(1, Math.floor(s.years / 8));
-
-  // The year your returns overtake the money you put in — a powerful moment
   const crossoverYear = useMemo(() => {
     const hit = data.find(d => d.gains > d.invested);
     return hit ? hit.year : null;
   }, [data]);
 
+  const isTarget = s.mode === 'target';
+
   return (
     <div className="space-y-4">
 
+      {/* ── Bidirectional toggle ───────────────────────────────────── */}
+      <div className="bg-slate-100 p-1 rounded-xl flex gap-1">
+        <button onClick={() => set({ mode: 'invest' })}
+          className={`flex-1 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all ${!isTarget ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}>
+          I'll invest a fixed amount
+        </button>
+        <button onClick={() => set({ mode: 'target' })}
+          className={`flex-1 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all ${isTarget ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}>
+          I have a target corpus
+        </button>
+      </div>
+
       {/* ── Hero ───────────────────────────────────────────────────── */}
-      <HeroCard
-        label={`SIP of ${formatINR(s.monthly)}/mo · ${s.rate}% · ${s.years} yrs`}
-        value={res.corpus}
-        gradient="blue"
-        meta={[
-          { label: 'You Invest', value: formatINR(res.invested) },
-          { label: 'Returns',    value: formatINR(res.gains) },
-          { label: 'Multiplied', value: `${multiple}×` },
-        ]}
-      />
+      {isTarget ? (
+        <HeroCard
+          label={`To reach ${formatINR(s.target)} in ${s.years} yrs at ${s.rate}%`}
+          value={computedMonthly}
+          rawValue={`${formatINR(computedMonthly)}/mo`}
+          gradient="blue"
+          sub="Invest this every month to hit your target corpus"
+          meta={[
+            { label: 'Target corpus', value: formatINR(s.target) },
+            { label: 'Total invested', value: formatINR(effectiveMonthly * s.years * 12) },
+            { label: 'From returns', value: formatINR(s.target - effectiveMonthly * s.years * 12) },
+          ]}
+        />
+      ) : (
+        <HeroCard
+          label={`SIP of ${formatINR(s.monthly)}/mo · ${s.rate}% · ${s.years} yrs`}
+          value={res.corpus}
+          gradient="blue"
+          meta={[
+            { label: 'You Invest', value: formatINR(res.invested) },
+            { label: 'Returns',    value: formatINR(res.gains) },
+            { label: 'Multiplied', value: `${multiple}×` },
+          ]}
+        />
+      )}
 
       {/* ── Glow bar ───────────────────────────────────────────────── */}
       <div className="bg-white rounded-2xl border border-slate-200 px-5 py-4">
@@ -91,7 +125,11 @@ export default function SIPCalculator({ onNavigate }) {
       {/* ── Sliders ────────────────────────────────────────────────── */}
       <div className="bg-white rounded-2xl border border-slate-200 px-5 pt-5 pb-4">
         <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-5">Adjust & Explore</p>
-        <SliderInput label="Monthly SIP" hint="Tap value to type any amount" value={s.monthly} min={500} max={500000} step={500} onChange={v => set({ monthly: v })} prefix="₹" />
+        {isTarget ? (
+          <SliderInput label="Target Corpus" hint="The wealth you want · tap to type" value={s.target} min={100000} max={500000000} step={100000} onChange={v => set({ target: v })} prefix="₹" />
+        ) : (
+          <SliderInput label="Monthly SIP" hint="Tap value to type any amount" value={s.monthly} min={500} max={500000} step={500} onChange={v => set({ monthly: v })} prefix="₹" />
+        )}
         <SliderInput label="Expected Annual Return" hint="Historical equity MF avg: 12–15%" value={s.rate} min={4} max={30} step={0.5} onChange={v => set({ rate: v })} unit="%" />
         <SliderInput label="Duration" hint="Time is the greatest multiplier" value={s.years} min={1} max={40} onChange={v => set({ years: v })} unit=" yr" />
 
@@ -108,6 +146,11 @@ export default function SIPCalculator({ onNavigate }) {
               </button>
             ))}
           </div>
+        )}
+        {isTarget && (
+          <p className="text-xs text-slate-500 mt-4 px-1">
+            You need <strong className="text-blue-700">{formatINR(computedMonthly)}/mo</strong> for {s.years} years to build {formatINR(s.target)} at {s.rate}%.
+          </p>
         )}
       </div>
 
@@ -176,7 +219,7 @@ export default function SIPCalculator({ onNavigate }) {
       </div>
 
       {/* ── What this means ────────────────────────────────────────── */}
-      <WealthContext corpus={res.corpus} monthlyExpense={s.monthly * 2} />
+      <WealthContext corpus={res.corpus} monthlyExpense={effectiveMonthly * 2} />
 
       <NextSteps onNavigate={onNavigate} steps={[
         { id: 'stepup',  label: 'Step-Up SIP',          desc: 'Increase SIP yearly with salary hikes' },

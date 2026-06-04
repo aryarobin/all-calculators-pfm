@@ -31,16 +31,30 @@ const CustomTooltip = ({ active, payload, label }) => {
   );
 };
 
-export default function EMICalculator() {
+// Reverse EMI: largest loan a given EMI can service (present value of annuity)
+function loanFromEMI(emi, annualRate, years) {
+  const r = annualRate / 100 / 12, n = years * 12;
+  if (r === 0) return emi * n;
+  return emi * (1 - Math.pow(1 + r, -n)) / r;
+}
+
+export default function EMICalculator({ onNavigate }) {
   const [state, update] = useCalcState('emi', {
+    mode: 'emi',        // 'emi' (loan → EMI) | 'afford' (EMI → max loan)
     loanType: 'home',
     amount: 3000000,
     rate: 8.5,
     years: 20,
+    targetEmi: 30000,
   });
 
-  const { loanType, amount, rate, years } = state;
+  const { loanType, rate, years, mode } = state;
   const loan = LOAN_TYPES.find(l => l.id === loanType) || LOAN_TYPES[0];
+  const isAfford = mode === 'afford';
+
+  // In affordability mode the loan amount is derived from the target EMI
+  const affordableLoan = useMemo(() => Math.round(loanFromEMI(state.targetEmi, rate, years)), [state.targetEmi, rate, years]);
+  const amount = isAfford ? affordableLoan : state.amount;
 
   const result = useMemo(() => calcEMI(amount, rate, years), [amount, rate, years]);
   const schedule = useMemo(() => calcEMISchedule(amount, rate, years), [amount, rate, years]);
@@ -63,19 +77,45 @@ export default function EMICalculator() {
   return (
     <div className="max-w-5xl mx-auto space-y-6">
 
-      {/* Hero EMI */}
-      <HeroCard
-        label={`${loan.label} loan · ${formatINR(amount, true)} at ${rate}% for ${years} yrs`}
-        value={emi}
-        rawValue={`${formatINR(emi)}/mo`}
-        gradient="blue"
-        sub={`${years * 12} monthly payments`}
-        meta={[
-          { label: 'Total Interest', value: formatINR(totalInterest, true) },
-          { label: 'Interest % of Loan', value: `${interestPct}%` },
-          { label: 'Daily Cost', value: `${formatINR(dailyInterest)}/day` },
-        ]}
-      />
+      {/* Bidirectional toggle */}
+      <div className="bg-slate-100 p-1 rounded-xl flex gap-1">
+        <button onClick={() => update({ mode: 'emi' })}
+          className={`flex-1 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all ${!isAfford ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}>
+          What's my EMI?
+        </button>
+        <button onClick={() => update({ mode: 'afford' })}
+          className={`flex-1 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all ${isAfford ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}>
+          How much loan can I afford?
+        </button>
+      </div>
+
+      {/* Hero */}
+      {isAfford ? (
+        <HeroCard
+          label={`Paying ${formatINR(state.targetEmi)}/mo for ${years} yrs at ${rate}%`}
+          value={affordableLoan}
+          gradient="blue"
+          sub={`Maximum ${loan.label.toLowerCase()} loan you can service`}
+          meta={[
+            { label: 'Your EMI', value: `${formatINR(state.targetEmi)}/mo` },
+            { label: 'Total Interest', value: formatINR(totalInterest, true) },
+            { label: 'Total Repaid', value: formatINR(totalPayment, true) },
+          ]}
+        />
+      ) : (
+        <HeroCard
+          label={`${loan.label} loan · ${formatINR(amount, true)} at ${rate}% for ${years} yrs`}
+          value={emi}
+          rawValue={`${formatINR(emi)}/mo`}
+          gradient="blue"
+          sub={`${years * 12} monthly payments`}
+          meta={[
+            { label: 'Total Interest', value: formatINR(totalInterest, true) },
+            { label: 'Interest % of Loan', value: `${interestPct}%` },
+            { label: 'Daily Cost', value: `${formatINR(dailyInterest)}/day` },
+          ]}
+        />
+      )}
 
       {/* Key Insight Banner */}
       <div className="bg-amber-50 border border-amber-200 rounded-xl px-5 py-4 text-sm text-amber-800 font-medium leading-relaxed">
@@ -111,15 +151,28 @@ export default function EMICalculator() {
             </div>
           </div>
 
-          <SliderInput
-            label="Loan Amount"
-            value={amount}
-            min={loan.min}
-            max={loan.max}
-            step={loan.step}
-            onChange={v => update({ amount: v })}
-            prefix="₹"
-          />
+          {isAfford ? (
+            <SliderInput
+              label="EMI you can pay monthly"
+              value={state.targetEmi}
+              min={2000}
+              max={500000}
+              step={1000}
+              onChange={v => update({ targetEmi: v })}
+              prefix="₹"
+              hint={`Max affordable loan: ${formatINR(affordableLoan)}`}
+            />
+          ) : (
+            <SliderInput
+              label="Loan Amount"
+              value={amount}
+              min={loan.min}
+              max={loan.max}
+              step={loan.step}
+              onChange={v => update({ amount: v })}
+              prefix="₹"
+            />
+          )}
 
           <SliderInput
             label="Annual Interest Rate"

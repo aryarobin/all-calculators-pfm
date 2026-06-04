@@ -22,12 +22,13 @@ import SWPCalculator from './components/calculators/SWPCalculator';
 import SalaryCalculator from './components/calculators/SalaryCalculator';
 import BudgetPlanner from './components/calculators/BudgetPlanner';
 import FinancialTimeline from './components/calculators/FinancialTimeline';
+import FinancialFreedom from './components/calculators/FinancialFreedom';
 import Dashboard from './components/Dashboard';
 
 const COMPONENTS = {
   sip: SIPCalculator, lumpsum: LumpsumCalculator, stepup: StepUpSIPCalculator,
   compare: InvestmentComparison, goal: GoalPlanning, retirement: RetirementCalculator,
-  readiness: RetirementReadiness, swp: SWPCalculator, timeline: FinancialTimeline,
+  readiness: RetirementReadiness, swp: SWPCalculator, fire: FinancialFreedom, timeline: FinancialTimeline,
   cagr: CAGRCalculator, multiplier: MoneyMultiplier, inflation: InflationCalculator,
   emi: EMICalculator, fdppf: FDPPFCalculator, tax: TaxCalculator,
   salary: SalaryCalculator, budget: BudgetPlanner,

@@ -30,6 +30,9 @@ export const CALCULATORS = [
   { id: 'swp', slug: 'swp-calculator', name: 'Income & Withdrawal', group: 'Goals & Retirement',
     seoTitle: 'SWP Calculator — Systematic Withdrawal & Income Planning | GoalFi',
     seoDesc: 'Two-way SWP calculator: find how much to invest now for a target monthly income later, or check if your corpus can sustain your withdrawals. Free.' },
+  { id: 'fire', slug: 'financial-freedom-calculator', name: 'Financial Freedom (FIRE)', group: 'Goals & Retirement',
+    seoTitle: 'Financial Freedom Calculator (FIRE) — Retire Now Corpus | GoalFi',
+    seoDesc: 'How much do you need to retire today and live off returns forever? FIRE number for India — after tax, comparing FD vs Equity MF vs your target return.' },
 
   // ── Analysis ──
   { id: 'timeline', slug: 'financial-timeline', name: 'Financial Timeline', group: 'Analysis',

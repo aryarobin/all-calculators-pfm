@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import {
   TrendingUp, Coins, Rocket, Scale, Target, Palmtree, Gauge, Wallet,
   Percent, Sparkles, TrendingDown, CalendarClock, Home, Receipt,
-  Briefcase, PieChart, Landmark, Search, ArrowRight, Zap,
+  Briefcase, PieChart, Landmark, Search, ArrowRight, Zap, Flame,
 } from 'lucide-react';
 import { findCalculator, getSuggestions, EXAMPLE_QUERIES } from '../utils/smartRouter';
 
@@ -29,10 +29,11 @@ const JOURNEYS = [
     tint: 'bg-violet-50 text-violet-600',
     hover: 'hover:border-violet-300 hover:bg-violet-50/50',
     steps: [
-      { id: 'goal',       label: 'Goal Planner',         desc: 'Inflation-adjusted SIP', Icon: Target },
+      { id: 'fire',       label: 'Financial Freedom',    desc: 'Retire-now corpus, after tax', Icon: Flame },
       { id: 'retirement', label: 'Retirement',           desc: 'Corpus & SIP to retire', Icon: Palmtree },
+      { id: 'goal',       label: 'Goal Planner',         desc: 'Inflation-adjusted SIP', Icon: Target },
+      { id: 'swp',        label: 'Income & Withdrawal',  desc: 'Income from your corpus', Icon: Wallet },
       { id: 'readiness',  label: 'Readiness Score',      desc: 'Multi-asset readiness', Icon: Gauge },
-      { id: 'swp',        label: 'Withdrawal Plan',      desc: 'Monthly income from corpus', Icon: Wallet },
     ],
   },
   {

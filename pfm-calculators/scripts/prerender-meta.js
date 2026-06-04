@@ -83,4 +83,21 @@ for (const calc of CALCULATORS) {
   count++;
 }
 
-console.log(`✓ prerendered ${count} calculator pages with per-URL SEO meta + content`);
+// Keep sitemap.xml in sync with the registry
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>${SITE_URL}/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+${CALCULATORS.map(c => `  <url>
+    <loc>${SITE_URL}/${c.slug}</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>`).join('\n')}
+</urlset>
+`;
+writeFileSync(resolve(DIST, 'sitemap.xml'), sitemap, 'utf8');
+
+console.log(`✓ prerendered ${count} calculator pages + sitemap (${count + 1} URLs)`);
