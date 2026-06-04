@@ -4,6 +4,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import SliderInput from '../shared/SliderInput';
+import HeroCard from '../shared/HeroCard';
 import {
   calcCAGR,
   calcFutureValue,
@@ -130,20 +131,13 @@ function FindCAGRMode({ state, update }) {
       {/* Results */}
       <div className="space-y-4">
         {/* Hero CAGR */}
-        <div className="card bg-gradient-to-br from-indigo-600 to-violet-600 text-white border-0">
-          <p className="text-xs font-semibold opacity-70 uppercase tracking-wider">
-            Compounded Annual Growth Rate
-          </p>
-          <p className="text-3xl sm:text-5xl font-black mt-2 tracking-tight">
-            {isFinite(cagr) && cagr > 0 ? formatPercent(cagr) : '—'}
-          </p>
-          <p className="text-sm opacity-75 mt-2">
-            {formatINR(startValue)} &rarr; {formatINR(endValue)} over {years} yr{years !== 1 ? 's' : ''}
-          </p>
-          {ctxMsg && (
-            <p className="text-xs mt-2 font-semibold opacity-90">{ctxMsg}</p>
-          )}
-        </div>
+        <HeroCard
+          label="Compounded Annual Growth Rate"
+          value={isFinite(cagr) && cagr > 0 ? Math.round(cagr * 10) / 10 : 0}
+          rawValue={isFinite(cagr) && cagr > 0 ? formatPercent(cagr) : '—'}
+          gradient="indigo"
+          sub={`${formatINR(startValue)} → ${formatINR(endValue)} over ${years} yr${years !== 1 ? 's' : ''}${ctxMsg ? ' · ' + ctxMsg : ''}`}
+        />
 
         {/* Rule of 72 */}
         {doublingYears && (
@@ -308,21 +302,16 @@ function FutureValueMode({ state, update }) {
       {/* Results */}
       <div className="space-y-4">
         {/* Hero future value */}
-        <div className="card bg-gradient-to-br from-emerald-500 to-teal-600 text-white border-0">
-          <p className="text-xs font-semibold opacity-70 uppercase tracking-wider">
-            Future Value after {targetYears} years
-          </p>
-          <p className="text-3xl sm:text-5xl font-black mt-2 tracking-tight">
-            {formatINR(futureVal)}
-          </p>
-          <div className="flex gap-4 mt-3 text-sm opacity-80">
-            <span>Invested: {formatINR(principal)}</span>
-            <span>Gains: {formatINR(futureVal - principal)}</span>
-          </div>
-          <p className="text-xs opacity-70 mt-1">
-            {multiple.toFixed(2)}x growth at {formatPercent(cagr)} CAGR
-          </p>
-        </div>
+        <HeroCard
+          label={`Future Value after ${targetYears} years`}
+          value={futureVal}
+          gradient="emerald"
+          sub={`${multiple.toFixed(2)}× growth at ${formatPercent(cagr)} CAGR`}
+          meta={[
+            { label: 'Invested', value: formatINR(principal) },
+            { label: 'Gains', value: formatINR(futureVal - principal) },
+          ]}
+        />
 
         {/* Milestone table */}
         <div className="card">

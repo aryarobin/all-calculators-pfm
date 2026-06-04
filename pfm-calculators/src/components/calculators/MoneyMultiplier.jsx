@@ -4,6 +4,7 @@ import {
   ResponsiveContainer, ReferenceLine,
 } from 'recharts';
 import SliderInput from '../shared/SliderInput';
+import HeroCard from '../shared/HeroCard';
 import NextSteps from '../shared/NextSteps';
 import { useCalcState } from '../../hooks/useCalcState';
 import {
@@ -214,11 +215,13 @@ export default function MoneyMultiplier({ onNavigate }) {
         <div className="space-y-4">
 
           {/* Hero card */}
-          <div className={`card ${heroBg} text-white border-0`}>
-            <p className="text-xs font-semibold opacity-75 uppercase tracking-widest mb-1">{heroLabel}</p>
-            <p className="text-3xl sm:text-5xl font-black leading-none mt-2 mb-2">{heroValue}</p>
-            <p className="text-sm opacity-80">{heroSub}</p>
-          </div>
+          <HeroCard
+            label={heroLabel}
+            value={isTimeMode ? (isFinite(timeToTarget) ? Math.round(timeToTarget * 10) / 10 : 0) : (isFinite(rateNeeded) ? Math.round(rateNeeded * 10) / 10 : 0)}
+            rawValue={heroValue}
+            gradient={isTimeMode ? 'amber' : 'violet'}
+            sub={heroSub}
+          />
 
           {/* Rule of 72 callout — always visible */}
           <div className="rounded-2xl bg-amber-50 border border-amber-200 px-5 py-4">

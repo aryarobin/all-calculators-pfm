@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import SliderInput from '../shared/SliderInput';
+import HeroCard from '../shared/HeroCard';
 import NextSteps from '../shared/NextSteps';
 import { useCalcState } from '../../hooks/useCalcState';
 import { calcFD, calcRD, calcPPF, calcNPS, formatINR } from '../../utils/financialCalc';
@@ -159,11 +160,9 @@ export default function FDPPFCalculator({ onNavigate }) {
 
           <div className="space-y-4">
             {/* Hero */}
-            <div className={`card bg-gradient-to-br ${currentTab.gradient} text-white border-0`}>
-              <p className="text-sm font-semibold opacity-80">Maturity Amount</p>
-              <p className="text-2xl sm:text-4xl font-black mt-1">{formatINR(fdResult.maturity)}</p>
-              <p className="text-sm opacity-75 mt-1">in {s.fdYears} {s.fdYears === 1 ? 'year' : 'years'} at {s.fdRate}% p.a.</p>
-            </div>
+            <HeroCard label="Maturity Amount" value={fdResult.maturity} gradient={currentTab.gradient}
+              sub={`in ${s.fdYears} ${s.fdYears === 1 ? 'year' : 'years'} at ${s.fdRate}% p.a.`} compact />
+
 
             {/* Key metrics */}
             <div className="grid grid-cols-3 gap-3">
@@ -235,11 +234,9 @@ export default function FDPPFCalculator({ onNavigate }) {
           </div>
 
           <div className="space-y-4">
-            <div className={`card bg-gradient-to-br ${currentTab.gradient} text-white border-0`}>
-              <p className="text-sm font-semibold opacity-80">Maturity Amount</p>
-              <p className="text-2xl sm:text-4xl font-black mt-1">{formatINR(rdResult.maturity)}</p>
-              <p className="text-sm opacity-75 mt-1">in {s.rdYears} {s.rdYears === 1 ? 'year' : 'years'} at {s.rdRate}%</p>
-            </div>
+            <HeroCard label="Maturity Amount" value={rdResult.maturity} gradient={currentTab.gradient}
+              sub={`in ${s.rdYears} ${s.rdYears === 1 ? 'year' : 'years'} at ${s.rdRate}%`} compact />
+
 
             <div className="grid grid-cols-3 gap-3">
               <MetricCard label="Total Deposited" value={formatINR(rdResult.invested)} />
@@ -308,11 +305,9 @@ export default function FDPPFCalculator({ onNavigate }) {
           </div>
 
           <div className="space-y-4">
-            <div className={`card bg-gradient-to-br ${currentTab.gradient} text-white border-0`}>
-              <p className="text-sm font-semibold opacity-80">PPF Maturity Value</p>
-              <p className="text-2xl sm:text-4xl font-black mt-1">{formatINR(ppfResult.maturity)}</p>
-              <p className="text-sm opacity-75 mt-1">100% TAX FREE after {s.ppfYears} years</p>
-            </div>
+            <HeroCard label="PPF Maturity Value" value={ppfResult.maturity} gradient={currentTab.gradient}
+              sub={`100% tax-free after ${s.ppfYears} years`} compact />
+
 
             <div className="grid grid-cols-3 gap-3">
               <MetricCard label="Total Invested" value={formatINR(ppfResult.totalInvested)} />
@@ -387,11 +382,9 @@ export default function FDPPFCalculator({ onNavigate }) {
           </div>
 
           <div className="space-y-4">
-            <div className={`card bg-gradient-to-br ${currentTab.gradient} text-white border-0`}>
-              <p className="text-sm font-semibold opacity-80">NPS Corpus at Retirement</p>
-              <p className="text-2xl sm:text-4xl font-black mt-1">{formatINR(npsResult.corpus)}</p>
-              <p className="text-sm opacity-75 mt-1">in {s.npsYears} years at {s.npsReturn}% return</p>
-            </div>
+            <HeroCard label="NPS Corpus at Retirement" value={npsResult.corpus} gradient={currentTab.gradient}
+              sub={`in ${s.npsYears} years at ${s.npsReturn}% return`} compact />
+
 
             {/* Lumpsum + Pension breakdown */}
             <div className="grid grid-cols-2 gap-3">
