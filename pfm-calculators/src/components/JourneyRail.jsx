@@ -4,6 +4,7 @@ import {
   ArrowRight, X,
 } from 'lucide-react';
 import { byId } from '../calculators';
+import { track } from '../lib/analytics';
 
 // Life-stage journeys — each is a curated, ordered path through a few
 // calculators with a one-line "why" per step. The point: a worried person
@@ -142,7 +143,7 @@ function JourneyModal({ journey, onSelect, onClose }) {
               if (!calc) return null;
               const last = i === journey.steps.length - 1;
               return (
-                <button key={step.id} onClick={() => onSelect(step.id)}
+                <button key={step.id} onClick={() => { track('journey_step', { journey: journey.id, step: step.id }); onSelect(step.id); }}
                   className="group w-full text-left flex gap-3.5 pb-4 last:pb-0">
                   {/* number + connector */}
                   <div className="flex flex-col items-center flex-shrink-0">
@@ -188,7 +189,7 @@ export default function JourneyRail({ onSelect }) {
         {JOURNEYS.map(j => {
           const { Icon } = j;
           return (
-            <button key={j.id} onClick={() => setActive(j)}
+            <button key={j.id} onClick={() => { setActive(j); track('journey_open', { journey: j.id }); }}
               className="bg-white rounded-xl border border-slate-200 p-3.5 text-left transition-all hover:border-[#1E1963] hover:shadow-sm group">
               <div className={`w-9 h-9 rounded-xl flex items-center justify-center mb-2.5 ${j.chip}`}>
                 <Icon size={18} strokeWidth={2} />

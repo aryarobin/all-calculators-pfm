@@ -1,6 +1,8 @@
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { trackSignupClick } from '../../lib/analytics';
 import { GOALFI_URL } from '../../calculators';
+import { GUIDES } from '../../data/guides';
 
 const COLUMNS = [
   {
@@ -82,6 +84,22 @@ export default function GoalFiFooter({ onSelect }) {
             </ul>
           </div>
         ))}
+      </div>
+
+      {/* Guides — internal links to the learn content */}
+      <div className="border-t border-white/10">
+        <div className="max-w-5xl mx-auto px-5 py-5">
+          <div className="flex items-center gap-2 mb-3">
+            <p className="font-mono-label text-[10px] uppercase tracking-widest text-slate-500">Guides</p>
+            <Link to="/learn" className="text-[11px] text-[#CA8D1B] hover:text-[#E6A125] transition-colors">View all →</Link>
+          </div>
+          <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
+            {GUIDES.map(g => (
+              <Link key={g.slug} to={`/learn/${g.slug}`}
+                className="text-slate-300 hover:text-[#CA8D1B] transition-colors">{g.h1}</Link>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* External + legal */}

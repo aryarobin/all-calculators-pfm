@@ -1,69 +1,72 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, lazy, Suspense } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import GoalFiFooter from './components/brand/GoalFiFooter';
 import Seo from './components/Seo';
 import CalcFAQ from './components/CalcFAQ';
-import { trackCalcView, trackSignupClick } from './lib/analytics';
+import GoalFiNudge from './components/GoalFiNudge';
+import { trackCalcView, trackSignupClick, track } from './lib/analytics';
 import { buildShareUrl } from './lib/share';
 import { CALCULATORS, byId, bySlug, NAV_GROUP_ORDER, GOALFI_URL } from './calculators';
 
-import SIPCalculator from './components/calculators/SIPCalculator';
-import LumpsumCalculator from './components/calculators/LumpsumCalculator';
-import StepUpSIPCalculator from './components/calculators/StepUpSIPCalculator';
-import GoalPlanning from './components/calculators/GoalPlanning';
-import RetirementCalculator from './components/calculators/RetirementCalculator';
-import RetirementReadiness from './components/calculators/RetirementReadiness';
-import CAGRCalculator from './components/calculators/CAGRCalculator';
-import MoneyMultiplier from './components/calculators/MoneyMultiplier';
-import InflationCalculator from './components/calculators/InflationCalculator';
-import EMICalculator from './components/calculators/EMICalculator';
-import FDPPFCalculator from './components/calculators/FDPPFCalculator';
-import TaxCalculator from './components/calculators/TaxCalculator';
-import InvestmentComparison from './components/calculators/InvestmentComparison';
-import SWPCalculator from './components/calculators/SWPCalculator';
-import SalaryCalculator from './components/calculators/SalaryCalculator';
-import BudgetPlanner from './components/calculators/BudgetPlanner';
-import FinancialTimeline from './components/calculators/FinancialTimeline';
-import FinancialFreedom from './components/calculators/FinancialFreedom';
-import CoastFire from './components/calculators/CoastFire';
-import PrepayVsInvest from './components/calculators/PrepayVsInvest';
-import RentVsBuy from './components/calculators/RentVsBuy';
-import XIRRCalculator from './components/calculators/XIRRCalculator';
-import CapitalGainsTax from './components/calculators/CapitalGainsTax';
-import EmergencyFund from './components/calculators/EmergencyFund';
-import SukanyaSamriddhi from './components/calculators/SukanyaSamriddhi';
-import CreditCardPayoff from './components/calculators/CreditCardPayoff';
-import NetWorth from './components/calculators/NetWorth';
-import SimpleVsCompound from './components/calculators/SimpleVsCompound';
-import InsuranceVsInvestment from './components/calculators/InsuranceVsInvestment';
-import TermCoverNeeded from './components/calculators/TermCoverNeeded';
-import DirectVsRegular from './components/calculators/DirectVsRegular';
-import LumpsumVsSIP from './components/calculators/LumpsumVsSIP';
-import CrorepatiTimeline from './components/calculators/CrorepatiTimeline';
-import HealthCoverNeeded from './components/calculators/HealthCoverNeeded';
-import EPFvsNPSvsVPF from './components/calculators/EPFvsNPSvsVPF';
-import CostOfDelay from './components/calculators/CostOfDelay';
-import GoldInvestment from './components/calculators/GoldInvestment';
-import RealReturn from './components/calculators/RealReturn';
-import JobSwitch from './components/calculators/JobSwitch';
-import PostOfficeSchemes from './components/calculators/PostOfficeSchemes';
-import BrokerageCharges from './components/calculators/BrokerageCharges';
-import IndexVsActive from './components/calculators/IndexVsActive';
-import GrowthVsIDCW from './components/calculators/GrowthVsIDCW';
-import DebtFundVsFD from './components/calculators/DebtFundVsFD';
-import ELSSCalculator from './components/calculators/ELSSCalculator';
-import LTCGHarvest from './components/calculators/LTCGHarvest';
-import AssetAllocation from './components/calculators/AssetAllocation';
-import SIPLumpsumCombo from './components/calculators/SIPLumpsumCombo';
-import HomeLoanEligibility from './components/calculators/HomeLoanEligibility';
-import PrepaymentImpact from './components/calculators/PrepaymentImpact';
-import BalanceTransfer from './components/calculators/BalanceTransfer';
-import NPSCalculator from './components/calculators/NPSCalculator';
-import EPFCalculator from './components/calculators/EPFCalculator';
-import ChildEducation from './components/calculators/ChildEducation';
-import FreelancerTax from './components/calculators/FreelancerTax';
-import GratuityCalculator from './components/calculators/GratuityCalculator';
-import HRACalculator from './components/calculators/HRACalculator';
+// Calculators are lazy-loaded so the initial bundle stays small — each opens
+// its own chunk on demand. Dashboard (the landing) stays eager for fast paint.
+const SIPCalculator = lazy(() => import('./components/calculators/SIPCalculator'));
+const LumpsumCalculator = lazy(() => import('./components/calculators/LumpsumCalculator'));
+const StepUpSIPCalculator = lazy(() => import('./components/calculators/StepUpSIPCalculator'));
+const GoalPlanning = lazy(() => import('./components/calculators/GoalPlanning'));
+const RetirementCalculator = lazy(() => import('./components/calculators/RetirementCalculator'));
+const RetirementReadiness = lazy(() => import('./components/calculators/RetirementReadiness'));
+const CAGRCalculator = lazy(() => import('./components/calculators/CAGRCalculator'));
+const MoneyMultiplier = lazy(() => import('./components/calculators/MoneyMultiplier'));
+const InflationCalculator = lazy(() => import('./components/calculators/InflationCalculator'));
+const EMICalculator = lazy(() => import('./components/calculators/EMICalculator'));
+const FDPPFCalculator = lazy(() => import('./components/calculators/FDPPFCalculator'));
+const TaxCalculator = lazy(() => import('./components/calculators/TaxCalculator'));
+const InvestmentComparison = lazy(() => import('./components/calculators/InvestmentComparison'));
+const SWPCalculator = lazy(() => import('./components/calculators/SWPCalculator'));
+const SalaryCalculator = lazy(() => import('./components/calculators/SalaryCalculator'));
+const BudgetPlanner = lazy(() => import('./components/calculators/BudgetPlanner'));
+const FinancialTimeline = lazy(() => import('./components/calculators/FinancialTimeline'));
+const FinancialFreedom = lazy(() => import('./components/calculators/FinancialFreedom'));
+const CoastFire = lazy(() => import('./components/calculators/CoastFire'));
+const PrepayVsInvest = lazy(() => import('./components/calculators/PrepayVsInvest'));
+const RentVsBuy = lazy(() => import('./components/calculators/RentVsBuy'));
+const XIRRCalculator = lazy(() => import('./components/calculators/XIRRCalculator'));
+const CapitalGainsTax = lazy(() => import('./components/calculators/CapitalGainsTax'));
+const EmergencyFund = lazy(() => import('./components/calculators/EmergencyFund'));
+const SukanyaSamriddhi = lazy(() => import('./components/calculators/SukanyaSamriddhi'));
+const CreditCardPayoff = lazy(() => import('./components/calculators/CreditCardPayoff'));
+const NetWorth = lazy(() => import('./components/calculators/NetWorth'));
+const SimpleVsCompound = lazy(() => import('./components/calculators/SimpleVsCompound'));
+const InsuranceVsInvestment = lazy(() => import('./components/calculators/InsuranceVsInvestment'));
+const TermCoverNeeded = lazy(() => import('./components/calculators/TermCoverNeeded'));
+const DirectVsRegular = lazy(() => import('./components/calculators/DirectVsRegular'));
+const LumpsumVsSIP = lazy(() => import('./components/calculators/LumpsumVsSIP'));
+const CrorepatiTimeline = lazy(() => import('./components/calculators/CrorepatiTimeline'));
+const HealthCoverNeeded = lazy(() => import('./components/calculators/HealthCoverNeeded'));
+const EPFvsNPSvsVPF = lazy(() => import('./components/calculators/EPFvsNPSvsVPF'));
+const CostOfDelay = lazy(() => import('./components/calculators/CostOfDelay'));
+const GoldInvestment = lazy(() => import('./components/calculators/GoldInvestment'));
+const RealReturn = lazy(() => import('./components/calculators/RealReturn'));
+const JobSwitch = lazy(() => import('./components/calculators/JobSwitch'));
+const PostOfficeSchemes = lazy(() => import('./components/calculators/PostOfficeSchemes'));
+const BrokerageCharges = lazy(() => import('./components/calculators/BrokerageCharges'));
+const IndexVsActive = lazy(() => import('./components/calculators/IndexVsActive'));
+const GrowthVsIDCW = lazy(() => import('./components/calculators/GrowthVsIDCW'));
+const DebtFundVsFD = lazy(() => import('./components/calculators/DebtFundVsFD'));
+const ELSSCalculator = lazy(() => import('./components/calculators/ELSSCalculator'));
+const LTCGHarvest = lazy(() => import('./components/calculators/LTCGHarvest'));
+const AssetAllocation = lazy(() => import('./components/calculators/AssetAllocation'));
+const SIPLumpsumCombo = lazy(() => import('./components/calculators/SIPLumpsumCombo'));
+const HomeLoanEligibility = lazy(() => import('./components/calculators/HomeLoanEligibility'));
+const PrepaymentImpact = lazy(() => import('./components/calculators/PrepaymentImpact'));
+const BalanceTransfer = lazy(() => import('./components/calculators/BalanceTransfer'));
+const NPSCalculator = lazy(() => import('./components/calculators/NPSCalculator'));
+const EPFCalculator = lazy(() => import('./components/calculators/EPFCalculator'));
+const ChildEducation = lazy(() => import('./components/calculators/ChildEducation'));
+const FreelancerTax = lazy(() => import('./components/calculators/FreelancerTax'));
+const GratuityCalculator = lazy(() => import('./components/calculators/GratuityCalculator'));
+const HRACalculator = lazy(() => import('./components/calculators/HRACalculator'));
 import Dashboard from './components/Dashboard';
 
 const COMPONENTS = {
@@ -137,8 +140,10 @@ export default function App() {
     try {
       if (navigator.share && /Mobi|Android/i.test(navigator.userAgent)) {
         await navigator.share({ title: `${currentCalc.name} — GoalFi Planner`, url });
+        track('share', { calculator_id: currentCalc.id, method: 'native' });
       } else {
         await navigator.clipboard.writeText(url);
+        track('share', { calculator_id: currentCalc.id, method: 'copy' });
       }
       setShared(true);
       setTimeout(() => setShared(false), 1800);
@@ -264,10 +269,17 @@ export default function App() {
             {isHome
               ? <Dashboard onSelect={handleSelect} />
               : ActiveComponent && (
-                <>
+                <Suspense fallback={
+                  <div className="space-y-4 animate-pulse">
+                    <div className="h-44 rounded-2xl bg-slate-200/70" />
+                    <div className="h-28 rounded-2xl bg-slate-100" />
+                    <div className="h-64 rounded-2xl bg-slate-100" />
+                  </div>
+                }>
                   <ActiveComponent onNavigate={handleSelect} />
+                  <GoalFiNudge calc={currentCalc} />
                   <CalcFAQ id={currentCalc.id} />
-                </>
+                </Suspense>
               )
             }
           </div>
