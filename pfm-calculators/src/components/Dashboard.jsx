@@ -10,6 +10,7 @@ import {
 import { findCalculator, getSuggestions, EXAMPLE_QUERIES } from '../utils/smartRouter';
 import { CALCULATORS, NAV_GROUP_ORDER, GOALFI_URL } from '../calculators';
 import InsightCards from './InsightCards';
+import JourneyRail from './JourneyRail';
 
 // One icon + a short human tagline per calculator id. The cards themselves
 // are generated from the registry so this page always reflects everything built.
@@ -96,6 +97,7 @@ export default function Dashboard({ onSelect }) {
   const [query, setQuery] = useState('');
   const [result, setResult] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
+  const [view, setView] = useState('browse'); // 'browse' | 'journeys'
   const inputRef = useRef(null);
 
   const handleChange = (q) => {
@@ -151,6 +153,24 @@ export default function Dashboard({ onSelect }) {
         </div>
       </div>
 
+      {/* ── View toggle: Browse ⇄ Journeys ───────────────────────────── */}
+      <div className="flex items-center gap-1 bg-slate-100 rounded-xl p-1 mb-8 w-full sm:w-fit">
+        <button onClick={() => setView('browse')}
+          className={`flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg text-[12px] sm:text-[13px] font-semibold transition-all whitespace-nowrap ${view === 'browse' ? 'bg-white text-[#1E1963] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>
+          <span className="sm:hidden">Browse</span>
+          <span className="hidden sm:inline">Browse calculators</span>
+        </button>
+        <button onClick={() => setView('journeys')}
+          className={`flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg text-[12px] sm:text-[13px] font-semibold transition-all whitespace-nowrap ${view === 'journeys' ? 'bg-white text-[#1E1963] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>
+          <span className="sm:hidden">Life stages</span>
+          <span className="hidden sm:inline">Start with your moment</span>
+        </button>
+      </div>
+
+      {view === 'journeys' ? (
+        <JourneyRail onSelect={onSelect} />
+      ) : (
+      <>
       {/* ── Conversational insight cards ─────────────────────────────── */}
       <InsightCards onSelect={onSelect} />
 
@@ -260,6 +280,8 @@ export default function Dashboard({ onSelect }) {
           </div>
         ))}
       </div>
+      </>
+      )}
 
       <p className="text-[11px] text-slate-400 mt-8 text-center">
         All calculations are estimates. Consult a SEBI-registered investment advisor before investing.

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import GoalFiFooter from './components/brand/GoalFiFooter';
 import Seo from './components/Seo';
@@ -78,6 +78,7 @@ export default function App() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const mainRef = useRef(null);
 
   const currentCalc = slug ? bySlug[slug] : null;
   const isHome = !slug;
@@ -88,9 +89,11 @@ export default function App() {
     if (slug && !currentCalc) navigate('/', { replace: true });
   }, [slug, currentCalc, navigate]);
 
-  // Scroll top + track on route change
+  // Scroll top + track on route change. The scroll container is <main>
+  // (it has overflow-y-auto), not the window — so scroll that element.
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    mainRef.current?.scrollTo({ top: 0, behavior: 'auto' });
+    window.scrollTo({ top: 0, behavior: 'auto' });
     if (currentCalc) trackCalcView(currentCalc.id, currentCalc.name);
   }, [slug]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -174,7 +177,7 @@ export default function App() {
         )}
 
         {/* Main */}
-        <main className="flex-1 overflow-y-auto">
+        <main ref={mainRef} className="flex-1 overflow-y-auto">
           {!isHome && (
             <div className="lg:hidden sticky top-0 z-20 bg-white border-b border-slate-100 px-3 py-2">
               <div className="overflow-x-auto scrollbar-none">
