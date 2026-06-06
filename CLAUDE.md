@@ -1,13 +1,24 @@
 # GoalFi PFM Calculators — Claude Context
 
 ## What this project is
-India's most comprehensive personal finance calculator suite — 22 calculators for Indian retail investors.
+India's most comprehensive personal finance calculator suite — **57 calculators** for Indian retail investors.
 Branded under GoalFi. SEO-first, India-specific (tax slabs, PPF, NPS, ELSS, XIRR, etc.).
 Stack: React 18 + Vite + Tailwind CSS (JavaScript, not TypeScript).
 
-## Current state
-Built and active. Recent commits show ongoing feature additions.
-Deployment options: Netlify (netlify.toml configured) + GCP Cloud Run (deploy-gcp.sh).
+## Current state (as of 2026-06-06)
+**LIVE at https://planner.goalfi.app** — see [[planner-domain-cloudflare-worker]]: Cloudflare Worker proxy → Cloud Run (asia-south1). Run.app URL: `pfm-calculators-656756860589.asia-south1.run.app`.
+- **57 calculators** + a `/learn` hub with **5 long-form SEO guides** (Article + FAQ JSON-LD).
+- Landing is **registry-driven** (renders every calculator from `calculators.js`, never goes stale) with a **"Start with your moment" journeys toggle** (8 life-stage paths) and a smart-search router covering all calculators.
+- **Shareable result links** (inputs encoded in URL `?s=`, Share button) and a **contextual GoalFi nudge** after every result (copy adapts by group).
+- **SEO depth**: per-calculator FAQ blocks + FAQPage JSON-LD prerendered; per-route canonicals/OG; sitemap auto-generated (64 URLs); `SITE_URL` already = `https://planner.goalfi.app`.
+- **Performance**: all calculators code-split (initial JS ~970KB → ~370KB; recharts lazy).
+- **Analytics layer** wired (GA4 + Clarity + PostHog, env-driven `VITE_*`) with events instrumented (calculator_view, share, journey_open/step, signup/cta clicks) — **no-op until IDs are added** (PENDING).
+Deploy: `gcloud builds submit` + `gcloud run deploy` (see Git section for the standalone-Python wrapper). Netlify config also present.
+
+## NEXT FOCUS (when work resumes) — set 2026-06-06
+1. **SEO push** (user's stated next priority): Google Search Console (submit sitemap, request indexing), Bing Webmaster, **backlinks from sibling GoalFi sites** (goalfi.app, pulse, research) — highest lever — more `/learn` guides for long-tail, verify indexability.
+2. **Then build the funnel** into existing products — see [[goalfi-funnel-and-auth]]: calculators are top-of-funnel; hand off to the EXISTING `goalfi-platform` backend (`POST /api/sip-intents`, `/api/subscriptions/create`, `leads` table). SSO is near-free because planner shares `.goalfi.app` registrable domain with `app.goalfi.app` (one-line cookie-domain change + a `/api/me`). Product-aware CTAs + carry-the-number + UTM attribution.
+3. Optional later: Capacitor iOS/Android app (reuse this codebase) for app-store ASO.
 
 ## Calculators (22 total)
 
