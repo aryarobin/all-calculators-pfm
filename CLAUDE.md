@@ -85,3 +85,26 @@ Edit `/Users/GoalFiTech/claude_projects/all_project_summary_git/GOALFI_PROJECT_S
 - There are **two** GitHub accounts authenticated on this machine via `gh`: `aryarobin` (active, has write) and **`goalfitech` (READ-ONLY — never push as this account, only read/clone)**.
 - Pitfall: plain `git push` may pull a stale `goalfitech` token from the macOS Keychain → `403 denied to goalfitech`. Git is configured to auth via `gh` (`gh auth setup-git`) so it uses the active `aryarobin` account. If a push is ever denied to `goalfitech` again, run `gh auth setup-git` (and ensure `gh auth status` shows `aryarobin` active) before retrying.
 - Never push to / commit into anything under the `goalfitech` account — it is for reading only.
+
+---
+
+## ⛔ PRE-FLIGHT — before writing any code, doc or deliverable
+
+**Read `all_project_summary_git/CLAUDE.md` → PRE-FLIGHT first.** Short version:
+
+1. **Does this already exist?** Check `CATALOGUE.md` + `REGISTER.md` in
+   `all_project_summary_git`, then **`ls` the candidate project.**
+2. **Is there a house format** for this artefact already? Match it.
+3. **What can I reuse?** Read the owning project's reuse map before building.
+4. **Where does the output belong?** The project that owns the capability — not
+   whichever folder is open.
+
+⚠️ **A one-line project description is not a check.** Three duplicates were built in the
+week of 8–15 Sep 2026 by reading a summary and never opening the folder. `ls` it.
+
+**Finishing means documenting.** Update this project's `SESSION.md`, append anything
+estate-level to `JOURNAL.md`, and re-run `python3 tools/build_register.py`. Work that
+is not written down gets rebuilt.
+
+**Never delete a duplicate** — write `SUPERSEDED.md` pointing at the real project, copy
+the work across, leave the folder in place.
